@@ -355,7 +355,7 @@ const MOCK=(()=>{const db=()=>LS.get('mock',{c:{},loc:{},pl:{}}),sv=d=>LS.set('m
 const API=DEMO?MOCK:REAL;
 
 // ===== Trạng thái =====
-const S={bg:LS.get('bg','xanh'),showBat:LS.get('showbat',true),approx:LS.get('approx',false),user:LS.get('user',''),name:LS.get('name',''),em:LS.get('em',''),av:LS.get('av',''),vf:'all',code:LS.get('code',''),sharing:LS.get('sharing',true),tab:'map',
+const S={nick:LS.get('nick',{}),bg:LS.get('bg','xanh'),showBat:LS.get('showbat',true),approx:LS.get('approx',false),user:LS.get('user',''),name:LS.get('name',''),em:LS.get('em',''),av:LS.get('av',''),vf:'all',code:LS.get('code',''),sharing:LS.get('sharing',true),tab:'map',
   me:null,ptn:null,couple:null,places:LS.get('places_cache',[]),filter:'all',sort:'new',lastSent:0,lastSentPos:null,pos:null,bat:null,err:null,pick:null};
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -440,7 +440,7 @@ function renderSetup(step){
       if(reg&&!n)return toast('Nhập tên hiển thị');if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
       e.target.disabled=true;
       try{if(reg){await API.register(u,p);S.name=n;LS.set('name',n);S.user=u;LS.set('user',u);await API.saveProfile({name:n,user:u,code:S.code||''})}
-        else{await API.login(u,p);S.user=u;LS.set('user',u);const pr=await API.getProfile();S.name=pr.name||u;LS.set('name',S.name);if(pr.em){S.em=pr.em;LS.set('em',pr.em)}if(pr.av){S.av=pr.av;LS.set('av',pr.av)}
+        else{await API.login(u,p);S.user=u;LS.set('user',u);const pr=await API.getProfile();S.name=pr.name||u;if(pr.nickj)try{S.nick=JSON.parse(pr.nickj);LS.set('nick',S.nick)}catch(e){}LS.set('name',S.name);if(pr.em){S.em=pr.em;LS.set('em',pr.em)}if(pr.av){S.av=pr.av;LS.set('av',pr.av)}
           if(pr.code&&!S.invite){const c=await API.getCouple(pr.code).catch(()=>null);if(c&&(c.members||[]).includes(NET.uid)){S.code=pr.code;LS.set('code',S.code);toast('Chào '+S.name+' 💞');return renderMain()}}}
         renderSetup(S.invite?'join':'choose')}catch(er){e.target.disabled=false;toast(errMsg(er),4500)}};return}
   if(step==='choose'){A.innerHTML=`<div class="page"><div class="scroll">
@@ -490,6 +490,7 @@ function addTiles(i){i=i==null?LS.get('tile',0):i;if(i>=TILES.length)i=0;const [
   let sw=false;const swap=()=>{if(sw||ok>0)return;sw=true;map.removeLayer(t);const n=(i+1)%TILES.length;LS.set('tile',n);addTiles(n)};
   t.on('tileload',()=>{ok++});t.on('tileerror',()=>{bad++;if(bad>=4)swap()});setTimeout(swap,6000)}
 function renderMain(){
+  if(!DEMO||1)setTimeout(()=>syncNick().then(()=>{drawPeople();drawMarkers()}),1500);
   $('#app').innerHTML=`<div class="page" id="pg-map"><div id="map"></div>
     <div class="top"><div class="share" id="shr"></div><div id="pingbox"></div><div class="ppl" id="ppl"></div></div>
     <button class="fab" id="fsr" style="bottom:132px" title="Tìm địa điểm">${I.search}</button>
@@ -540,7 +541,21 @@ async function toggleShare(){S.sharing=!S.sharing;LS.set('sharing',S.sharing);dr
 
 // những người khác trong nhóm (kể cả người chưa mở app)
 function others(){const m=((S.couple&&S.couple.members)||[]).filter(x=>x!==NET.uid);return m.map(id=>(S.locs||[]).find(l=>l.id===id)||{id,name:null})}
-const nameOf=uid=>uid===NET.uid?S.name:(((S.locs||[]).find(l=>l.id===uid)||{}).name||'Thành viên');
+const nickOf=uid=>uid&&uid!==NET.uid?(S.nick||{})[uid]||'':'';
+const dn=(p,d)=>{const n=(p&&p.name)||d||'Thành viên',k=p&&nickOf(p.id);return k?n+' ('+k+')':n};
+const nameOf=uid=>uid===NET.uid?S.name:dn({id:uid,name:((S.locs||[]).find(l=>l.id===uid)||{}).name});
+async function syncNick(){try{const pr=await API.getProfile();if(pr.nickj){S.nick=JSON.parse(pr.nickj);LS.set('nick',S.nick)}}catch(e){}}
+function editNick(uid,done){const p=personOf(uid);const sh=document.createElement('div');sh.className='sheet';sh.style.zIndex=2000;sh.innerHTML=`<div>
+  <div class="row"><div class="grow"><h2 style="margin:0">Biệt danh</h2><div class="mut">cho ${esc(p.name||'Thành viên')} · chỉ mình bạn thấy</div></div><button class="ib" id="x">${I.x}</button></div>
+  <div style="height:10px"></div><input class="t" id="nk" maxlength="20" value="${esc(nickOf(uid))}" placeholder="Ví dụ: Bé Mít, Sếp, Vợ yêu…">
+  <div class="chips" style="margin-top:8px">${['Vợ yêu','Chồng yêu','Bé iu','Sếp','Bạn thân','Mẹ','Bố'].map(t=>`<button class="chip">${t}</button>`).join('')}</div>
+  <div class="row" style="gap:8px;margin-top:12px">${nickOf(uid)?'<button class="btn gh grow" id="rm">Xoá biệt danh</button>':''}<button class="btn grow" id="ok">Lưu</button></div></div>`;
+  document.body.appendChild(sh);const q=x=>sh.querySelector(x);q('#x').onclick=()=>sh.remove();sh.onclick=ev=>{if(ev.target===sh)sh.remove()};
+  sh.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{q('#nk').value=b.textContent});
+  const save=async v=>{S.nick=Object.assign({},S.nick);if(v)S.nick[uid]=v;else delete S.nick[uid];LS.set('nick',S.nick);sh.remove();toast(v?'Đã đặt biệt danh':'Đã xoá biệt danh');
+    API.saveProfile({nickj:JSON.stringify(S.nick)}).catch(()=>{});drawPeople();drawMarkers();if(S.tab==='chat')drawChats();if(done)done()};
+  q('#ok').onclick=()=>save(q('#nk').value.trim().slice(0,20));if(q('#rm'))q('#rm').onclick=()=>save('');setTimeout(()=>q('#nk').focus(),80)}
+window.editNick=editNick;
 const batTxt=p=>p.bat==null?'':` · <span class="${p.bat<=20&&!p.batc?'low':''}">${p.batc?'⚡':'🔋'}${p.bat}%</span>`;
 function personRow(p){const me=S.pos||(S.me&&S.me.lat!=null?S.me:null);let st;
   if(!p.t)st='Chưa mở app lần nào';
@@ -548,7 +563,7 @@ function personRow(p){const me=S.pos||(S.me&&S.me.lat!=null?S.me:null);let st;
   else if(p.lat==null)st='Chưa có vị trí';
   else{const age=(Date.now()-p.t)/60e3,cls=age<10?'fresh':age>60?'stale':'',d=dist(me,p);st=`<span class="${cls}">● ${ago(p.t)}</span>${p.approx?' · <b>khu vực gần đúng</b>':''}${d!=null?' · cách '+(p.approx?'~':'')+fmtD(d):''}${batTxt(p)}`}
   const canNav=p.sharing!==false&&p.lat!=null;
-  return`<div class="pr" data-id="${p.id}"><div class="avw${todayNews(p.id)?' new':''}" data-ph="${p.id}" title="Xem ảnh">${avHtml(p,36)}${unseenN(p.id)?`<i class="pc">${unseenN(p.id)}</i>`:''}</div><div class="grow"><div class="nm">${esc(p.name||'Thành viên mới')}</div><div class="st">${st}</div></div>
+  return`<div class="pr" data-id="${p.id}"><div class="avw${todayNews(p.id)?' new':''}" data-ph="${p.id}" title="Xem ảnh">${avHtml(p,36)}${unseenN(p.id)?`<i class="pc">${unseenN(p.id)}</i>`:''}</div><div class="grow"><div class="nm">${esc(dn(p,'Thành viên mới'))}</div><div class="st">${st}</div></div>
     <div class="acts">${canNav?`<button class="ib" data-go="${p.id}" title="Chỉ đường">${I.nav}</button>`:''}<button class="ib" data-pg="${p.id}" title="Nhờ cập nhật">${I.bell}</button></div></div>`}
 function drawPeople(){const e=$('#ppl');if(!e)return;
   if(!S.couple){e.innerHTML=`<div class="ph"><b>Đang tải…</b></div>`;return}
@@ -571,7 +586,7 @@ function drawPing(){const e=$('#pingbox');if(!e)return;const P=myPing(),seen=LS.
     $('#pgx').onclick=()=>{LS.set('pingseen',P.t);drawPing()}}else e.innerHTML=''}
 
 function mkIcon(p,col){const inner=p.av?'':(p.em?`<b style="font-size:20px">${p.em}</b>`:esc(ini(p.name)));
-  return L.divIcon({className:'',html:`<div class="mk"><i style="background:${col}${p.av?`;background-image:url('${p.av}');background-size:cover`:''}">${inner}</i><span>${p.av&&p.em?p.em+' ':''}${esc(p.name||'?')}</span></div>`,iconSize:[90,58],iconAnchor:[45,20]})}
+  return L.divIcon({className:'',html:`<div class="mk"><i style="background:${col}${p.av?`;background-image:url('${p.av}');background-size:cover`:''}">${inner}</i><span>${p.av&&p.em?p.em+' ':''}${esc(nickOf(p.id)||p.name||'?')}</span></div>`,iconSize:[90,58],iconAnchor:[45,20]})}
 function drawMarkers(){if(!map)return;const want={};
   const me=S.pos||(S.me&&S.me.lat!=null?S.me:null);if(me)want[NET.uid]=Object.assign({},me,{name:S.name+' (bạn)',em:S.em,av:S.av});
   for(const p of others())if(p.sharing!==false&&p.lat!=null)want[p.id]=p;
@@ -731,7 +746,7 @@ function squareJpeg(file,cb){const fr=new FileReader();fr.onload=()=>{const im=n
   im.onerror=()=>toast('Không đọc được ảnh này');im.src=fr.result};fr.readAsDataURL(file)}
 // chọn người xem: all | me | danh sách uid
 function audHtml(sel){const O=others();return`<div class="seg" id="aud"><button data-a="all" class="${sel==='all'?'on':''}">👥 Cả nhóm</button><button data-a="pick" class="${Array.isArray(sel)?'on':''}">✅ Chọn người</button><button data-a="me" class="${sel==='me'?'on':''}">🙈 Chỉ mình tôi</button></div>
-  <div id="audl" class="${Array.isArray(sel)?'':'hide'}" style="margin-top:8px">${O.map(p=>`<label class="ck2"><input type="checkbox" value="${p.id}" ${Array.isArray(sel)&&sel.includes(p.id)?'checked':''}>${avHtml(p,28)}<span>${esc(p.name||'Thành viên')}</span></label>`).join('')||'<div class="mut">Nhóm chưa có ai khác</div>'}</div>`}
+  <div id="audl" class="${Array.isArray(sel)?'':'hide'}" style="margin-top:8px">${O.map(p=>`<label class="ck2"><input type="checkbox" value="${p.id}" ${Array.isArray(sel)&&sel.includes(p.id)?'checked':''}>${avHtml(p,28)}<span>${esc(dn(p))}</span></label>`).join('')||'<div class="mut">Nhóm chưa có ai khác</div>'}</div>`}
 function bindAud(root,st){root.querySelectorAll('#aud button').forEach(b=>b.onclick=()=>{const a=b.dataset.a;st.sel=a==='pick'?(Array.isArray(st.sel)?st.sel:[]):a;
   root.querySelectorAll('#aud button').forEach(x=>x.classList.toggle('on',x===b));root.querySelector('#audl').classList.toggle('hide',a!=='pick')});
   root.querySelectorAll('#audl input').forEach(i=>i.onchange=()=>{st.sel=[...root.querySelectorAll('#audl input:checked')].map(x=>x.value)})}
@@ -804,10 +819,10 @@ function burst(box,e,n){if(!box||!box.isConnected)return;n=n||6;for(let k=0;k<n;
   const x=12+Math.random()*76,dx=(Math.random()*2-1)*40,sz=22+Math.random()*20,du=1800+Math.random()*1400,dl=k*140+Math.random()*120;
   el.style.cssText=`left:${x}%;font-size:${sz}px;--dx:${dx}px;animation-duration:${du}ms;animation-delay:${dl}ms`;box.appendChild(el);setTimeout(()=>el.remove(),du+dl+100)}}
 async function openViewer(uid,start){await loadPhotos();const L=phOf(uid),p=personOf(uid),mine=uid===NET.uid;
-  if(!L.length){if(mine){toast('Bạn chưa có ảnh nào. Bấm nút máy ảnh để chụp nhé');return}toast((p.name||'Người này')+' chưa chia sẻ ảnh nào với bạn');return}
+  if(!L.length){if(mine){toast('Bạn chưa có ảnh nào. Bấm nút máy ảnh để chụp nhé');return}toast(dn(p,'Người này')+' chưa chia sẻ ảnh nào với bạn');return}
   LS.set('phseen_'+uid,L[0].t);drawPeople();let i=start||0;
   const v=document.createElement('div');v.className='viewer';document.body.appendChild(v);
-  const draw=async()=>{const x=L[i];v.innerHTML=`<div class="vtop">${avHtml(p,36)}<div class="grow"><b>${esc(p.name||'')}${mine?' (bạn)':''}</b><div class="vs">${ago(x.t)}${mine?' · '+audLabel(x.see):''}</div></div><span class="vs">${i+1}/${L.length}</span><button class="ib vx" id="vx">${I.x}</button></div>
+  const draw=async()=>{const x=L[i];v.innerHTML=`<div class="vtop">${avHtml(p,36)}<div class="grow"><b>${esc(dn(p,''))}${mine?' (bạn)':''}</b><div class="vs">${ago(x.t)}${mine?' · '+audLabel(x.see):''}</div></div><span class="vs">${i+1}/${L.length}</span><button class="ib vx" id="vx">${I.x}</button></div>
       <div class="vimg${x.fr==='none'?'':' fr'}" style="${fiOf(x.fr)}">${x.fr==='none'?'':`<img class="fover" src="${frSrc(x.fr)}" alt="">`}<div class="spin">Đang tải ảnh…</div>${x.cap?`<div class="vcap">${esc(x.cap)}</div>`:''}<button class="vnav l" id="vp"></button><button class="vnav r" id="vn"></button></div>
       <div class="vdots">${L.slice(0,20).map((_,k)=>`<i class="${k===i?'on':''}"></i>`).join('')}</div>
       ${mine?`<div class="row" style="gap:8px;margin-top:12px"><button class="btn sec grow" id="vaud">${I.eye} Ai xem được</button><button class="btn red" id="vdel">Xoá</button></div>`:''}
@@ -848,16 +863,16 @@ async function loadChats(){if(!S.code)return;try{CH=await API.listChats(S.code)}
 const unread=c=>c.lb&&c.lb!==NET.uid&&(c.lt||0)>(c['r_'+NET.uid]||0);
 function drawChats(){const e=$('#chat');if(!e)return;const O=others();
   const rows=O.map(p=>{const c=CH.find(x=>x.id===pairId(p.id))||{};return{p,c}}).sort((a,b)=>(b.c.lt||0)-(a.c.lt||0));
-  e.innerHTML=`<h1>Tin nhắn</h1><div class="card" style="padding:4px 12px">${rows.length?rows.map(({p,c})=>`<div class="crow" data-u="${p.id}">${avHtml(p,44)}<div class="grow" style="min-width:0"><div class="row"><b class="grow">${esc(p.name||'Thành viên')}</b><span class="vs2">${c.lt?ago(c.lt):''}</span></div>
+  e.innerHTML=`<h1>Tin nhắn</h1><div class="card" style="padding:4px 12px">${rows.length?rows.map(({p,c})=>`<div class="crow" data-u="${p.id}">${avHtml(p,44)}<div class="grow" style="min-width:0"><div class="row"><b class="grow">${esc(dn(p))}</b><span class="vs2">${c.lt?ago(c.lt):''}</span></div>
       <div class="cprev${unread(c)?' un':''}">${c.lt?(c.lb===NET.uid?'Bạn: ':'')+esc(c.ltx||''):'<i>Bắt đầu trò chuyện</i>'}</div></div>${unread(c)?'<i class="udot"></i>':''}</div>`).join(''):'<div class="empty">Nhóm chưa có ai khác. Mời mọi người vào nhóm để nhắn tin nhé.</div>'}</div>
     <p class="mut" style="text-align:center">Tin nhắn chỉ hai người trong cuộc đọc được.</p>`;
   e.querySelectorAll('[data-u]').forEach(r=>r.onclick=()=>openConv(r.dataset.u))}
 async function openConv(uid,quote){const p=personOf(uid),pid=pairId(uid),base=`${COL}/${S.code}/chats/${pid}`;let M=[],timer=null;
-  const v=document.createElement('div');v.className='conv';v.innerHTML=`<div class="ctop"><button class="ib" id="cx">${I.x}</button>${avHtml(p,36)}<b class="grow">${esc(p.name||'')}</b></div>
+  const v=document.createElement('div');v.className='conv';v.innerHTML=`<div class="ctop"><button class="ib" id="cx">${I.x}</button>${avHtml(p,36)}<b class="grow">${esc(dn(p,''))}</b><button class="ib" id="cnk" title="Đặt biệt danh" style="font-size:16px">✏️</button></div>
     <div class="cmsgs" id="cms"><div class="vs2" style="text-align:center;padding:20px">Đang tải…</div></div>
     <div id="cq"></div><div class="cin"><input id="ci" maxlength="1000" placeholder="Nhắn tin…" enterkeyhint="send"><button class="ib" id="cs">${I.send}</button></div>`;
   document.body.appendChild(v);const q=x=>v.querySelector(x);
-  const close=()=>{clearInterval(timer);v.remove();loadChats()};q('#cx').onclick=close;
+  const close=()=>{clearInterval(timer);v.remove();loadChats()};q('#cx').onclick=close;q('#cnk').onclick=()=>editNick(uid,()=>{const b=q('.ctop b');if(b)b.textContent=dn(p,'')});
   const showQ=()=>{q('#cq').innerHTML=quote?`<div class="cquote"><span id="cqi" class="cth"></span><span class="grow">Trả lời ảnh của ${esc(nameOf(quote.phby))}</span><button id="cqx">✕</button></div>`:'';
     if(quote){q('#cqx').onclick=()=>{quote=null;showQ()};phImg(quote.ph).then(src=>{const t=q('#cqi');if(t&&src)t.style.backgroundImage=`url('${src}')`}).catch(()=>{})}};showQ();
   const draw=()=>{const box=q('#cms'),atEnd=box.scrollHeight-box.scrollTop-box.clientHeight<80;
@@ -968,6 +983,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
     <h2 style="margin-top:14px">Thành viên (${M.length})</h2>
     ${M.map((id,i)=>`<div class="row" style="padding:6px 0;border-bottom:1px solid var(--ln)">${avHtml(personOf(id),32)}
       <div class="grow">${esc(nameOf(id))}${id===NET.uid?' (bạn)':''}${i===0?' <span class="tag">Trưởng nhóm</span>':''}</div>
+      ${id!==NET.uid?`<button class="btn sec" style="min-height:34px;padding:6px 10px;font-size:13px" data-nk="${id}">✏️ Biệt danh</button>`:''}
       ${owner&&id!==NET.uid?`<button class="btn red" style="min-height:34px;padding:6px 10px;font-size:13px" data-rm="${id}">Gỡ</button>`:''}</div>`).join('')}
     ${owner?'<p class="mut">Trưởng nhóm có thể gỡ người khác, ví dụ khi ai đó đổi máy (họ vào lại bằng mã).</p>':''}</div>
   <div class="card"><h2>Chia sẻ vị trí</h2>${MODES.map(([k,n,d])=>`<button class="mopt${k===curMode()?' on':''}" data-m="${k}"><b>${n}</b><span>${d}</span></button>`).join('')}
@@ -975,7 +991,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 23${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 24${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};
@@ -989,6 +1005,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   e.querySelectorAll('[data-em]').forEach(b=>b.onclick=()=>{const x=b.dataset.em;if(takenEm().includes(x))return toast('Biểu tượng này đã có người dùng');S.em=x;LS.set('em',x);API.saveProfile({em:x}).catch(()=>{});pushId();toast('Biểu tượng của bạn: '+x);drawSet();drawMarkers();drawPlacesOnMap()});
   $('#svg').onclick=async()=>{const t=$('#gt').value.trim();if(!t)return;try{await API.patchCouple(S.code,{title:t});S.couple.title=t;toast('Đã đổi tên nhóm');drawPeople()}catch(er){toast(errMsg(er))}};
   $('#inv').onclick=shareInvite;
+  e.querySelectorAll('[data-nk]').forEach(b=>b.onclick=()=>editNick(b.dataset.nk,()=>drawSet()));
   e.querySelectorAll('[data-rm]').forEach(b=>b.onclick=async()=>{const id=b.dataset.rm;if(!confirm('Gỡ '+nameOf(id)+' khỏi nhóm?'))return;
     try{const c=await API.getCouple(S.code);await API.patchCouple(S.code,{members:(c.members||[]).filter(x=>x!==id)});toast('Đã gỡ');await refresh();drawSet()}catch(er){toast(errMsg(er))}});
   $('#sbat').onchange=ev=>{S.showBat=ev.target.checked;LS.set('showbat',S.showBat);pushId();toast(S.showBat?'Mọi người sẽ thấy % pin của bạn':'Đã ẩn % pin')};

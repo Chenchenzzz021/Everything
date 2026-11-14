@@ -268,7 +268,8 @@ let map,plLayer,fitted=false;const MK={};
 const TILES=[['https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap',referrerPolicy:'strict-origin-when-cross-origin'}],
   ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'© Esri'}]];
 function addTiles(i){i=i==null?LS.get('tile',0):i;if(i>=TILES.length)i=0;const [u,o]=TILES[i];const t=L.tileLayer(u,o).addTo(map);let bad=0,ok=0;
-  t.on('tileload',()=>{ok++});t.on('tileerror',()=>{bad++;if(bad>=4&&ok===0&&i+1<TILES.length){map.removeLayer(t);LS.set('tile',i+1);addTiles(i+1)}})}
+  let sw=false;const swap=()=>{if(sw||ok>0)return;sw=true;map.removeLayer(t);const n=(i+1)%TILES.length;LS.set('tile',n);addTiles(n)};
+  t.on('tileload',()=>{ok++});t.on('tileerror',()=>{bad++;if(bad>=4)swap()});setTimeout(swap,6000)}
 function renderMain(){
   $('#app').innerHTML=`<div class="page" id="pg-map"><div id="map"></div>
     <div class="top"><div class="share" id="shr"></div><div id="pingbox"></div><div class="ppl" id="ppl"></div></div>
@@ -453,7 +454,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 3${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 4${DEMO?' · xem thử':''}</p>`;
   $('#svn').onclick=()=>{const n=$('#nm').value.trim();if(!n)return;S.name=n;LS.set('name',n);toast('Đã đổi tên');if(S.sharing&&S.pos)sendLoc();else API.setLoc(S.code,{name:n,sharing:false,t:Date.now()}).catch(()=>{});drawShare();drawMarkers()};
   $('#svg').onclick=async()=>{const t=$('#gt').value.trim();if(!t)return;try{await API.patchCouple(S.code,{title:t});S.couple.title=t;toast('Đã đổi tên nhóm');drawPeople()}catch(er){toast(errMsg(er))}};
   $('#inv').onclick=shareInvite;

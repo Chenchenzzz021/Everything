@@ -190,7 +190,24 @@ ul.ck li{margin:4px 0}
 .ludo .lyin{position:absolute;inset:16%;background:rgba(255,255,255,.88);border-radius:26%;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;place-items:center;box-shadow:inset 0 2px 6px rgba(0,0,0,.08)}
 .ludo .lyin i{width:58%;aspect-ratio:1;border-radius:50%;background:color-mix(in srgb,var(--c) 22%,#fff);box-shadow:inset 0 2px 4px rgba(0,0,0,.12)}
 .ludo .lyn{position:absolute;left:0;right:0;bottom:2%;text-align:center;font-size:10px;color:#fff;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.35);white-space:nowrap;overflow:hidden}
-.ludo .lc{background:conic-gradient(from 45deg,#22c55e 0 25%,#eab308 0 50%,#3b82f6 0 75%,#ef4444 0);margin:1px;border-radius:6px;display:grid;place-items:center;box-shadow:inset 0 0 0 3px rgba(255,255,255,.7)}.ludo .lc span{font-size:clamp(14px,5vw,26px);filter:drop-shadow(0 2px 2px rgba(0,0,0,.3))}
+.ludo .lc{position:relative;margin:1px;border-radius:12px;display:grid;place-items:center;overflow:hidden;
+  background:radial-gradient(circle,rgba(255,255,255,.75) 0 18%,rgba(255,255,255,0) 52%),
+   linear-gradient(45deg,transparent calc(50% - 1.5px),rgba(255,255,255,.95) 0 calc(50% + 1.5px),transparent 0),
+   linear-gradient(-45deg,transparent calc(50% - 1.5px),rgba(255,255,255,.95) 0 calc(50% + 1.5px),transparent 0),
+   conic-gradient(from -45deg,#4ade80 0 12.5%,#16a34a 0 25%,#fde047 0 37.5%,#eab308 0 50%,#60a5fa 0 62.5%,#2563eb 0 75%,#f87171 0 87.5%,#dc2626 0);
+  box-shadow:inset 0 0 0 3px rgba(255,255,255,.85),0 3px 8px rgba(0,0,0,.18)}
+.ludo .lca{position:absolute;color:rgba(255,255,255,.9);font-size:clamp(7px,2vw,11px);text-shadow:0 1px 1px rgba(0,0,0,.2);animation:lca 1.6s ease-in-out infinite}
+.ludo .lca.t{top:6%;left:50%;transform:translateX(-50%)}.ludo .lca.b{bottom:6%;left:50%;transform:translateX(-50%)}.ludo .lca.l{left:7%;top:50%;transform:translateY(-50%)}.ludo .lca.r{right:7%;top:50%;transform:translateY(-50%)}
+@keyframes lca{50%{opacity:.35}}
+.ludo .lcb{position:relative;width:52%;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#fff7c2,#fbbf24 60%,#d97706);border:2.5px solid #fff;box-shadow:0 0 0 2px rgba(217,119,6,.35),0 0 14px 4px rgba(253,224,71,.8);animation:lcb 2s ease-in-out infinite}
+.ludo .lcb::before{content:'';position:absolute;inset:-38%;border-radius:50%;background:repeating-conic-gradient(rgba(255,255,255,.55) 0 8deg,transparent 8deg 30deg);-webkit-mask:radial-gradient(circle,transparent 34%,#000 36%,transparent 70%);mask:radial-gradient(circle,transparent 34%,#000 36%,transparent 70%);animation:lcr 8s linear infinite;z-index:-1}
+.ludo .lcb span{font-size:clamp(12px,4.2vw,24px);filter:drop-shadow(0 2px 1px rgba(146,64,14,.45))}
+@keyframes lcb{50%{box-shadow:0 0 0 2px rgba(217,119,6,.35),0 0 22px 8px rgba(253,224,71,.95)}}@keyframes lcr{to{transform:rotate(360deg)}}
+.ludo .lt,.ludo .lh{transition:transform .25s,box-shadow .25s,background .25s}
+.ludo .lt.lit,.ludo .lh.lit{position:relative;z-index:1;transform:translateY(-3px) scale(1.14);background:color-mix(in srgb,var(--lc) 22%,#fff);box-shadow:0 0 0 2px #fff,0 0 12px 4px var(--lc),0 4px 6px rgba(0,0,0,.15);animation:tlit .7s ease-out}
+.ludo .lh.lit{background:linear-gradient(145deg,#fff,var(--c))}
+@keyframes tlit{0%{filter:brightness(1.6)}100%{filter:brightness(1)}}
+.ludo .lp.hop{transition:left .15s ease-out,top .15s ease-out}.ludo .lp.jp span{animation:jp .17s ease-out}@keyframes jp{50%{transform:translateY(-35%) scale(1.15)}}
 .ludo .lp{width:6.4%;border:2px solid #fff;background:radial-gradient(circle at 50% 42%,#fff 0 47%,var(--c) 50% 100%);box-shadow:0 3px 0 color-mix(in srgb,var(--c) 60%,#000),0 4px 6px rgba(0,0,0,.3);font-size:clamp(9px,2.9vw,17px)}
 .ludo .lp span{display:block;transform:translateY(-1px)}.ludo .lp.mv{transition:left .45s cubic-bezier(.3,1.4,.6,1),top .45s cubic-bezier(.3,1.4,.6,1)}
 .ludo .lp.home{width:7.4%}.ludo .lp.fin{width:4.6%;font-size:clamp(7px,2vw,12px)}
@@ -1075,7 +1092,7 @@ const DICE=['','⚀','⚁','⚂','⚃','⚄','⚅'];
 async function openGame(id){const old=$('.gm');if(old)old.remove();const v=document.createElement('div');v.className='gm';document.body.appendChild(v);let g=null,busy=false,timer=null,rolling=false,sv=0;
   const close=()=>{clearInterval(timer);v.remove();loadGames()};
   const load=async()=>{if(busy)return;const ver=sv;try{const n=await gGet(id);if(busy||ver!==sv)return;if(!n){v.innerHTML='<div class="empty">Ván này đã bị xoá</div>';return}if(g&&(n.upd||0)<(g.upd||0))return;if(!g||n.upd!==g.upd||n.st!==g.st){const was=g;g=n;g.id=id;draw(was);botStep()}}catch(e){}};
-  const save=async o=>{busy=true;sv++;o.upd=Date.now();Object.assign(g,o);draw();try{if(isLocal(id))lgPut(id,o);else await API.put(gPath(id),o,true)}catch(e){toast(errMsg(e))}busy=false;if(!isLocal(id))loadGames();botStep()};
+  const save=async o=>{busy=true;sv++;o.upd=Date.now();const was=g?JSON.parse(JSON.stringify(g)):null;Object.assign(g,o);draw(was);try{if(isLocal(id))lgPut(id,o);else await API.put(gPath(id),o,true)}catch(e){toast(errMsg(e))}busy=false;if(!isLocal(id))loadGames();botStep()};
   const chips=()=>(g.pl||[]).map((u,i)=>{const p=personOf(u),col=g.type==='ludo'?LCOL[slotsOf(g.pl.length)[i]]:(i===0?'#e8577a':'#3b82f6');
       return`<span class="gch${g.st==='play'&&g.turn===i?' on':''}" style="--c:${col}">${avHtml(p,26)}<span>${esc(nickOf(u)||p.name||'?')}${u===NET.uid?' (bạn)':''}</span>${g.type==='caro'?`<b style="color:${col}">${i===0?'✕':'◯'}</b>`:''}</span>`}).join('')
       +(g.st==='wait'?(g.inv||[]).filter(u=>!g.pl.includes(u)).map(u=>`<span class="gch wait">${avHtml(personOf(u),26)}<span>${esc(nameOf(u))} · chờ…</span></span>`).join(''):'');
@@ -1100,20 +1117,24 @@ async function openGame(id){const old=$('.gm');if(old)old.remove();const v=docum
       if(yard>=0||(r>=6&&r<=8&&c>=6&&c<=8))continue;
       const pi=LPATH.findIndex(([pr,pc])=>pr===r&&pc===c),hi=LHOME.findIndex(H=>H.some(([hr,hc])=>hr===r&&hc===c));
       if(hi>=0){cls='lh';st=`--c:${LCOL[hi]}`}else if(pi>=0){cls='lt';const sIdx=SAFE.indexOf(pi);if(sIdx>=0){cls='lt ls';st=`--c:${LCOL[sIdx]}`}}else continue;
-      cells+=`<div class="${cls}" style="grid-row:${r+1};grid-column:${c+1};${st}">${cls==='lt ls'?'<small>★</small>':hi>=0&&(LHOME[hi][4][0]===r&&LHOME[hi][4][1]===c)?'<small>▲</small>':''}</div>`}
+      cells+=`<div class="${cls}" data-rc="${r},${c}" style="grid-row:${r+1};grid-column:${c+1};${st}">${cls==='lt ls'?'<small>★</small>':hi>=0&&(LHOME[hi][4][0]===r&&LHOME[hi][4][1]===c)?'<small>▲</small>':''}</div>`}
     const YN=['do','xanhla','vang','xanhduong'];
     for(let y=0;y<4;y++){const [yr,yc]=LYARD[y];const si=SL.indexOf(y),act=si>=0&&g.st==='play'&&g.turn===si;cells+=`<div class="ly${used.has(y)?'':' off'}${act?' act':''}" style="grid-row:${yr+1}/span 6;grid-column:${yc+1}/span 6;--c:${LCOL[y]};--ci:url(assets/chuong-${YN[y]}.png)"><div class="lyin"><i></i><i></i><i></i><i></i></div>${si>=0?`<span class="lyn">${esc(nickOf(g.pl[si])||personOf(g.pl[si]).name||'')}</span>`:''}</div>`}
-    cells+=`<div class="lc" style="grid-row:7/span 3;grid-column:7/span 3"><span>🏆</span></div>`;
+    cells+=`<div class="lc" style="grid-row:7/span 3;grid-column:7/span 3"><b class="lca t">▼</b><b class="lca r">◀</b><b class="lca b">▲</b><b class="lca l">▶</b><div class="lcb"><span>🏆</span></div></div>`;
     const moves=myTurn(g)&&g.rolled?ludoMoves(g,g.d):[],mv=new Set(moves.map(m=>m.k));
     const at={};let pcs='';const WP=was&&was.type==='ludo'&&(was.pos||[]).length===P.length?was.pos:null;const anim=[];
     for(let s=0;s<n;s++){const sl=SL[s],u=g.pl[s],em=emOf(u)||'🙂';for(let k=0;k<4;k++){const p=P[s*4+k],[r,c]=lxy(sl,p,k);
         const key=r+','+c;const off=at[key]=(at[key]||0)+1;const dx=p===-1||p===56?0:(off-1)*.24,dy=p===-1||p===56?0:-(off-1)*.24;
         const can=s===g.turn&&u===NET.uid&&mv.has(k);let L=(c+.5+dx)/15*100,T=(r+.5+dy)/15*100,L0=L,T0=T;
-        if(WP&&WP[s*4+k]!==p){const [r0,c0]=lxy(sl,WP[s*4+k],k);L0=(c0+.5)/15*100;T0=(r0+.5)/15*100;anim.push([s*4+k,L,T])}
+        if(WP&&WP[s*4+k]!==p){const a=WP[s*4+k],[r0,c0]=lxy(sl,a,k);L0=(c0+.5)/15*100;T0=(r0+.5)/15*100;const st=[];if(a>=0&&p>a)for(let q=a+1;q<p;q++)st.push(lxy(sl,q,k));anim.push([s*4+k,L,T,st,LCOL[sl]])}
         pcs+=`<button class="lp${can?' can':''}${p===56?' fin':''}${p===-1?' home':''}" data-k="${k}" data-ix="${s*4+k}" ${can?'':'disabled'} style="left:${L0}%;top:${T0}%;--c:${LCOL[sl]}"><span>${em}</span></button>`}}
     v.querySelector('#gb').innerHTML=`<div class="ludo" id="lb">${cells}${pcs}</div>`;
     const lb=v.querySelector('#lb');
-    if(anim.length)requestAnimationFrame(()=>requestAnimationFrame(()=>anim.forEach(([ix,L,T])=>{const e=lb.querySelector(`[data-ix="${ix}"]`);if(e){e.classList.add('mv');e.style.left=L+'%';e.style.top=T+'%'}})));
+    if(anim.length)requestAnimationFrame(()=>requestAnimationFrame(()=>anim.forEach(([ix,L,T,st,col])=>{const e=lb.querySelector(`[data-ix="${ix}"]`);if(!e)return;
+      const lit=(r,c)=>{const t=lb.querySelector(`[data-rc="${r},${c}"]`);if(!t)return;t.style.setProperty('--lc',col);t.classList.remove('lit');void t.offsetWidth;t.classList.add('lit');setTimeout(()=>t.classList.remove('lit'),700)};
+      if(!st.length){e.classList.add('mv');e.style.left=L+'%';e.style.top=T+'%';return}
+      e.classList.add('hop');let i=0;const step=()=>{if(i<st.length){const [r,c]=st[i++];e.style.left=(c+.5)/15*100+'%';e.style.top=(r+.5)/15*100+'%';lit(r,c);e.classList.remove('jp');void e.offsetWidth;e.classList.add('jp');setTimeout(step,170)}
+        else{e.style.left=L+'%';e.style.top=T+'%';const [r,c]=[Math.round(T/100*15-.5),Math.round(L/100*15-.5)];lit(r,c);e.classList.remove('jp');void e.offsetWidth;e.classList.add('jp');setTimeout(()=>e.classList.remove('hop','jp'),300)}};step()})));
     // hiệu ứng: đá quân, xuất chuồng, về đích
     if(WP)for(let s=0;s<n;s++){const sl=SL[s];for(let k=0;k<4;k++){const a=WP[s*4+k],b=P[s*4+k];if(a===b)continue;
       if(a>=0&&a<=50&&b===-1){const [r,c]=lxy(sl,a,k);lfx(lb,r,c,'💥','kick');banner('💥 ĐÁ QUÂN!','#ef4444');lb.classList.remove('shake');void lb.offsetWidth;lb.classList.add('shake')}
@@ -1273,7 +1294,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 33${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 34${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

@@ -51,6 +51,19 @@ service cloud.firestore {
         }
       }
       // tin nhắn riêng: mã cuộc trò chuyện = uid1_uid2, chỉ 2 người đó đọc/ghi
+      // Trò chơi: ca rô, cá ngựa
+      match /games/{gid} {
+        allow read: if isMember(c);
+        allow create: if isMember(c) && request.resource.data.by == request.auth.uid && request.resource.data.pl == [request.auth.uid];
+        allow update: if isMember(c) && (request.auth.uid in resource.data.pl || request.auth.uid in resource.data.inv);
+        allow delete: if isMember(c) && resource.data.by == request.auth.uid;
+      }
+      // Vị trí riêng cho từng người xem (khi ẩn với một số người)
+      match /lv/{lid} {
+        allow read: if isMember(c) && (request.auth.uid == resource.data.v || request.auth.uid == resource.data.o);
+        allow create, update: if isMember(c) && request.resource.data.o == request.auth.uid && lid == request.auth.uid + '_' + request.resource.data.v;
+        allow delete: if isMember(c) && lid.split('_')[0] == request.auth.uid;
+      }
       match /chats/{pid} {
         allow get: if isMember(c) && request.auth.uid in pid.split('_');
         allow list: if isMember(c) && request.auth.uid in resource.data.m;

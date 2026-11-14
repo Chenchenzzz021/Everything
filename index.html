@@ -127,6 +127,18 @@ ul.ck li{margin:4px 0}
 .mopt{display:block;width:100%;text-align:left;padding:12px 14px;border-radius:14px;border:1px solid var(--ln);background:#fff;margin-bottom:8px}
 .mopt b{display:block;font-size:15px}.mopt span{font-size:13px;color:var(--mut)}
 .mopt.on{border:2px solid var(--pk);background:var(--pk2)}
+.ic{width:20px;height:20px;display:block;flex:none}
+nav button b .ic{width:24px;height:24px}
+nav button{gap:3px}
+nav button b{display:grid;place-items:center;width:52px;height:30px;border-radius:999px;transition:background .2s}
+nav button.on b{background:var(--pk2)}
+nav button.on b .ic{stroke-width:2.3}
+.fab{color:var(--pk)}
+.fab .ic{width:22px;height:22px}
+.ib .ic{width:19px;height:19px}.ib.sm .ic{width:16px;height:16px}
+.btn .ic{width:18px;height:18px}
+.tg{display:inline-flex;align-items:center;gap:4px}.tg .ic{width:15px;height:15px}
+.ph .ic{width:18px;height:18px;color:var(--mut)}
 </style>
 </head>
 <body>
@@ -229,6 +241,24 @@ const cleanCode=c=>String(c||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
 const inviteLink=()=>location.origin+location.pathname+'?moi='+S.code+(DEMO?'&demo=1':'');
 const CATS={eat:{n:'Ăn uống',e:'🍜'},drink:{n:'Cà phê',e:'☕'},fun:{n:'Vui chơi',e:'🎡'},other:{n:'Khác',e:'📍'}};
 
+// ===== Bộ icon nét vẽ =====
+const IC=(d,f)=>`<svg class="ic" viewBox="0 0 24 24" fill="${f||'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const I={
+  map:IC('<path d="M9 4 3 6.5v13.5l6-2.5 6 2.5 6-2.5V4l-6 2.5z"/><path d="M9 4v13.5M15 6.5V20"/>'),
+  star:IC('<path d="m12 3.2 2.7 5.5 6 .9-4.35 4.25 1.03 6L12 17.02l-5.38 2.83 1.03-6L3.3 9.6l6-.9z"/>'),
+  set:IC('<path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="17" r="2"/>'),
+  search:IC('<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/>'),
+  locate:IC('<circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.3" fill="currentColor"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>'),
+  users:IC('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M15.5 4.7a3.5 3.5 0 0 1 0 6.6M17.5 14a6.5 6.5 0 0 1 4 6"/>'),
+  nav:IC('<path d="M3.5 10.5 20.5 3.5l-7 17-2.2-7.8z"/>'),
+  bell:IC('<path d="M6 9a6 6 0 0 1 12 0c0 6.5 2.5 8.5 2.5 8.5h-17S6 15.5 6 9"/><path d="M10.2 20.5a2 2 0 0 0 3.6 0"/>'),
+  send:IC('<path d="M21.5 2.5 14.8 21.2l-3.7-8.3-8.6-3.6z"/><path d="M21.5 2.5 11.1 12.9"/>'),
+  x:IC('<path d="M18 6 6 18M6 6l12 12"/>'),
+  plus:IC('<path d="M12 5v14M5 12h14"/>'),
+  up:IC('<path d="m6 15 6-6 6 6"/>'),down:IC('<path d="m6 9 6 6 6-6"/>'),
+  cam:IC('<path d="M3 8.5A2 2 0 0 1 5 6.5h2.2l1.8-2.3h6l1.8 2.3H19a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="3.5"/>'),
+  eye:IC('<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/>')
+};
 // ===== Khởi động =====
 function boot(){
   const q=new URLSearchParams(location.search),inv=cleanCode(q.get('moi'));
@@ -280,7 +310,7 @@ function renderSetup(step){
           if(pr.code&&!S.invite){const c=await API.getCouple(pr.code).catch(()=>null);if(c&&(c.members||[]).includes(NET.uid)){S.code=pr.code;LS.set('code',S.code);toast('Chào '+S.name+' 💞');return renderMain()}}}
         renderSetup(S.invite?'join':'choose')}catch(er){e.target.disabled=false;toast(errMsg(er),4500)}};return}
   if(step==='choose'){A.innerHTML=`<div class="page"><div class="scroll">
-    <div class="hero">💌</div><h1 style="text-align:center">Chào ${esc(S.name)}</h1>
+    <div class="hero">${I.send}</div><h1 style="text-align:center">Chào ${esc(S.name)}</h1>
     <div class="card"><h2>Tạo nhóm mới</h2><p class="mut">Bạn nhận được một mã và đường link để gửi cho mọi người (tối đa ${MAXM} người).</p>
       <input class="t" id="gt" maxlength="30" placeholder="Tên nhóm, ví dụ: Hai đứa mình, Gia đình"><div style="height:10px"></div><button class="btn w" id="mk">Tạo nhóm</button></div>
     <div class="card"><h2>Đã có mã nhóm</h2><input class="t" id="cd" placeholder="Ví dụ: ABCDE-FGH23" autocapitalize="characters"><div style="height:10px"></div><button class="btn sec w" id="jn">Vào nhóm</button></div>
@@ -328,13 +358,13 @@ function addTiles(i){i=i==null?LS.get('tile',0):i;if(i>=TILES.length)i=0;const [
 function renderMain(){
   $('#app').innerHTML=`<div class="page" id="pg-map"><div id="map"></div>
     <div class="top"><div class="share" id="shr"></div><div id="pingbox"></div><div class="ppl" id="ppl"></div></div>
-    <button class="fab" id="fsr" style="bottom:132px" title="Tìm địa điểm">🔍</button>
-    <button class="fab" id="fme" style="bottom:72px" title="Về vị trí của tôi">🎯</button>
-    <button class="fab" id="fall" style="bottom:12px" title="Xem cả nhóm">👥</button>
+    <button class="fab" id="fsr" style="bottom:132px" title="Tìm địa điểm">${I.search}</button>
+    <button class="fab" id="fme" style="bottom:72px" title="Về vị trí của tôi">${I.locate}</button>
+    <button class="fab" id="fall" style="bottom:12px" title="Xem cả nhóm">${I.users}</button>
     <div class="pick hide" id="pick"><b>Chạm vào bản đồ để chọn chỗ</b><div class="mut">hoặc</div><button class="btn gh" id="pickx">Huỷ</button></div></div>
   <div class="page hide" id="pg-pl"><div class="scroll" id="pl"></div></div>
   <div class="page hide" id="pg-set"><div class="scroll" id="set"></div></div>
-  <nav><button data-t="map" class="on"><b>🗺️</b>Bản đồ</button><button data-t="pl"><b>⭐</b>Địa điểm</button><button data-t="set"><b>⚙️</b>Cài đặt</button></nav>`;
+  <nav><button data-t="map" class="on"><b>${I.map}</b>Bản đồ</button><button data-t="pl"><b>${I.star}</b>Địa điểm</button><button data-t="set"><b>${I.set}</b>Cài đặt</button></nav>`;
   document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>tab(b.dataset.t));
   map=L.map('map',{zoomControl:false,attributionControl:true}).setView([16.05,108.2],5);
   addTiles();
@@ -353,13 +383,13 @@ function tab(t){S.tab=t;document.querySelectorAll('nav button').forEach(b=>b.cla
   if(t==='map')setTimeout(()=>map.invalidateSize(),50);if(t==='pl'){drawPlaces();loadPlaces()}if(t==='set')drawSet()}
 
 function drawShare(){const e=$('#shr');if(!e)return;e.className='share'+(S.sharing?'':' off');
-  e.innerHTML=S.sharing?`<span class="dot"${S.approx?' style="background:#f59e0b"':''}></span><span>${S.approx?'Chia sẻ vị trí gần đúng (~1 km)':'Đang chia sẻ vị trí chính xác'}${S.err?` · <span style="color:#b91c1c">${esc(S.err)}</span>`:''}</span><button class="tg" id="tg">Ẩn / đổi</button>`
+  e.innerHTML=S.sharing?`<span class="dot"${S.approx?' style="background:#f59e0b"':''}></span><span>${S.approx?'Chia sẻ vị trí gần đúng (~1 km)':'Đang chia sẻ vị trí chính xác'}${S.err?` · <span style="color:#b91c1c">${esc(S.err)}</span>`:''}</span><button class="tg" id="tg">${I.eye} Đổi</button>`
     :`<span class="dot"></span><span>Đang ẩn vị trí</span><button class="tg" id="tg" style="background:var(--pk);color:#fff">Bật lại</button>`;
   $('#tg').onclick=modeSheet}
 const curMode=()=>!S.sharing?'off':S.approx?'approx':'exact';
 const MODES=[['exact','📍 Chính xác','Mọi người thấy đúng chỗ bạn đang đứng.'],['approx','🟠 Gần đúng','Chỉ thấy khu vực bạn đang ở, lệch khoảng 1 km.'],['off','🙈 Ẩn vị trí','Không ai thấy bạn ở đâu. Mọi người chỉ thấy chữ “Đang ẩn”.']];
 function modeSheet(){const sh=document.createElement('div');sh.className='sheet';const m=curMode();
-  sh.innerHTML=`<div><div class="row"><h2 class="grow" style="margin:0">Chia sẻ vị trí của bạn</h2><button class="ib" id="x">✕</button></div><div style="height:10px"></div>
+  sh.innerHTML=`<div><div class="row"><h2 class="grow" style="margin:0">Chia sẻ vị trí của bạn</h2><button class="ib" id="x">${I.x}</button></div><div style="height:10px"></div>
     ${MODES.map(([k,n,d])=>`<button class="mopt${k===m?' on':''}" data-m="${k}"><b>${n}</b><span>${d}</span></button>`).join('')}</div>`;
   document.body.appendChild(sh);sh.querySelector('#x').onclick=()=>sh.remove();sh.onclick=ev=>{if(ev.target===sh)sh.remove()};
   sh.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{sh.remove();setMode(b.dataset.m)})}
@@ -382,13 +412,13 @@ function personRow(p){const me=S.pos||(S.me&&S.me.lat!=null?S.me:null);let st;
   else{const age=(Date.now()-p.t)/60e3,cls=age<10?'fresh':age>60?'stale':'',d=dist(me,p);st=`<span class="${cls}">● ${ago(p.t)}</span>${p.approx?' · <b>khu vực gần đúng</b>':''}${d!=null?' · cách '+(p.approx?'~':'')+fmtD(d):''}${p.bat!=null?' · 🔋'+p.bat+'%':''}`}
   const canNav=p.sharing!==false&&p.lat!=null;
   return`<div class="pr" data-id="${p.id}">${avHtml(p,36)}<div class="grow"><div class="nm">${esc(p.name||'Thành viên mới')}</div><div class="st">${st}</div></div>
-    <div class="acts">${canNav?`<button class="ib" data-go="${p.id}" title="Chỉ đường">🧭</button>`:''}<button class="ib" data-pg="${p.id}" title="Nhờ cập nhật">🔔</button></div></div>`}
+    <div class="acts">${canNav?`<button class="ib" data-go="${p.id}" title="Chỉ đường">${I.nav}</button>`:''}<button class="ib" data-pg="${p.id}" title="Nhờ cập nhật">${I.bell}</button></div></div>`}
 function drawPeople(){const e=$('#ppl');if(!e)return;
   if(!S.couple){e.innerHTML=`<div class="ph"><b>Đang tải…</b></div>`;return}
   const O=others();O.sort((a,b)=>(b.t||0)-(a.t||0));
-  if(!O.length){e.innerHTML=`<div class="pr"><div class="av" style="background:var(--pk)">?</div><div class="grow"><div class="nm">${esc(gName())}</div><div class="st">Chưa có ai. Gửi mã <b>${fmtCode(S.code)}</b> để mời</div></div><div class="acts"><button class="ib" id="inv">💌</button></div></div>`;$('#inv').onclick=shareInvite;return}
+  if(!O.length){e.innerHTML=`<div class="pr"><div class="av" style="background:var(--pk)">?</div><div class="grow"><div class="nm">${esc(gName())}</div><div class="st">Chưa có ai. Gửi mã <b>${fmtCode(S.code)}</b> để mời</div></div><div class="acts"><button class="ib" id="inv">${I.send}</button></div></div>`;$('#inv').onclick=shareInvite;return}
   const open=S.pplOpen!==false;
-  e.innerHTML=`<div class="ph" id="pht"><b class="grow">${esc(gName())} · ${O.length+1} người</b>${O.length>1?'<button class="ib sm" id="pgall" title="Nhờ cả nhóm cập nhật">🔔</button>':''}<span class="mut">${open?'▲':'▼'}</span></div>
+  e.innerHTML=`<div class="ph" id="pht"><b class="grow">${esc(gName())} · ${O.length+1} người</b>${O.length>1?'<button class="ib sm" id="pgall" title="Nhờ cả nhóm cập nhật">'+I.bell+'</button>':''}<span class="mut">${open?I.up:I.down}</span></div>
     ${open?`<div class="pls">${O.map(personRow).join('')}</div>`:''}`;
   $('#pht').onclick=ev=>{if(ev.target.closest('#pgall'))return;S.pplOpen=!open;drawPeople()};
   if($('#pgall'))$('#pgall').onclick=()=>askUpdate('all');
@@ -486,7 +516,7 @@ function drawPlaces(){const e=$('#pl');if(!e)return;const f=S.filter,vf=S.vf;let
   if(vf==='been')L2=L2.filter(p=>visitors(p).length);else if(vf==='not')L2=L2.filter(p=>!visitors(p).length);else if(vf==='me')L2=L2.filter(p=>!iVisited(p));
   if(f!=='all')L2=L2.filter(p=>p.cat===f);
   if(S.sort==='new')L2.sort((a,b)=>(b.t||0)-(a.t||0));else if(S.sort==='star')L2.sort((a,b)=>avgR(b)-avgR(a));else{const me=S.pos;L2.sort((a,b)=>(dist(me,a)??1e12)-(dist(me,b)??1e12))}
-  e.innerHTML=`<div class="row" style="margin-bottom:10px"><h1 class="grow" style="margin:0">Địa điểm</h1><button class="btn" id="add">＋ Thêm</button></div>
+  e.innerHTML=`<div class="row" style="margin-bottom:10px"><h1 class="grow" style="margin:0">Địa điểm</h1><button class="btn" id="add">${I.plus} Thêm</button></div>
     <div class="seg" id="vf" style="margin-bottom:10px">${[['all','Tất cả'],['been','🚩 Đã đi ('+nb+')'],['not','⭐ Chưa đi ('+nn+')'],['me','🙋 Mình chưa đi']].map(([k,n])=>`<button data-v="${k}" class="${vf===k?'on':''}">${n}</button>`).join('')}</div>
     <div class="chips">${[['all','Mọi loại'],['eat','🍜 Ăn uống'],['drink','☕ Cà phê'],['fun','🎡 Vui chơi'],['other','📍 Khác']].map(([k,n])=>`<button class="chip${f===k?' on':''}" data-f="${k}">${n}</button>`).join('')}</div>
     <div class="row" style="margin-bottom:8px"><span class="mut grow">${L2.length} nơi</span><select class="t" id="srt" style="width:auto;padding:6px 10px;font-size:14px"><option value="new">Mới thêm</option><option value="star">Sao cao nhất</option><option value="near">Gần đây</option></select></div>
@@ -495,7 +525,7 @@ function drawPlaces(){const e=$('#pl');if(!e)return;const f=S.filter,vf=S.vf;let
       <div class="vis">${visitors(p).length?'🚩 Đã đến: '+visitors(p).map(id=>`<span title="${esc(nameOf(id))}">${emOf(id)||'🙂'}</span>`).join(' '):'<span class="tag w">⭐ Chưa ai đến</span>'}</div>
       <div class="rt">${R.length?`<span>${stars(av)} <b>${av.toFixed(1)}</b> · ${R.length} người chấm</span>`:'<i>Chưa ai chấm</i>'}<span>Bạn: ${myR(p)?myR(p)+'★':'<i>chưa chấm</i>'}</span></div>
       ${p.note?`<div class="nt">${esc(p.note)}</div>`:''}<div class="mut" style="font-size:12px;margin-top:2px">${c.n}${d!=null?' · '+fmtD(d):''}${p.addr?' · '+esc(p.addr):''}${p.by?' · '+esc(nameOf(p.by))+' thêm':''}</div></div></div>`}).join('')
-      :`<div class="empty">Chưa có nơi nào. Bấm <b>＋ Thêm</b> để lưu quán ăn, quán cà phê, chỗ vui chơi đầu tiên 💕</div>`}</div>`;
+      :`<div class="empty">Chưa có nơi nào. Bấm <b>${I.plus} Thêm</b> để lưu quán ăn, quán cà phê, chỗ vui chơi đầu tiên 💕</div>`}</div>`;
   $('#srt').value=S.sort;$('#srt').onchange=ev=>{S.sort=ev.target.value;drawPlaces()};
   e.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{S.filter=b.dataset.f;drawPlaces()});
   e.querySelectorAll('#vf button').forEach(b=>b.onclick=()=>{S.vf=b.dataset.v;drawPlaces();drawPlacesOnMap()});
@@ -504,7 +534,7 @@ function drawPlaces(){const e=$('#pl');if(!e)return;const f=S.filter,vf=S.vf;let
 function openPlace(p){const isNew=!p||!p.id;const d=Object.assign({cat:'eat',name:'',note:'',lat:null,lng:null,addr:''},p||{});if(d.been==null)d.been=p&&p.id?iVisited(p):false;d.my=p&&p.id&&d.my==null?myR(p):(d.my||0);
   S.pickDraft=d;const OR=isNew?[]:allR(p).filter(r=>r.id!==NET.uid);
   const sh=document.createElement('div');sh.className='sheet';sh.innerHTML=`<div>
-    <div class="row"><h2 class="grow" style="margin:0">${isNew?'Thêm địa điểm':'Sửa địa điểm'}</h2><button class="ib" id="x">✕</button></div>
+    <div class="row"><h2 class="grow" style="margin:0">${isNew?'Thêm địa điểm':'Sửa địa điểm'}</h2><button class="ib" id="x">${I.x}</button></div>
     <label class="f">Tên quán / địa điểm</label><input class="t" id="pn" maxlength="60" value="${esc(d.name)}" placeholder="Ví dụ: Bún chả Hàng Mành">
     <label class="f">Loại</label><div class="seg" id="pc">${Object.keys(CATS).map(k=>`<button data-v="${k}" class="${d.cat===k?'on':''}">${CATS[k].e} ${CATS[k].n}</button>`).join('')}</div>
     <label class="f">Bạn đã đến đây chưa?</label><div class="seg" id="ps"><button data-v="1" class="${d.been?'on':''}">🚩 ${S.em||''} Mình đã đến</button><button data-v="0" class="${d.been?'':'on'}">⭐ Chưa đến</button></div>
@@ -550,7 +580,7 @@ let tmpMk=null;
 const POP={minWidth:220,autoPanPaddingTopLeft:[10,250],autoPanPaddingBottomRight:[70,20]};
 function collapsePpl(){if(S.pplOpen!==false){S.pplOpen=false;drawPeople()}}
 function openSearch(){const sh=document.createElement('div');sh.className='sheet';sh.innerHTML=`<div>
-  <div class="row"><input class="t grow" id="sq" placeholder="Tìm quán, địa chỉ… (vd: phở, Hồ Gươm)" enterkeyhint="search"><button class="btn" id="sgo">Tìm</button><button class="ib" id="sx">✕</button></div>
+  <div class="row"><input class="t grow" id="sq" placeholder="Tìm quán, địa chỉ… (vd: phở, Hồ Gươm)" enterkeyhint="search"><button class="btn" id="sgo">Tìm</button><button class="ib" id="sx">${I.x}</button></div>
   <div id="sres" class="sres" style="margin-top:8px"></div></div>`;
   document.body.appendChild(sh);const q=x=>sh.querySelector(x),close=()=>sh.remove();q('#sx').onclick=close;sh.onclick=ev=>{if(ev.target===sh)close()};
   const run=async()=>{const t=q('#sq').value.trim();if(!t)return;const ft=fold(t);
@@ -586,7 +616,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
       <label class="f">Tên đăng nhập</label><input class="t" id="us" maxlength="30" autocapitalize="none" autocomplete="username"><label class="f">Mật khẩu (ít nhất 6 ký tự)</label><input class="t" id="pw" type="password" autocomplete="new-password">
       <div style="height:10px"></div><button class="btn w" id="mkacc">Tạo tài khoản</button>`}</div>
   <div class="card"><h2>Tên, ảnh và biểu tượng</h2>
-    <div class="row" style="gap:12px">${avHtml({id:NET.uid,name:S.name,em:S.em,av:S.av},64)}<div class="grow"><button class="btn sec w" id="upav">📷 ${S.av?'Đổi ảnh':'Tải ảnh lên'}</button>${S.av?'<button class="btn gh w" id="rmav" style="margin-top:6px;min-height:36px">Bỏ ảnh</button>':''}</div></div>
+    <div class="row" style="gap:12px">${avHtml({id:NET.uid,name:S.name,em:S.em,av:S.av},64)}<div class="grow"><button class="btn sec w" id="upav">${I.cam} ${S.av?'Đổi ảnh':'Tải ảnh lên'}</button>${S.av?'<button class="btn gh w" id="rmav" style="margin-top:6px;min-height:36px">Bỏ ảnh</button>':''}</div></div>
     <input type="file" id="avf" accept="image/*" class="hide">
     <label class="f">Tên hiển thị</label><div class="row"><input class="t grow" id="nm" maxlength="20" value="${esc(S.name)}"><button class="btn" id="svn">Lưu</button></div>
     <label class="f">Biểu tượng riêng của bạn (cắm cờ ở quán bạn đã đến). Biểu tượng mờ là đã có người dùng.</label>
@@ -605,7 +635,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 9${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 10${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

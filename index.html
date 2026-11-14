@@ -15,7 +15,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Itim&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.min.js"></script>
 <style>
 :root{--pk:#e8577a;--pk2:#fde4ea;--bl:#3b82f6;--bl2:#dbeafe;--ink:#1f2330;--mut:#6b7280;--bg:#fff7f9;--card:#fff;--ln:#f1d5dc;--ok:#16a34a;--warn:#d97706;--sh:0 6px 24px rgba(232,87,122,.15)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -118,6 +120,7 @@ ul.ck li{margin:4px 0}
 .av{position:relative;background-repeat:no-repeat}
 .av .eb{position:absolute;right:-4px;bottom:-4px;font-style:normal;font-size:14px;background:#fff;border-radius:50%;width:20px;height:20px;display:grid;place-items:center;box-shadow:0 1px 3px rgba(0,0,0,.25)}
 .flag{position:relative;width:80px;height:50px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.25))}
+.flag.flip{transform:scaleX(-1);transform-origin:6px 50%}.flag.flip .fe{display:inline-flex;align-items:center;transform:scaleX(-1)}.flag .fe{display:inline-flex;align-items:center;gap:1px}
 .flag .fb{position:absolute;left:0;bottom:0;width:12px;height:5px;border-radius:50%;background:rgba(0,0,0,.25);filter:blur(1px)}
 .flag .fp{position:absolute;left:4px;top:3px;width:3px;height:45px;border-radius:2px;background:linear-gradient(90deg,#8b5e3c,#c89466 50%,#7a4f30)}
 .flag .fk{position:absolute;left:1.5px;top:0;width:8px;height:8px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff6c4,#f5b301 60%,#c98a00)}
@@ -150,6 +153,7 @@ ul.ck li{margin:4px 0}
 .sload{display:flex;gap:6px;justify-content:center;padding:16px}.sload i{width:8px;height:8px;border-radius:50%;background:var(--pk);opacity:.3;animation:sdot 1s infinite}.sload i:nth-child(2){animation-delay:.15s}.sload i:nth-child(3){animation-delay:.3s}
 @keyframes sdot{50%{opacity:1;transform:translateY(-3px)}}
 .page.swl{animation:swl .22s ease-out}.page.swr{animation:swr .22s ease-out}@keyframes swl{from{transform:translateX(40px);opacity:.4}to{transform:none;opacity:1}}@keyframes swr{from{transform:translateX(-40px);opacity:.4}to{transform:none;opacity:1}}
+.clu{border-radius:50%;background:radial-gradient(circle at 35% 30%,#ff9cbb,#e8577a 70%);border:3px solid #fff;box-shadow:0 3px 10px rgba(232,87,122,.45),0 0 0 4px rgba(232,87,122,.18);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;line-height:1}.clu b{font-size:16px}.clu span{font-size:11px;margin-top:1px;white-space:nowrap}
 .qa2{display:flex;gap:6px}.qa2 button{flex:1;text-align:center!important;padding:8px 4px!important;background:#eef2ff!important;color:#4f46e5!important}
 .qa{display:flex;flex-direction:column;gap:6px;margin-top:8px}
 .qa button{padding:8px 10px;border-radius:10px;background:var(--pk2);color:var(--pk);font-weight:600;font-size:13px;text-align:left}
@@ -507,7 +511,12 @@ function renderMain(){
   initSwipe();
   map=L.map('map',{zoomControl:false,attributionControl:true}).setView([16.05,108.2],5);
   addTiles();
-  plLayer=L.layerGroup().addTo(map);
+  plLayer=(L.markerClusterGroup?L.markerClusterGroup({maxClusterRadius:z=>z>=17?26:z>=15?40:55,spiderfyOnMaxZoom:true,showCoverageOnHover:false,zoomToBoundsOnClick:true,spiderfyDistanceMultiplier:4.5,
+    spiderLegPolylineOptions:{weight:2,color:'#e8577a',opacity:.7},
+    iconCreateFunction:cl=>{const ch=cl.getAllChildMarkers(),n=ch.length,ps=ch.map(m=>S.places.find(x=>x.id===m._pid)).filter(Boolean);
+      const E=[...new Set(ps.flatMap(p=>isPers(p)?[CATS[p.cat].e]:visitors(p).length?emList(visitors(p)):['⭐']))].slice(0,3).join('');
+      const sz=n<10?46:54;return L.divIcon({className:'',html:`<div class="clu" style="width:${sz}px;height:${sz}px"><b>${n}</b><span>${E}</span></div>`,iconSize:[sz,sz],iconAnchor:[sz/2,sz/2]})}}):L.layerGroup()).addTo(map);
+  if(plLayer.on)plLayer.on('spiderfied',e=>{const c=map.latLngToLayerPoint(e.cluster.getLatLng());e.markers.forEach(m=>{const el=m.getElement&&m.getElement(),f=el&&el.querySelector('.flag');if(f)f.classList.toggle('flip',map.latLngToLayerPoint(m.getLatLng()).x<c.x-2)})}).on('unspiderfied',e=>{e.markers.forEach(m=>{const el=m.getElement&&m.getElement(),f=el&&el.querySelector('.flag');if(f)f.classList.remove('flip')})});
   map.on('click',e=>{if(S.pick){const cb=S.pick;S.pick=null;$('#pick').classList.add('hide');cb(e.latlng.lat,e.latlng.lng)}});
   $('#fme').onclick=()=>{const p=S.pos||(S.me&&S.me.lat!=null&&S.me);if(p)map.setView([p.lat,p.lng],16);else locateOnce(true)};
   $('#fall').onclick=()=>fitAll(true);$('#fcam').onclick=()=>$('#camf').click();$('#camf').onchange=ev=>{const f=ev.target.files[0];ev.target.value='';if(f)composePhoto(f)};$('#fsr').onclick=openSearch;
@@ -674,7 +683,7 @@ function placeIcon(p){const V=visitors(p);
   if(isPers(p))return L.divIcon({className:'',html:`<div class="ppin"><span>${CATS[p.cat].e}</span></div>`,iconSize:[34,34],iconAnchor:[4,38]});
   if(!V.length)return L.divIcon({className:'',html:`<div class="pstar">⭐</div>`,iconSize:[30,30],iconAnchor:[15,15]});
   const E=emList(V),sh=E.slice(0,3).join('')+(E.length>3?'<small>+'+(E.length-3)+'</small>':'');
-  return L.divIcon({className:'',html:`<div class="flag"><div class="fb"></div><div class="fp"></div><div class="fl">${sh}</div><div class="fk"></div></div>`,iconSize:[80,50],iconAnchor:[6,48],popupAnchor:[0,-44]})}
+  return L.divIcon({className:'',html:`<div class="flag"><div class="fb"></div><div class="fp"></div><div class="fl"><span class="fe">${sh}</span></div><div class="fk"></div></div>`,iconSize:[80,50],iconAnchor:[6,48],popupAnchor:[0,-44]})}
 function drawPlacesOnMap(){if(!plLayer)return;plLayer.clearLayers();for(const p of S.places){if(p.lat==null)continue;const c=CATS[p.cat]||CATS.other,V=visitors(p);
   const ps=isPers(p);if(!ps&&(S.vf==='been'&&!V.length||S.vf==='not'&&V.length))continue;
   const mk=L.marker([p.lat,p.lng],{icon:placeIcon(p)});mk._pid=p.id;mk.addTo(plLayer)
@@ -959,7 +968,7 @@ function openSearch(){const v=document.createElement('div');v.className='srch';v
   q('#sclr').onclick=()=>{inp.value='';inp.oninput();inp.focus()};
   render('');setTimeout(()=>inp.focus(),60)}
 function focusPlace(id){const p=S.places.find(x=>x.id===id);if(!p)return;tab('map');if(p.lat==null)return openPlace(p);
-  if(S.vf!=='all'){S.vf='all';drawPlacesOnMap()}collapsePpl();map.setView([p.lat,p.lng],17,{animate:false});setTimeout(()=>{plLayer.eachLayer(l=>{if(l._pid===id)l.openPopup()})},300)}
+  if(S.vf!=='all'){S.vf='all';drawPlacesOnMap()}collapsePpl();map.setView([p.lat,p.lng],17,{animate:false});setTimeout(()=>{plLayer.eachLayer(l=>{if(l._pid===id){if(plLayer.zoomToShowLayer)plLayer.zoomToShowLayer(l,()=>l.openPopup());else l.openPopup()}})},300)}
 function showFound(x){tab('map');const lat=+x.lat,lng=+x.lon;const near=S.places.find(p=>p.lat!=null&&dist(p,{lat,lng})<60);if(near)return focusPlace(near.id);
   if(tmpMk)map.removeLayer(tmpMk);const nm=x.name||x.display_name.split(',')[0],addr=x.addr!=null?x.addr:x.display_name.split(',').slice(1,4).join(',').trim();
   S.found={name:nm,addr,lat,lng,cat:guessCat(x)};
@@ -1014,7 +1023,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 26${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 27${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

@@ -6,6 +6,10 @@ service cloud.firestore {
       return request.auth != null &&
         request.auth.uid in get(/databases/$(database)/documents/doita/$(c)).data.members;
     }
+    // hồ sơ của từng tài khoản: tên hiển thị và mã nhóm đang ở
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
     match /doita/{c} {
       allow get: if request.auth != null;            // phải biết mã mới đọc được
       allow list: if false;                           // không ai liệt kê được các cặp

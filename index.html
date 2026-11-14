@@ -144,14 +144,26 @@ async function auth(){
   const k=FB.apiKey,sv=LS.get('fb',null);let r;
   if(sv&&sv.rt){try{r=await (await ff(`https://securetoken.googleapis.com/v1/token?key=${k}`,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'grant_type=refresh_token&refresh_token='+encodeURIComponent(sv.rt)})).json();
     if(r.id_token){NET.tok=r.id_token;NET.uid=r.user_id;NET.exp=Date.now()+(+r.expires_in||3600)*1e3;LS.set('fb',{rt:r.refresh_token,uid:r.user_id});return NET.tok}}catch(e){if(sv.uid){NET.uid=sv.uid;throw new Error('offline')}}}
-  r=await (await ff(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${k}`,{method:'POST',headers:{'Content-Type':'application/json'},body:'{"returnSecureToken":true}'})).json();
-  if(!r.idToken)throw new Error('auth');NET.tok=r.idToken;NET.uid=r.localId;NET.exp=Date.now()+(+r.expiresIn||3600)*1e3;LS.set('fb',{rt:r.refreshToken,uid:r.localId});return NET.tok}
+  if(sv&&sv.rt&&r&&r.error)throw new Error('SESSION_EXPIRED');
+  throw new Error('NOAUTH')}
+// ===== Tài khoản: tên đăng nhập + mật khẩu (Firebase Email/Password) =====
+const normU=u=>String(u||'').trim().toLowerCase();
+const EMAIL=u=>normU(u)+'@everything-app.web.app';
+function setSess(r){NET.tok=r.idToken;NET.uid=r.localId;NET.exp=Date.now()+(+r.expiresIn||3600)*1e3;LS.set('fb',{rt:r.refreshToken,uid:r.localId})}
+async function idt(path,body){const r=await (await ff(`https://identitytoolkit.googleapis.com/v1/accounts:${path}?key=${FB.apiKey}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({returnSecureToken:true},body))})).json();
+  if(r.error)throw new Error(r.error.message||'AUTH');return r}
 const base=()=>`https://firestore.googleapis.com/v1/projects/${FB.projectId}/databases/(default)/documents`;
 async function req(path,o={}){const t=await auth();const r=await ff(base()+path,Object.assign({},o,{headers:{'Content-Type':'application/json',Authorization:'Bearer '+t}}));
   if(r.status===404)return null;const j=await r.json().catch(()=>({}));if(!r.ok){const e=new Error((j.error&&j.error.message)||('HTTP '+r.status));e.status=r.status;throw e}return j}
 const mask=o=>Object.keys(o).map(k=>'updateMask.fieldPaths='+encodeURIComponent(k)).join('&');
 const REAL={
   async uid(){await auth();return NET.uid},
+  async register(u,p){const sv=LS.get('fb',null);
+    if(sv&&sv.rt){let t=null;try{t=await auth()}catch(e){}if(t){setSess(await idt('update',{idToken:t,email:EMAIL(u),password:p}));return}}
+    setSess(await idt('signUp',{email:EMAIL(u),password:p}))},
+  async login(u,p){setSess(await idt('signInWithPassword',{email:EMAIL(u),password:p}))},
+  async getProfile(){const d=await req(`/users/${NET.uid}`);return d?decF(d.fields||{}):{}},
+  async saveProfile(o){await req(`/users/${NET.uid}?${mask(o)}`,{method:'PATCH',body:JSON.stringify({fields:encF(o)})})},
   async getCouple(c){const d=await req(`/${COL}/${c}`);return d?decF(d.fields||{}):null},
   async createCouple(c,title){await req(`/${COL}/${c}?currentDocument.exists=false`,{method:'PATCH',body:JSON.stringify({fields:encF({members:[NET.uid],title:title||'',t:Date.now()})})})},
   async patchCouple(c,o){await req(`/${COL}/${c}?${mask(o)}&currentDocument.exists=true`,{method:'PATCH',body:JSON.stringify({fields:encF(o)})})},
@@ -166,6 +178,10 @@ const REAL={
 // ===== Máy chủ giả để xem thử (?demo=1): lưu trong máy, có người yêu giả =====
 const MOCK=(()=>{const db=()=>LS.get('mock',{c:{},loc:{},pl:{}}),sv=d=>LS.set('mock',d);const me='me_demo';
   return{async uid(){NET.uid=me;return me},
+  async register(u,p){const A=LS.get('mockacc',{});if(A[u])throw new Error('EMAIL_EXISTS');A[u]={p};LS.set('mockacc',A);NET.uid=me},
+  async login(u,p){const A=LS.get('mockacc',{});if(!A[u]||A[u].p!==p)throw new Error('INVALID_LOGIN_CREDENTIALS');NET.uid=me},
+  async getProfile(){return LS.get('mockprof',{})},
+  async saveProfile(o){LS.set('mockprof',Object.assign(LS.get('mockprof',{}),o))},
   async getCouple(c){return db().c[c]||null},
   async createCouple(c,title){const d=db();d.c[c]={members:[me,'ny_demo','ban_demo','me_demo2'],title,t:Date.now()};d.loc[c]={ny_demo:{name:'Người yêu',sharing:true,lat:21.0306,lng:105.8466,acc:25,bat:63,t:Date.now()-4*60e3},ban_demo:{name:'Minh',sharing:true,lat:21.0180,lng:105.8300,acc:40,t:Date.now()-75*60e3},me_demo2:{name:'Mẹ',sharing:false,t:Date.now()-20*60e3}};sv(d)},
   async patchCouple(c,o){const d=db();Object.assign(d.c[c],o);sv(d)},
@@ -178,7 +194,7 @@ const MOCK=(()=>{const db=()=>LS.get('mock',{c:{},loc:{},pl:{}}),sv=d=>LS.set('m
 const API=DEMO?MOCK:REAL;
 
 // ===== Trạng thái =====
-const S={name:LS.get('name',''),code:LS.get('code',''),sharing:LS.get('sharing',true),tab:'map',
+const S={user:LS.get('user',''),name:LS.get('name',''),code:LS.get('code',''),sharing:LS.get('sharing',true),tab:'map',
   me:null,ptn:null,couple:null,places:LS.get('places_cache',[]),filter:'all',sort:'new',lastSent:0,lastSentPos:null,pos:null,bat:null,err:null,pick:null};
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -200,7 +216,10 @@ const CATS={eat:{n:'Ăn uống',e:'🍜'},drink:{n:'Cà phê',e:'☕'},fun:{n:'V
 function boot(){
   const q=new URLSearchParams(location.search),inv=cleanCode(q.get('moi'));
   if(inv&&!S.code)S.invite=inv;
-  if(!S.name||!S.code)return renderSetup();
+  try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+  const hasSess=!!(LS.get('fb',null)||{}).rt||DEMO&&!!S.user;
+  if(!S.user&&!(S.code&&hasSess))return renderSetup('intro'); // chưa đăng nhập
+  if(!S.code)return renderSetup();
   renderMain();
 }
 
@@ -210,7 +229,7 @@ const PAL=['#e8577a','#8b5cf6','#f59e0b','#10b981','#ef4444','#06b6d4','#d946ef'
 function colOf(uid){if(uid===NET.uid)return'#3b82f6';const m=((S.couple&&S.couple.members)||[]).filter(x=>x!==NET.uid);const i=m.indexOf(uid);return PAL[(i<0?0:i)%PAL.length]}
 const gName=()=>(S.couple&&S.couple.title)||'Nhóm của bạn';
 function renderSetup(step){
-  const A=$('#app');step=step||(S.invite?'join':(S.name?'choose':'intro'));
+  const A=$('#app');step=step||(!S.user&&!S.code?'intro':(S.invite?'join':'choose'));
   if(step==='intro'){A.innerHTML=`<div class="page"><div class="scroll">
     <div class="hero">💞</div><h1 style="text-align:center">Everything</h1>
     <p class="mut" style="text-align:center;margin-top:0">Người yêu, gia đình, bạn bè: ai cùng chung mã thì thấy nhau đang ở đâu, và cùng lưu lại những nơi đã đi.</p>
@@ -220,23 +239,39 @@ function renderSetup(step){
       <li>Vị trí được gửi khi app đang mở. Mọi người luôn thấy <b>lần cập nhật cuối</b> cách đây bao lâu.</li>
       <li>Có thể rời nhóm bất cứ lúc nào, vị trí của bạn sẽ bị xoá.</li></ul></div>
     ${isIOS&&!standalone?`<div class="note" style="margin-bottom:12px">📱 iPhone: nên bấm nút <b>Chia sẻ</b> ⬆️ của Safari, chọn <b>“Thêm vào MH chính”</b>, rồi mở app từ biểu tượng trên màn hình và làm tiếp ở đó. Nếu làm trong Safari rồi mới thêm vào màn hình chính, app sẽ coi là máy mới.</div>`:''}
-    <label class="f">Tên bạn muốn mọi người thấy</label>
-    <input class="t" id="nm" maxlength="20" placeholder="Ví dụ: Chen" value="${esc(S.name)}">
-    <div style="height:12px"></div>
-    <button class="btn w" id="go">Tiếp tục</button>
+    <button class="btn w" id="go">Tạo tài khoản</button><div style="height:8px"></div>
+    <button class="btn sec w" id="lg">Đã có tài khoản? Đăng nhập</button>
     ${DEMO?'<p class="mut" style="text-align:center">Đang ở chế độ xem thử, dữ liệu chỉ nằm trong máy này.</p>':''}
   </div></div>`;
-    $('#go').onclick=()=>{const n=$('#nm').value.trim();if(!n)return toast('Nhập tên trước nhé');S.name=n;LS.set('name',n);renderSetup()};return}
+    $('#go').onclick=()=>renderSetup('reg');$('#lg').onclick=()=>renderSetup('login');return}
+  if(step==='reg'||step==='login'){const reg=step==='reg';A.innerHTML=`<div class="page"><div class="scroll">
+    <div class="hero">${reg?'✨':'🔑'}</div><h1 style="text-align:center">${reg?'Tạo tài khoản':'Đăng nhập'}</h1>
+    <p class="mut" style="text-align:center;margin-top:0">${reg?'Có tài khoản thì đổi máy, xoá app hay thoát ra vẫn đăng nhập lại được, giữ nguyên tên và nhóm.':'Đăng nhập để vào lại nhóm của bạn.'}</p>
+    <div class="card">
+    ${reg?`<label class="f" style="margin-top:0">Tên hiển thị (mọi người sẽ thấy)</label><input class="t" id="nm" maxlength="20" placeholder="Ví dụ: Chen" value="${esc(S.name)}">`:''}
+    <label class="f"${reg?'':' style="margin-top:0"'}>Tên đăng nhập</label><input class="t" id="us" maxlength="30" autocapitalize="none" autocomplete="username" placeholder="Ví dụ: chenchen">
+    <label class="f">Mật khẩu${reg?' (ít nhất 6 ký tự)':''}</label><input class="t" id="pw" type="password" autocomplete="${reg?'new-password':'current-password'}">
+    <div style="height:14px"></div><button class="btn w" id="ok">${reg?'Tạo tài khoản':'Đăng nhập'}</button></div>
+    <button class="btn gh w" id="sw">${reg?'Đã có tài khoản? Đăng nhập':'Chưa có tài khoản? Tạo mới'}</button><div style="height:8px"></div>
+    <button class="btn gh w" id="bk">Quay lại</button></div></div>`;
+    $('#sw').onclick=()=>renderSetup(reg?'login':'reg');$('#bk').onclick=()=>renderSetup('intro');
+    $('#ok').onclick=async e=>{const u=normU($('#us').value),p=$('#pw').value,n=reg?$('#nm').value.trim():'';
+      if(reg&&!n)return toast('Nhập tên hiển thị');if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
+      e.target.disabled=true;
+      try{if(reg){await API.register(u,p);S.name=n;LS.set('name',n);S.user=u;LS.set('user',u);await API.saveProfile({name:n,user:u,code:S.code||''})}
+        else{await API.login(u,p);S.user=u;LS.set('user',u);const pr=await API.getProfile();S.name=pr.name||u;LS.set('name',S.name);
+          if(pr.code&&!S.invite){const c=await API.getCouple(pr.code).catch(()=>null);if(c&&(c.members||[]).includes(NET.uid)){S.code=pr.code;LS.set('code',S.code);toast('Chào '+S.name+' 💞');return renderMain()}}}
+        renderSetup(S.invite?'join':'choose')}catch(er){e.target.disabled=false;toast(errMsg(er),4500)}};return}
   if(step==='choose'){A.innerHTML=`<div class="page"><div class="scroll">
     <div class="hero">💌</div><h1 style="text-align:center">Chào ${esc(S.name)}</h1>
     <div class="card"><h2>Tạo nhóm mới</h2><p class="mut">Bạn nhận được một mã và đường link để gửi cho mọi người (tối đa ${MAXM} người).</p>
       <input class="t" id="gt" maxlength="30" placeholder="Tên nhóm, ví dụ: Hai đứa mình, Gia đình"><div style="height:10px"></div><button class="btn w" id="mk">Tạo nhóm</button></div>
     <div class="card"><h2>Đã có mã nhóm</h2><input class="t" id="cd" placeholder="Ví dụ: ABCDE-FGH23" autocapitalize="characters"><div style="height:10px"></div><button class="btn sec w" id="jn">Vào nhóm</button></div>
-    <button class="btn gh w" id="bk">Đổi tên</button></div></div>`;
-    $('#bk').onclick=()=>renderSetup('intro');
+    <button class="btn gh w" id="bk">Đăng xuất</button></div></div>`;
+    $('#bk').onclick=logout;
     $('#mk').onclick=async e=>{e.target.disabled=true;const title=$('#gt').value.trim()||'Nhóm của '+S.name;
       try{await API.uid();let c;for(let i=0;i<3;i++){c=newCode();try{await API.createCouple(c,title);break}catch(er){if(i===2)throw er}}
-        S.code=c;LS.set('code',c);renderSetup('created')}catch(er){e.target.disabled=false;toast(errMsg(er))}};
+        S.code=c;LS.set('code',c);API.saveProfile({code:c}).catch(()=>{});renderSetup('created')}catch(er){e.target.disabled=false;toast(errMsg(er))}};
     $('#jn').onclick=()=>{S.invite=cleanCode($('#cd').value);if(S.invite.length<8)return toast('Mã chưa đúng');renderSetup('join')};return}
   if(step==='created'){A.innerHTML=`<div class="page"><div class="scroll">
     <div class="hero">🎉</div><h1 style="text-align:center">Đã tạo nhóm</h1>
@@ -245,7 +280,7 @@ function renderSetup(step){
     <button class="btn w" id="sh">Gửi link mời</button><div style="height:8px"></div><button class="btn sec w" id="cp">Sao chép link</button></div>
     <button class="btn gh w" id="go">Vào bản đồ</button></div></div>`;
     $('#sh').onclick=shareInvite;$('#cp').onclick=copyInvite;$('#go').onclick=()=>renderMain();return}
-  if(step==='join'){if(!S.name)return renderSetup('intro');A.innerHTML=`<div class="page"><div class="scroll">
+  if(step==='join'){if(!S.user)return renderSetup('intro');A.innerHTML=`<div class="page"><div class="scroll">
     <div class="hero">💞</div><h1 style="text-align:center">Lời mời vào nhóm</h1>
     <div class="code">${fmtCode(S.invite)}</div><div id="gi" class="mut" style="text-align:center;margin-bottom:10px"></div>
     <div class="card"><p style="margin-top:0">Khi vào nhóm, <b>bạn và mọi người trong nhóm sẽ thấy vị trí của nhau</b> mỗi khi mở app. Bạn có thể tạm dừng hoặc rời nhóm bất cứ lúc nào.</p>
@@ -255,9 +290,12 @@ function renderSetup(step){
     $('#ok').onclick=async e=>{e.target.disabled=true;try{const uid=await API.uid(),c=S.invite,d=await API.getCouple(c);
       if(!d)throw new Error('Không tìm thấy mã này');const m=d.members||[];
       if(!m.includes(uid)){if(m.length>=MAXM)throw new Error('Nhóm đã đủ '+MAXM+' người.');await API.patchCouple(c,{members:m.concat([uid])})}
-      S.code=c;LS.set('code',c);S.invite='';history.replaceState(null,'',location.pathname+(DEMO?'?demo=1':''));renderMain();toast('Đã vào nhóm 💞')}catch(er){e.target.disabled=false;toast(errMsg(er),4500)}};return}
+      S.code=c;LS.set('code',c);API.saveProfile({code:c}).catch(()=>{});S.invite='';history.replaceState(null,'',location.pathname+(DEMO?'?demo=1':''));renderMain();toast('Đã vào nhóm 💞')}catch(er){e.target.disabled=false;toast(errMsg(er),4500)}};return}
 }
-function errMsg(e){const m=String(e&&e.message||e);if(/PERMISSION|permission/.test(m))return'Máy chủ chưa cho phép. Cần dán luật bảo mật Firestore (xem hướng dẫn).';if(/offline|Failed to fetch|network|timeout|aborted/i.test(m))return'Không có mạng, thử lại sau nhé';return m}
+function errMsg(e){const m=String(e&&e.message||e);
+  const AE={EMAIL_EXISTS:'Tên đăng nhập này đã có người dùng',INVALID_LOGIN_CREDENTIALS:'Sai tên đăng nhập hoặc mật khẩu',EMAIL_NOT_FOUND:'Sai tên đăng nhập hoặc mật khẩu',INVALID_PASSWORD:'Sai tên đăng nhập hoặc mật khẩu',
+    WEAK_PASSWORD:'Mật khẩu ít nhất 6 ký tự',OPERATION_NOT_ALLOWED:'Firebase chưa bật đăng nhập Email/Password',TOO_MANY_ATTEMPTS_TRY_LATER:'Thử sai nhiều quá, đợi một lúc nhé',NOAUTH:'Bạn cần đăng nhập lại',SESSION_EXPIRED:'Phiên đăng nhập hết hạn, hãy đăng nhập lại',CREDENTIAL_TOO_OLD_LOGIN_AGAIN:'Hãy đăng nhập lại rồi thử'};
+  for(const k in AE)if(m.startsWith(k))return AE[k];if(/PERMISSION|permission/.test(m))return'Máy chủ chưa cho phép. Cần dán luật bảo mật Firestore (xem hướng dẫn).';if(/offline|Failed to fetch|network|timeout|aborted/i.test(m))return'Không có mạng, thử lại sau nhé';return m}
 async function shareInvite(){const u=inviteLink(),t='Vào nhóm “'+gName()+'” trên Everything nhé 💞 Mã: '+fmtCode(S.code);
   if(navigator.share){try{await navigator.share({title:'Everything',text:t,url:u});return}catch(e){if(e&&e.name==='AbortError')return}}copyInvite()}
 async function copyInvite(){try{await navigator.clipboard.writeText(inviteLink());toast('Đã sao chép link')}catch(e){prompt('Sao chép link này:',inviteLink())}}
@@ -369,7 +407,10 @@ async function refresh(){if(!S.code)return;try{const uid=await API.uid();const [
     const P=myPing();if(P.t&&P.t>(LS.get('pingdone',0))&&S.sharing){LS.set('pingdone',P.t);locateOnce()}
   }catch(e){if(e.status===403){S.err='máy chủ chưa cho phép';drawShare()}}
   drawPeople();drawMarkers();drawPing()}
-function kicked(){toast('Bạn không còn ở trong nhóm này',4000);leaveLocal()}
+function kicked(){toast('Bạn không còn ở trong nhóm này',4000);API.saveProfile({code:''}).catch(()=>{});leaveLocal()}
+function logout(){if(!confirm('Đăng xuất khỏi máy này? Đăng nhập lại bằng tên đăng nhập và mật khẩu là vào lại nhóm.'))return;
+  stopGeo();clearInterval(S.iv);clearInterval(S.iv2);for(const k of ['fb','user','name','code','places_cache','pingseen','pingdone'])LS.del(k);
+  Object.assign(S,{user:'',name:'',code:'',couple:null,me:null,locs:[],places:[]});NET.tok=null;NET.uid=null;fitted=false;for(const k in MK)delete MK[k];renderSetup('intro')}
 function leaveLocal(){stopGeo();clearInterval(S.iv);clearInterval(S.iv2);S.code='';LS.del('code');LS.del('places_cache');S.couple=S.me=null;S.locs=[];S.places=[];fitted=false;for(const k in MK)delete MK[k];renderSetup('choose')}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&S.code&&$('#map')){refresh();if(S.sharing)locateOnce()}});
 
@@ -439,6 +480,10 @@ window.openPlace=openPlace;
 // ===== Cài đặt =====
 function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],owner=M[0]===NET.uid;
   e.innerHTML=`<h1>Cài đặt</h1>
+  <div class="card"><h2>Tài khoản</h2>${S.user?`<p class="mut" style="margin-top:0">Đăng nhập với tên <b>${esc(S.user)}</b>. Đổi máy thì đăng nhập lại là vào đúng nhóm.</p><button class="btn gh w" id="lo">Đăng xuất</button>`
+    :`<p class="mut" style="margin-top:0"><b style="color:#b91c1c">Chưa có tài khoản.</b> Nếu xoá app hay thoát ra, bạn sẽ mất nhóm này. Tạo tài khoản để giữ lại:</p>
+      <label class="f">Tên đăng nhập</label><input class="t" id="us" maxlength="30" autocapitalize="none" autocomplete="username"><label class="f">Mật khẩu (ít nhất 6 ký tự)</label><input class="t" id="pw" type="password" autocomplete="new-password">
+      <div style="height:10px"></div><button class="btn w" id="mkacc">Tạo tài khoản</button>`}</div>
   <div class="card"><h2>Tên của bạn</h2><div class="row"><input class="t grow" id="nm" maxlength="20" value="${esc(S.name)}"><button class="btn" id="svn">Lưu</button></div></div>
   <div class="card"><h2>Nhóm</h2>
     <div class="row"><input class="t grow" id="gt" maxlength="30" value="${esc(gName())}"><button class="btn sec" id="svg">Đổi tên</button></div>
@@ -454,8 +499,11 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 4${DEMO?' · xem thử':''}</p>`;
-  $('#svn').onclick=()=>{const n=$('#nm').value.trim();if(!n)return;S.name=n;LS.set('name',n);toast('Đã đổi tên');if(S.sharing&&S.pos)sendLoc();else API.setLoc(S.code,{name:n,sharing:false,t:Date.now()}).catch(()=>{});drawShare();drawMarkers()};
+  <p class="mut" style="text-align:center">Everything · phiên bản 5${DEMO?' · xem thử':''}</p>`;
+  if($('#lo'))$('#lo').onclick=logout;
+  if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
+    ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};
+  $('#svn').onclick=()=>{const n=$('#nm').value.trim();if(!n)return;S.name=n;LS.set('name',n);API.saveProfile({name:n}).catch(()=>{});toast('Đã đổi tên');if(S.sharing&&S.pos)sendLoc();else API.setLoc(S.code,{name:n,sharing:false,t:Date.now()}).catch(()=>{});drawShare();drawMarkers()};
   $('#svg').onclick=async()=>{const t=$('#gt').value.trim();if(!t)return;try{await API.patchCouple(S.code,{title:t});S.couple.title=t;toast('Đã đổi tên nhóm');drawPeople()}catch(er){toast(errMsg(er))}};
   $('#inv').onclick=shareInvite;
   e.querySelectorAll('[data-rm]').forEach(b=>b.onclick=async()=>{const id=b.dataset.rm;if(!confirm('Gỡ '+nameOf(id)+' khỏi nhóm?'))return;
@@ -463,7 +511,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   $('#tg2').onclick=async()=>{await toggleShare();drawSet()};
   $('#lv').onclick=async()=>{if(!confirm('Rời nhóm? Vị trí của bạn sẽ bị xoá và mọi người sẽ không thấy bạn nữa.'))return;
     try{await API.delLoc(S.code);const c=await API.getCouple(S.code);if(c)await API.patchCouple(S.code,{members:(c.members||[]).filter(x=>x!==NET.uid)})}catch(er){toast(errMsg(er));return}
-    toast('Đã rời nhóm');leaveLocal()}}
+    API.saveProfile({code:''}).catch(()=>{});toast('Đã rời nhóm');leaveLocal()}}
 
 if('serviceWorker'in navigator&&!DEMO)navigator.serviceWorker.register('sw.js').catch(()=>{});
 boot();

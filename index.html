@@ -120,7 +120,7 @@ ul.ck li{margin:4px 0}
 .av{position:relative;background-repeat:no-repeat}
 .av .eb{position:absolute;right:-4px;bottom:-4px;font-style:normal;font-size:14px;background:#fff;border-radius:50%;width:20px;height:20px;display:grid;place-items:center;box-shadow:0 1px 3px rgba(0,0,0,.25)}
 .flag{position:relative;width:80px;height:50px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.25))}
-.flag.flip{transform:scaleX(-1);transform-origin:6px 50%}.flag.flip .fe{display:inline-flex;align-items:center;transform:scaleX(-1)}.flag .fe{display:inline-flex;align-items:center;gap:1px}
+.flag{transform:scale(.74);transform-origin:6px 48px}.flag.flip{transform:scale(.74) scaleX(-1);transform-origin:6px 48px}.flag.flip .fe{display:inline-flex;align-items:center;transform:scaleX(-1)}.flag .fe{display:inline-flex;align-items:center;gap:1px}
 .flag .fb{position:absolute;left:0;bottom:0;width:12px;height:5px;border-radius:50%;background:rgba(0,0,0,.25);filter:blur(1px)}
 .flag .fp{position:absolute;left:4px;top:3px;width:3px;height:45px;border-radius:2px;background:linear-gradient(90deg,#8b5e3c,#c89466 50%,#7a4f30)}
 .flag .fk{position:absolute;left:1.5px;top:0;width:8px;height:8px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff6c4,#f5b301 60%,#c98a00)}
@@ -683,7 +683,7 @@ function placeIcon(p){const V=visitors(p);
   if(isPers(p))return L.divIcon({className:'',html:`<div class="ppin"><span>${CATS[p.cat].e}</span></div>`,iconSize:[34,34],iconAnchor:[4,38]});
   if(!V.length)return L.divIcon({className:'',html:`<div class="pstar">⭐</div>`,iconSize:[30,30],iconAnchor:[15,15]});
   const E=emList(V),sh=E.slice(0,3).join('')+(E.length>3?'<small>+'+(E.length-3)+'</small>':'');
-  return L.divIcon({className:'',html:`<div class="flag"><div class="fb"></div><div class="fp"></div><div class="fl"><span class="fe">${sh}</span></div><div class="fk"></div></div>`,iconSize:[80,50],iconAnchor:[6,48],popupAnchor:[0,-44]})}
+  return L.divIcon({className:'',html:`<div class="flag"><div class="fb"></div><div class="fp"></div><div class="fl"><span class="fe">${sh}</span></div><div class="fk"></div></div>`,iconSize:[80,50],iconAnchor:[6,48],popupAnchor:[0,-34]})}
 function drawPlacesOnMap(){if(!plLayer)return;plLayer.clearLayers();for(const p of S.places){if(p.lat==null)continue;const c=CATS[p.cat]||CATS.other,V=visitors(p);
   const ps=isPers(p);if(!ps&&(S.vf==='been'&&!V.length||S.vf==='not'&&V.length))continue;
   const mk=L.marker([p.lat,p.lng],{icon:placeIcon(p)});mk._pid=p.id;mk.addTo(plLayer)
@@ -1023,7 +1023,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 27${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 28${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

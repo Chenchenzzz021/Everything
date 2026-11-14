@@ -548,7 +548,7 @@ function personRow(p){const me=S.pos||(S.me&&S.me.lat!=null?S.me:null);let st;
   else if(p.lat==null)st='Chưa có vị trí';
   else{const age=(Date.now()-p.t)/60e3,cls=age<10?'fresh':age>60?'stale':'',d=dist(me,p);st=`<span class="${cls}">● ${ago(p.t)}</span>${p.approx?' · <b>khu vực gần đúng</b>':''}${d!=null?' · cách '+(p.approx?'~':'')+fmtD(d):''}${batTxt(p)}`}
   const canNav=p.sharing!==false&&p.lat!=null;
-  return`<div class="pr" data-id="${p.id}"><div class="avw${hasNew(p.id)?' new':''}" data-ph="${p.id}" title="Xem ảnh">${avHtml(p,36)}${phCount(p.id)?`<i class="pc">${phCount(p.id)}</i>`:''}</div><div class="grow"><div class="nm">${esc(p.name||'Thành viên mới')}</div><div class="st">${st}</div></div>
+  return`<div class="pr" data-id="${p.id}"><div class="avw${todayNews(p.id)?' new':''}" data-ph="${p.id}" title="Xem ảnh">${avHtml(p,36)}${unseenN(p.id)?`<i class="pc">${unseenN(p.id)}</i>`:''}</div><div class="grow"><div class="nm">${esc(p.name||'Thành viên mới')}</div><div class="st">${st}</div></div>
     <div class="acts">${canNav?`<button class="ib" data-go="${p.id}" title="Chỉ đường">${I.nav}</button>`:''}<button class="ib" data-pg="${p.id}" title="Nhờ cập nhật">${I.bell}</button></div></div>`}
 function drawPeople(){const e=$('#ppl');if(!e)return;
   if(!S.couple){e.innerHTML=`<div class="ph"><b>Đang tải…</b></div>`;return}
@@ -717,6 +717,10 @@ window.openPlace=openPlace;
 const PHI={};let PH=[];
 const phOf=uid=>PH.filter(x=>x.by===uid).sort((a,b)=>b.t-a.t);
 const phCount=uid=>phOf(uid).length;
+const dayStart=()=>{const d=new Date();d.setHours(0,0,0,0);return d.getTime()};
+const chatWith=uid=>CH.find(c=>c.id===pairId(uid))||null;
+const unseenN=uid=>{if(uid===NET.uid)return 0;const seen=LS.get('phseen_'+uid,0),c=chatWith(uid);return phOf(uid).filter(x=>x.t>seen).length+(c&&c.lb===uid&&unread(c)?1:0)};
+const todayNews=uid=>{if(uid===NET.uid)return false;const d=dayStart(),L=phOf(uid),c=chatWith(uid);return !!((L.length&&L[0].t>=d)||(c&&c.lb===uid&&(c.lt||0)>=d))};
 const hasNew=uid=>{const L=phOf(uid);return L.length&&uid!==NET.uid&&L[0].t>LS.get('phseen_'+uid,0)};
 async function loadPhotos(){if(!S.code)return;try{const old=new Set(PH.map(x=>x.id)),L=await API.listPhotos(S.code);
     const fresh=PH.length?L.filter(x=>!old.has(x.id)&&x.by!==NET.uid):[];PH=L;
@@ -840,7 +844,7 @@ const pairId=uid=>[NET.uid,uid].sort().join('_');
 let CH=[];
 async function loadChats(){if(!S.code)return;try{CH=await API.listChats(S.code)}catch(e){return}const n=CH.filter(unread).length,b=$('#nbadge');
   if(b){b.textContent=n;b.classList.toggle('hide',!n)}const last=LS.get('chatseen',0),nw=CH.filter(c=>unread(c)&&c.lt>last);if(nw.length&&S.tab!=='chat'&&!$('.conv')){toast('💬 '+nameOf(nw[0].lb)+': '+(nw[0].ltx||'').slice(0,40),3500)}
-  LS.set('chatseen',Math.max(last,...CH.map(c=>c.lt||0)));if(S.tab==='chat')drawChats()}
+  LS.set('chatseen',Math.max(last,...CH.map(c=>c.lt||0)));drawPeople();if(S.tab==='chat')drawChats()}
 const unread=c=>c.lb&&c.lb!==NET.uid&&(c.lt||0)>(c['r_'+NET.uid]||0);
 function drawChats(){const e=$('#chat');if(!e)return;const O=others();
   const rows=O.map(p=>{const c=CH.find(x=>x.id===pairId(p.id))||{};return{p,c}}).sort((a,b)=>(b.c.lt||0)-(a.c.lt||0));
@@ -971,7 +975,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 22${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 23${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

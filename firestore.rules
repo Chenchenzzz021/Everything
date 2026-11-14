@@ -1,9 +1,7 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // ===== Giữ nguyên các luật cũ của game Hearthfall ở đây =====
-
-    // ===== Đôi Ta: mỗi nhóm tối đa 20 người, chỉ thành viên mới đọc được vị trí và địa điểm =====
+    // ===== Everything: mỗi nhóm tối đa 20 người, chỉ thành viên mới đọc được vị trí và địa điểm =====
     function isMember(c) {
       return request.auth != null &&
         request.auth.uid in get(/databases/$(database)/documents/doita/$(c)).data.members;

@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
+<title>Đôi Ta</title>
+<meta name="theme-color" content="#e8577a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Đôi Ta">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+:root{--pk:#e8577a;--pk2:#fde4ea;--bl:#3b82f6;--bl2:#dbeafe;--ink:#1f2330;--mut:#6b7280;--bg:#fff7f9;--card:#fff;--ln:#f1d5dc;--ok:#16a34a;--warn:#d97706;--sh:0 6px 24px rgba(232,87,122,.15)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+.hide{display:none!important}
+#app{position:fixed;inset:0;display:flex;flex-direction:column}
+.page{flex:1;position:relative;overflow:hidden}
+.scroll{position:absolute;inset:0;overflow-y:auto;padding:16px 16px 24px;padding-top:calc(16px + env(safe-area-inset-top))}
+nav{display:flex;background:#fff;border-top:1px solid var(--ln);padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;padding:8px 0 6px;font-size:12px;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:2px}
+nav button b{font-size:20px;line-height:1;font-weight:400}
+nav button.on{color:var(--pk);font-weight:600}
+#map{position:absolute;inset:0;z-index:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 16px;border-radius:14px;background:var(--pk);color:#fff;font-weight:600;min-height:46px}
+.btn.sec{background:var(--pk2);color:var(--pk)}
+.btn.gh{background:#fff;color:var(--ink);border:1px solid var(--ln)}
+.btn.red{background:#fee2e2;color:#b91c1c}
+.btn.w{width:100%}
+.btn:disabled{opacity:.5}
+.card{background:var(--card);border-radius:18px;box-shadow:var(--sh);padding:16px;margin-bottom:12px}
+h1{font-size:26px;margin:8px 0 4px}
+h2{font-size:18px;margin:0 0 10px}
+.mut{color:var(--mut);font-size:13px}
+label.f{display:block;font-size:13px;color:var(--mut);margin:10px 0 4px}
+input.t,select.t,textarea.t{width:100%;padding:12px;border:1px solid var(--ln);border-radius:12px;background:#fff;font-size:16px}
+textarea.t{min-height:70px;resize:vertical}
+.row{display:flex;gap:8px;align-items:center}
+.row>*{min-width:0}
+.grow{flex:1}
+/* thanh trạng thái chia sẻ */
+.top{position:absolute;left:12px;right:12px;top:calc(10px + env(safe-area-inset-top));z-index:500;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.top>*{pointer-events:auto}
+.share{display:flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:6px 6px 6px 12px;box-shadow:var(--sh);font-size:13px;font-weight:600}
+.share .dot{width:10px;height:10px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 rgba(22,163,74,.5);animation:pu 2s infinite}
+.share.off .dot{background:#9ca3af;animation:none}
+.share .tg{margin-left:auto;padding:6px 12px;border-radius:999px;background:var(--pk2);color:var(--pk);font-size:12px}
+@keyframes pu{70%{box-shadow:0 0 0 8px rgba(22,163,74,0)}100%{box-shadow:0 0 0 0 rgba(22,163,74,0)}}
+.ptn{background:#fff;border-radius:18px;padding:12px 14px;box-shadow:var(--sh);display:flex;gap:12px;align-items:center}
+.av{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:17px;flex:none}
+.av.me{background:var(--bl)}.av.you{background:var(--pk)}
+.ptn .nm{font-weight:700}
+.ptn .st{font-size:13px;color:var(--mut)}
+.ptn .st b{color:var(--ink);font-weight:600}
+.fresh{color:var(--ok)!important}.stale{color:var(--warn)!important}
+.ptn .acts{margin-left:auto;display:flex;gap:6px}
+.ib{width:40px;height:40px;border-radius:12px;background:var(--pk2);color:var(--pk);display:grid;place-items:center;font-size:18px}
+.fab{position:absolute;right:12px;z-index:500;width:48px;height:48px;border-radius:50%;background:#fff;box-shadow:var(--sh);display:grid;place-items:center;font-size:20px}
+.ping{background:#fff4e5;color:#92400e;border-radius:14px;padding:10px 12px;font-size:13px;box-shadow:var(--sh)}
+/* marker */
+.mk{display:flex;flex-direction:column;align-items:center}
+.mk i{width:36px;height:36px;border-radius:50%;border:3px solid #fff;display:grid;place-items:center;color:#fff;font-style:normal;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.mk span{margin-top:2px;background:#fff;border-radius:8px;padding:1px 6px;font-size:11px;font-weight:600;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.pm{font-size:22px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.4));text-align:center;line-height:1}
+.pick{position:absolute;left:12px;right:12px;bottom:12px;z-index:600;background:#fff;border-radius:16px;padding:12px;box-shadow:var(--sh);text-align:center}
+/* địa điểm */
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px}
+.chip{padding:7px 12px;border-radius:999px;background:#fff;border:1px solid var(--ln);font-size:13px;white-space:nowrap}
+.chip.on{background:var(--pk);color:#fff;border-color:var(--pk)}
+.pl{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--ln)}
+.pl:last-child{border:0}
+.pl .em{font-size:26px;width:40px;text-align:center;flex:none}
+.pl .nm{font-weight:700}
+.pl .nt{font-size:13px;color:var(--mut);margin-top:2px;white-space:pre-wrap;word-break:break-word}
+.stars{color:#f59e0b;letter-spacing:1px;font-size:14px}
+.stars .e{color:#e5e7eb}
+.rt{font-size:12px;color:var(--mut);display:flex;gap:10px;flex-wrap:wrap;margin-top:2px}
+.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;background:var(--bl2);color:#1d4ed8;margin-left:4px;vertical-align:1px}
+.tag.w{background:#fef3c7;color:#92400e}
+.srate{display:flex;gap:4px;font-size:32px}
+.srate button{color:#e5e7eb;padding:0 2px}
+.srate button.on{color:#f59e0b}
+.seg{display:flex;background:#f3f4f6;border-radius:12px;padding:3px}
+.seg button{flex:1;padding:9px 4px;border-radius:10px;font-size:14px}
+.seg button.on{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.1);font-weight:600}
+.sheet{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.35);display:flex;align-items:flex-end}
+.sheet>div{background:var(--bg);width:100%;max-height:92%;overflow-y:auto;border-radius:22px 22px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom))}
+.sres button{display:block;width:100%;text-align:left;padding:10px;border-bottom:1px solid var(--ln);font-size:14px}
+.empty{text-align:center;color:var(--mut);padding:30px 10px}
+.code{font:700 28px/1.2 ui-monospace,Menlo,monospace;letter-spacing:3px;text-align:center;padding:14px;background:var(--pk2);color:var(--pk);border-radius:14px;margin:8px 0}
+.note{background:#eff6ff;color:#1e3a8a;border-radius:14px;padding:12px;font-size:13px}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#1f2330;color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;z-index:2000;max-width:90%;text-align:center}
+ul.ck{padding-left:20px;margin:6px 0}
+ul.ck li{margin:4px 0}
+.hero{text-align:center;font-size:56px;margin-top:10px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+'use strict';
+// ===== Cấu hình máy chủ (Firestore qua REST, đăng nhập ẩn danh) =====
+const FB={apiKey:"AIzaSyB77j0n0Mqs2cJet9vVG-9CPgxqmo7_lQk",projectId:"hearthfall-a6b56"};
+const COL='doita'; // couples: doita/{mã} ; vị trí: doita/{mã}/loc/{uid} ; địa điểm: doita/{mã}/places/{id}
+const DEMO=/[?&]demo=1/.test(location.search);
+
+// ===== Lưu trữ cục bộ =====
+const LS={get(k,d){try{const v=localStorage.getItem('dt_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},
+  set(k,v){try{localStorage.setItem('dt_'+k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem('dt_'+k)}catch(e){}}};
+
+// ===== Mã hoá giá trị Firestore =====
+function enc(v){if(v===null||v===undefined)return{nullValue:null};if(typeof v==='boolean')return{booleanValue:v};
+  if(typeof v==='number')return Number.isInteger(v)?{integerValue:String(v)}:{doubleValue:v};
+  if(Array.isArray(v))return{arrayValue:{values:v.map(enc)}};
+  if(typeof v==='object'){const f={};for(const k in v)f[k]=enc(v[k]);return{mapValue:{fields:f}}}return{stringValue:String(v)}}
+function dec(x){if(!x)return null;if('stringValue'in x)return x.stringValue;if('integerValue'in x)return+x.integerValue;if('doubleValue'in x)return x.doubleValue;
+  if('booleanValue'in x)return x.booleanValue;if('nullValue'in x)return null;if('timestampValue'in x)return Date.parse(x.timestampValue);
+  if('arrayValue'in x)return(x.arrayValue.values||[]).map(dec);if('mapValue'in x)return decF(x.mapValue.fields||{});return null}
+function decF(f){const o={};for(const k in f)o[k]=dec(f[k]);return o}
+const encF=o=>{const f={};for(const k in o)f[k]=enc(o[k]);return f};
+
+// ===== Máy chủ thật =====
+const NET={tok:null,uid:null,exp:0};
+const ff=(u,o={})=>fetch(u,Object.assign({signal:AbortSignal.timeout?AbortSignal.timeout(12000):undefined},o));
+async function auth(){
+  if(NET.tok&&Date.now()<NET.exp-60e3)return NET.tok;
+  const k=FB.apiKey,sv=LS.get('fb',null);let r;
+  if(sv&&sv.rt){try{r=await (await ff(`https://securetoken.googleapis.com/v1/token?key=${k}`,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'grant_type=refresh_token&refresh_token='+encodeURIComponent(sv.rt)})).json();
+    if(r.id_token){NET.tok=r.id_token;NET.uid=r.user_id;NET.exp=Date.now()+(+r.expires_in||3600)*1e3;LS.set('fb',{rt:r.refresh_token,uid:r.user_id});return NET.tok}}catch(e){if(sv.uid){NET.uid=sv.uid;throw new Error('offline')}}}
+  r=await (await ff(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${k}`,{method:'POST',headers:{'Content-Type':'application/json'},body:'{"returnSecureToken":true}'})).json();
+  if(!r.idToken)throw new Error('auth');NET.tok=r.idToken;NET.uid=r.localId;NET.exp=Date.now()+(+r.expiresIn||3600)*1e3;LS.set('fb',{rt:r.refreshToken,uid:r.localId});return NET.tok}
+const base=()=>`https://firestore.googleapis.com/v1/projects/${FB.projectId}/databases/(default)/documents`;
+async function req(path,o={}){const t=await auth();const r=await ff(base()+path,Object.assign({},o,{headers:{'Content-Type':'application/json',Authorization:'Bearer '+t}}));
+  if(r.status===404)return null;const j=await r.json().catch(()=>({}));if(!r.ok){const e=new Error((j.error&&j.error.message)||('HTTP '+r.status));e.status=r.status;throw e}return j}
+const mask=o=>Object.keys(o).map(k=>'updateMask.fieldPaths='+encodeURIComponent(k)).join('&');
+const REAL={
+  async uid(){await auth();return NET.uid},
+  async getCouple(c){const d=await req(`/${COL}/${c}`);return d?decF(d.fields||{}):null},
+  async createCouple(c){await req(`/${COL}/${c}?currentDocument.exists=false`,{method:'PATCH',body:JSON.stringify({fields:encF({members:[NET.uid],t:Date.now()})})})},
+  async patchCouple(c,o){await req(`/${COL}/${c}?${mask(o)}&currentDocument.exists=true`,{method:'PATCH',body:JSON.stringify({fields:encF(o)})})},
+  async setLoc(c,o){await req(`/${COL}/${c}/loc/${NET.uid}`,{method:'PATCH',body:JSON.stringify({fields:encF(o)})})},
+  async delLoc(c){await req(`/${COL}/${c}/loc/${NET.uid}`,{method:'DELETE'})},
+  async listLoc(c){const j=await req(`/${COL}/${c}/loc?pageSize=10`);return((j&&j.documents)||[]).map(d=>Object.assign({id:d.name.split('/').pop()},decF(d.fields||{})))},
+  async listPlaces(c){let out=[],tk='';for(let i=0;i<10;i++){const j=await req(`/${COL}/${c}/places?pageSize=300${tk?'&pageToken='+tk:''}`);
+    out=out.concat(((j&&j.documents)||[]).map(d=>Object.assign({id:d.name.split('/').pop()},decF(d.fields||{}))));if(!j||!j.nextPageToken)break;tk=j.nextPageToken}return out},
+  async savePlace(c,id,o){await req(`/${COL}/${c}/places/${id}?${mask(o)}`,{method:'PATCH',body:JSON.stringify({fields:encF(o)})})},
+  async delPlace(c,id){await req(`/${COL}/${c}/places/${id}`,{method:'DELETE'})}
+};
+// ===== Máy chủ giả để xem thử (?demo=1): lưu trong máy, có người yêu giả =====
+const MOCK=(()=>{const db=()=>LS.get('mock',{c:{},loc:{},pl:{}}),sv=d=>LS.set('mock',d);const me='me_demo';
+  return{async uid(){NET.uid=me;return me},
+  async getCouple(c){return db().c[c]||null},
+  async createCouple(c){const d=db();d.c[c]={members:[me,'ny_demo'],t:Date.now()};d.loc[c]={ny_demo:{name:'Người yêu',sharing:true,lat:21.0306,lng:105.8466,acc:25,bat:63,t:Date.now()-4*60e3}};sv(d)},
+  async patchCouple(c,o){const d=db();Object.assign(d.c[c],o);sv(d)},
+  async setLoc(c,o){const d=db();(d.loc[c]=d.loc[c]||{})[me]=o;sv(d)},
+  async delLoc(c){const d=db();if(d.loc[c])delete d.loc[c][me];sv(d)},
+  async listLoc(c){const L=db().loc[c]||{};return Object.keys(L).map(k=>Object.assign({id:k},L[k]))},
+  async listPlaces(c){const L=db().pl[c]||{};return Object.keys(L).map(k=>Object.assign({id:k},L[k]))},
+  async savePlace(c,id,o){const d=db();const P=(d.pl[c]=d.pl[c]||{});P[id]=Object.assign(P[id]||{},o);sv(d)},
+  async delPlace(c,id){const d=db();if(d.pl[c])delete d.pl[c][id];sv(d)}}})();
+const API=DEMO?MOCK:REAL;
+
+// ===== Trạng thái =====
+const S={name:LS.get('name',''),code:LS.get('code',''),sharing:LS.get('sharing',true),tab:'map',
+  me:null,ptn:null,couple:null,places:LS.get('places_cache',[]),filter:'all',sort:'new',lastSent:0,lastSentPos:null,pos:null,bat:null,err:null,pick:null};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ini=n=>(String(n||'?').trim()[0]||'?').toUpperCase();
+function ago(t){if(!t)return'chưa có';const s=Math.max(0,(Date.now()-t)/1000);if(s<60)return'vừa xong';const m=s/60;if(m<60)return Math.floor(m)+' phút trước';const h=m/60;if(h<24)return Math.floor(h)+' giờ trước';
+  const d=new Date(t);return d.toLocaleDateString('vi-VN')+' '+d.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})}
+function dist(a,b){if(!a||!b)return null;const R=6371e3,r=Math.PI/180,dl=(b.lat-a.lat)*r,dn=(b.lng-a.lng)*r;const x=Math.sin(dl/2)**2+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(x))}
+const fmtD=m=>m==null?'':m<1000?Math.round(m)+' m':(m/1000).toFixed(m<10e3?1:0)+' km';
+function toast(t,ms=2600){const e=document.createElement('div');e.className='toast';e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),ms)}
+const isIOS=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const newCode=()=>{const a='ABCDEFGHJKMNPQRSTUVWXYZ23456789',b=new Uint32Array(10);crypto.getRandomValues(b);return Array.from(b,x=>a[x%a.length]).join('')};
+const fmtCode=c=>c.slice(0,5)+'-'+c.slice(5);
+const cleanCode=c=>String(c||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+const inviteLink=()=>location.origin+location.pathname+'?moi='+S.code+(DEMO?'&demo=1':'');
+const CATS={eat:{n:'Ăn uống',e:'🍜'},drink:{n:'Cà phê',e:'☕'},fun:{n:'Vui chơi',e:'🎡'},other:{n:'Khác',e:'📍'}};
+
+// ===== Khởi động =====
+function boot(){
+  const q=new URLSearchParams(location.search),inv=cleanCode(q.get('moi'));
+  if(inv&&!S.code)S.invite=inv;
+  if(!S.name||!S.code)return renderSetup();
+  renderMain();
+}
+
+// ===== Màn hình bắt đầu =====
+function renderSetup(step){
+  const A=$('#app');step=step||(S.invite?'join':(S.name?'choose':'intro'));
+  if(step==='intro'){A.innerHTML=`<div class="page"><div class="scroll">
+    <div class="hero">💞</div><h1 style="text-align:center">Đôi Ta</h1>
+    <p class="mut" style="text-align:center;margin-top:0">Cùng nhau biết người kia đang ở đâu, và lưu lại những nơi hai đứa đã đi.</p>
+    <div class="card"><h2>Cách hoạt động</h2><ul class="ck">
+      <li>Cả hai cùng cài, cùng đồng ý. Ai cũng thấy được người kia, không có chuyện xem lén.</li>
+      <li>Luôn có dòng <b>“Đang chia sẻ vị trí”</b> ở trên bản đồ. Bấm một cái là tạm dừng, người kia sẽ thấy “Đã tạm dừng”.</li>
+      <li>Vị trí được gửi khi app đang mở. Người kia luôn thấy <b>lần cập nhật cuối</b> cách đây bao lâu.</li>
+      <li>Có thể rời cặp bất cứ lúc nào, vị trí của bạn sẽ bị xoá.</li></ul></div>
+    ${isIOS&&!standalone?`<div class="note" style="margin-bottom:12px">📱 iPhone: nên bấm nút <b>Chia sẻ</b> ⬆️ của Safari, chọn <b>“Thêm vào MH chính”</b>, rồi mở app từ biểu tượng trên màn hình và làm tiếp ở đó. Nếu làm trong Safari rồi mới thêm vào màn hình chính, app sẽ coi là máy mới.</div>`:''}
+    <label class="f">Tên bạn muốn người kia thấy</label>
+    <input class="t" id="nm" maxlength="20" placeholder="Ví dụ: Chen" value="${esc(S.name)}">
+    <div style="height:12px"></div>
+    <button class="btn w" id="go">Tiếp tục</button>
+    ${DEMO?'<p class="mut" style="text-align:center">Đang ở chế độ xem thử, dữ liệu chỉ nằm trong máy này.</p>':''}
+  </div></div>`;
+    $('#go').onclick=()=>{const n=$('#nm').value.trim();if(!n)return toast('Nhập tên trước nhé');S.name=n;LS.set('name',n);renderSetup()};return}
+  if(step==='choose'){A.innerHTML=`<div class="page"><div class="scroll">
+    <div class="hero">💌</div><h1 style="text-align:center">Chào ${esc(S.name)}</h1>
+    <div class="card"><h2>Bạn tạo cặp mới</h2><p class="mut">Bạn nhận được một mã và đường link để gửi cho người ấy.</p><button class="btn w" id="mk">Tạo cặp mới</button></div>
+    <div class="card"><h2>Người ấy đã gửi mã cho bạn</h2><input class="t" id="cd" placeholder="Ví dụ: ABCDE-FGH23" autocapitalize="characters"><div style="height:10px"></div><button class="btn sec w" id="jn">Vào cặp</button></div>
+    <button class="btn gh w" id="bk">Đổi tên</button></div></div>`;
+    $('#bk').onclick=()=>renderSetup('intro');
+    $('#mk').onclick=async e=>{e.target.disabled=true;try{await API.uid();let c;for(let i=0;i<3;i++){c=newCode();try{await API.createCouple(c);break}catch(er){if(i===2)throw er}}
+        S.code=c;LS.set('code',c);renderSetup('created')}catch(er){e.target.disabled=false;toast(errMsg(er))}};
+    $('#jn').onclick=()=>{S.invite=cleanCode($('#cd').value);if(S.invite.length<8)return toast('Mã chưa đúng');renderSetup('join')};return}
+  if(step==='created'){A.innerHTML=`<div class="page"><div class="scroll">
+    <div class="hero">🎉</div><h1 style="text-align:center">Đã tạo cặp</h1>
+    <div class="card"><h2>Gửi cho người ấy</h2><p class="mut">Người ấy mở link (hoặc nhập mã) là hai bạn được ghép với nhau. Mỗi cặp chỉ có 2 người.</p>
+    <div class="code">${fmtCode(S.code)}</div>
+    <button class="btn w" id="sh">Gửi link mời</button><div style="height:8px"></div><button class="btn sec w" id="cp">Sao chép link</button></div>
+    <button class="btn gh w" id="go">Vào bản đồ</button></div></div>`;
+    $('#sh').onclick=shareInvite;$('#cp').onclick=copyInvite;$('#go').onclick=()=>renderMain();return}
+  if(step==='join'){if(!S.name)return renderSetup('intro');A.innerHTML=`<div class="page"><div class="scroll">
+    <div class="hero">💞</div><h1 style="text-align:center">Lời mời ghép đôi</h1>
+    <div class="code">${fmtCode(S.invite)}</div>
+    <div class="card"><p style="margin-top:0">Khi vào cặp, <b>bạn và người kia sẽ thấy vị trí của nhau</b> mỗi khi mở app. Bạn có thể tạm dừng hoặc rời cặp bất cứ lúc nào.</p>
+    <button class="btn w" id="ok">Đồng ý và vào cặp</button><div style="height:8px"></div><button class="btn gh w" id="no">Không phải bây giờ</button></div></div></div>`;
+    $('#no').onclick=()=>{S.invite='';history.replaceState(null,'',location.pathname+(DEMO?'?demo=1':''));renderSetup('choose')};
+    $('#ok').onclick=async e=>{e.target.disabled=true;try{const uid=await API.uid(),c=S.invite,d=await API.getCouple(c);
+      if(!d)throw new Error('Không tìm thấy mã này');const m=d.members||[];
+      if(!m.includes(uid)){if(m.length>=2)throw new Error('Cặp này đã đủ 2 người. Nhờ người kia vào Cài đặt, bấm “Mời lại” rồi thử lại.');await API.patchCouple(c,{members:m.concat([uid])})}
+      S.code=c;LS.set('code',c);S.invite='';history.replaceState(null,'',location.pathname+(DEMO?'?demo=1':''));renderMain();toast('Đã ghép đôi 💞')}catch(er){e.target.disabled=false;toast(errMsg(er),4500)}};return}
+}
+function errMsg(e){const m=String(e&&e.message||e);if(/PERMISSION|permission/.test(m))return'Máy chủ chưa cho phép. Cần dán luật bảo mật Firestore (xem hướng dẫn).';if(/offline|Failed to fetch|network|timeout|aborted/i.test(m))return'Không có mạng, thử lại sau nhé';return m}
+async function shareInvite(){const u=inviteLink(),t='Vào Đôi Ta với mình nhé 💞 Mã: '+fmtCode(S.code);
+  if(navigator.share){try{await navigator.share({title:'Đôi Ta',text:t,url:u});return}catch(e){if(e&&e.name==='AbortError')return}}copyInvite()}
+async function copyInvite(){try{await navigator.clipboard.writeText(inviteLink());toast('Đã sao chép link')}catch(e){prompt('Sao chép link này:',inviteLink())}}
+
+// ===== Giao diện chính =====
+let map,mkMe,mkPt,ccMe,ccPt,plLayer,fitted=false;
+function renderMain(){
+  $('#app').innerHTML=`<div class="page" id="pg-map"><div id="map"></div>
+    <div class="top"><div class="share" id="shr"></div><div id="pingbox"></div><div class="ptn" id="ptn"></div></div>
+    <button class="fab" id="fme" style="bottom:72px" title="Về vị trí của tôi">🎯</button>
+    <button class="fab" id="fall" style="bottom:12px" title="Xem cả hai">💑</button>
+    <div class="pick hide" id="pick"><b>Chạm vào bản đồ để chọn chỗ</b><div class="mut">hoặc</div><button class="btn gh" id="pickx">Huỷ</button></div></div>
+  <div class="page hide" id="pg-pl"><div class="scroll" id="pl"></div></div>
+  <div class="page hide" id="pg-set"><div class="scroll" id="set"></div></div>
+  <nav><button data-t="map" class="on"><b>🗺️</b>Bản đồ</button><button data-t="pl"><b>⭐</b>Địa điểm</button><button data-t="set"><b>⚙️</b>Cài đặt</button></nav>`;
+  document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>tab(b.dataset.t));
+  map=L.map('map',{zoomControl:false,attributionControl:true}).setView([16.05,108.2],5);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:20,subdomains:'abcd',attribution:'© OpenStreetMap © CARTO'}).addTo(map);
+  plLayer=L.layerGroup().addTo(map);
+  map.on('click',e=>{if(S.pick){const cb=S.pick;S.pick=null;$('#pick').classList.add('hide');cb(e.latlng.lat,e.latlng.lng)}});
+  $('#fme').onclick=()=>{const p=S.pos||(S.me&&S.me.lat!=null&&S.me);if(p)map.setView([p.lat,p.lng],16);else locateOnce(true)};
+  $('#fall').onclick=()=>fitBoth(true);
+  $('#pickx').onclick=()=>{S.pick=null;$('#pick').classList.add('hide');openPlace(S.pickDraft)};
+  drawShare();drawPtn();drawPlacesOnMap();
+  startGeo();refresh();loadPlaces();
+  clearInterval(S.iv);S.iv=setInterval(()=>{if(document.visibilityState==='visible')refresh()},15e3);
+  clearInterval(S.iv2);S.iv2=setInterval(()=>{drawPtn()},30e3);
+}
+function tab(t){S.tab=t;document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  $('#pg-map').classList.toggle('hide',t!=='map');$('#pg-pl').classList.toggle('hide',t!=='pl');$('#pg-set').classList.toggle('hide',t!=='set');
+  if(t==='map')setTimeout(()=>map.invalidateSize(),50);if(t==='pl'){drawPlaces();loadPlaces()}if(t==='set')drawSet()}
+
+function drawShare(){const e=$('#shr');if(!e)return;e.className='share'+(S.sharing?'':' off');
+  e.innerHTML=S.sharing?`<span class="dot"></span><span>Đang chia sẻ vị trí${S.err?` · <span style="color:#b91c1c">${esc(S.err)}</span>`:''}</span><button class="tg" id="tg">Tạm dừng</button>`
+    :`<span class="dot"></span><span>Đã tạm dừng chia sẻ</span><button class="tg" id="tg" style="background:var(--pk);color:#fff">Bật lại</button>`;
+  $('#tg').onclick=toggleShare}
+async function toggleShare(){S.sharing=!S.sharing;LS.set('sharing',S.sharing);drawShare();
+  if(S.sharing){toast('Đã bật chia sẻ');startGeo();locateOnce()}else{stopGeo();toast('Đã tạm dừng. Người ấy sẽ thấy bạn đang tạm dừng.');
+    try{await API.setLoc(S.code,{name:S.name,sharing:false,t:Date.now()})}catch(e){toast(errMsg(e))}}
+  refresh()}
+
+function drawPtn(){const e=$('#ptn');if(!e)return;const p=S.ptn,me=S.me;
+  if(!S.couple){e.innerHTML=`<div class="av you">…</div><div class="grow"><div class="nm">Đang tải…</div></div>`;return}
+  if(!p&&(S.couple.members||[]).length<2){e.innerHTML=`<div class="av you">?</div><div class="grow"><div class="nm">Chưa có người ấy</div><div class="st">Gửi mã <b>${fmtCode(S.code)}</b> để ghép đôi</div></div><div class="acts"><button class="ib" id="inv">💌</button></div>`;$('#inv').onclick=shareInvite;return}
+  if(!p){e.innerHTML=`<div class="av you">?</div><div class="grow"><div class="nm">Người ấy</div><div class="st">Chưa mở app lần nào</div></div>`;return}
+  const age=p.t?(Date.now()-p.t)/60e3:1e9,cls=age<10?'fresh':age>60?'stale':'';
+  let st;if(p.sharing===false)st=`<b>Đã tạm dừng chia sẻ</b> · ${ago(p.t)}`;
+  else if(p.lat==null)st='Chưa có vị trí';
+  else{const d=dist(S.pos||(me&&me.lat!=null?me:null),p);st=`<span class="${cls}">● ${ago(p.t)}</span>${d!=null?' · cách '+fmtD(d):''}${p.bat!=null?' · 🔋'+p.bat+'%':''}`}
+  const canNav=p.sharing!==false&&p.lat!=null;
+  e.innerHTML=`<div class="av you">${esc(ini(p.name))}</div><div class="grow"><div class="nm">${esc(p.name||'Người ấy')}</div><div class="st">${st}</div></div>
+    <div class="acts">${canNav?`<button class="ib" id="go" title="Chỉ đường">🧭</button>`:''}<button class="ib" id="pg" title="Nhờ cập nhật">🔔</button></div>`;
+  if(canNav)$('#go').onclick=()=>window.open(`https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`,'_blank');
+  $('#pg').onclick=askUpdate}
+async function askUpdate(){const p=S.ptn;if(!p)return;try{await API.patchCouple(S.code,{['ping_'+p.id]:Date.now(),['pingby_'+p.id]:S.name});
+  toast('Đã nhờ. Lần tới người ấy mở app sẽ thấy lời nhắn và vị trí được cập nhật.',4000)}catch(e){toast(errMsg(e))}}
+function drawPing(){const e=$('#pingbox');if(!e)return;const c=S.couple||{},t=c['ping_'+NET.uid],seen=LS.get('pingseen',0);
+  if(t&&t>seen&&Date.now()-t<6*36e5){e.innerHTML=`<div class="ping">🔔 <b>${esc(c['pingby_'+NET.uid]||'Người ấy')}</b> đang tìm bạn (${ago(t)}). ${S.sharing?'Vị trí của bạn vừa được gửi.':'Bạn đang tạm dừng chia sẻ.'} <button style="float:right;font-weight:600" id="pgx">Đã xem</button></div>`;
+    $('#pgx').onclick=()=>{LS.set('pingseen',t);drawPing()}}else e.innerHTML=''}
+
+function mkIcon(n,cls){return L.divIcon({className:'',html:`<div class="mk"><i style="background:${cls==='me'?'var(--bl)':'var(--pk)'}">${esc(ini(n))}</i><span>${esc(n)}</span></div>`,iconSize:[80,56],iconAnchor:[40,20]})}
+function drawMarkers(){if(!map)return;const me=S.pos||(S.me&&S.me.lat!=null?S.me:null),p=S.ptn&&S.ptn.sharing!==false&&S.ptn.lat!=null?S.ptn:null;
+  const put=(pt,mk,cc,n,cls,col)=>{if(!pt){if(mk)map.removeLayer(mk);if(cc)map.removeLayer(cc);return[null,null]}
+    const ll=[pt.lat,pt.lng];if(!mk)mk=L.marker(ll,{icon:mkIcon(n,cls),zIndexOffset:cls==='me'?100:200}).addTo(map);else{mk.setLatLng(ll);mk.setIcon(mkIcon(n,cls))}
+    const r=Math.min(pt.acc||0,2000);if(!cc)cc=L.circle(ll,{radius:r,color:col,weight:1,fillOpacity:.08}).addTo(map);else{cc.setLatLng(ll);cc.setRadius(r)}return[mk,cc]};
+  [mkMe,ccMe]=put(me,mkMe,ccMe,S.name+' (bạn)','me','#3b82f6');[mkPt,ccPt]=put(p,mkPt,ccPt,(p&&p.name)||'Người ấy','you','#e8577a');
+  if(!fitted&&(me||p)){fitted=true;fitBoth()}}
+function fitBoth(user){const pts=[];if(mkMe)pts.push(mkMe.getLatLng());if(mkPt)pts.push(mkPt.getLatLng());if(!pts.length){if(user)toast('Chưa có vị trí nào');return}
+  if(pts.length===1)map.setView(pts[0],15);else map.fitBounds(L.latLngBounds(pts),{padding:[60,60],maxZoom:16,paddingTopLeft:[40,170]})}
+
+// ===== Định vị =====
+let watchId=null;
+function startGeo(){if(!S.sharing||watchId!=null||!navigator.geolocation)return;
+  watchId=navigator.geolocation.watchPosition(onPos,onGeoErr,{enableHighAccuracy:true,maximumAge:15e3,timeout:30e3});
+  if(navigator.getBattery)navigator.getBattery().then(b=>{const f=()=>S.bat=Math.round(b.level*100);f();b.addEventListener('levelchange',f)}).catch(()=>{})}
+function stopGeo(){if(watchId!=null)navigator.geolocation.clearWatch(watchId);watchId=null}
+function locateOnce(center){if(!navigator.geolocation)return toast('Máy không hỗ trợ định vị');navigator.geolocation.getCurrentPosition(p=>{onPos(p,true);if(center)map.setView([p.coords.latitude,p.coords.longitude],16)},onGeoErr,{enableHighAccuracy:true,maximumAge:0,timeout:20e3})}
+function onPos(p,force){S.err=null;S.pos={lat:p.coords.latitude,lng:p.coords.longitude,acc:Math.round(p.coords.accuracy||0)};drawShare();drawMarkers();drawPtn();
+  if(!S.sharing)return;const moved=dist(S.lastSentPos,S.pos);
+  if(force||Date.now()-S.lastSent>30e3||moved==null||moved>40)sendLoc()}
+function onGeoErr(e){S.err=e.code===1?'chưa cho phép định vị':'không lấy được vị trí';drawShare();
+  if(e.code===1)toast(isIOS?'Hãy cho phép vị trí: Cài đặt › Quyền riêng tư › Dịch vụ định vị › Safari/Đôi Ta':'Hãy cho phép quyền vị trí cho trang này',5000)}
+async function sendLoc(){if(!S.pos||!S.sharing||S.sending)return;S.sending=true;const o={name:S.name,sharing:true,lat:S.pos.lat,lng:S.pos.lng,acc:S.pos.acc,t:Date.now()};if(S.bat!=null)o.bat=S.bat;
+  try{await API.setLoc(S.code,o);S.lastSent=o.t;S.lastSentPos=S.pos;S.me=o}catch(e){S.err=errMsg(e).slice(0,40);drawShare()}S.sending=false}
+
+// ===== Làm mới dữ liệu =====
+async function refresh(){if(!S.code)return;try{const uid=await API.uid();const [c,locs]=await Promise.all([API.getCouple(S.code),API.listLoc(S.code)]);
+    if(!c||!(c.members||[]).includes(uid)){return kicked()}
+    S.couple=c;S.me=locs.find(l=>l.id===uid)||S.me;S.ptn=locs.find(l=>l.id!==uid&&(c.members||[]).includes(l.id))||null;
+    if(S.me&&S.me.name!==S.name&&S.sharing===false){}
+    const pt=c['ping_'+uid];if(pt&&pt>(LS.get('pingdone',0))&&S.sharing){LS.set('pingdone',pt);locateOnce()}
+  }catch(e){if(e.status===403){S.err='máy chủ chưa cho phép';drawShare()}}
+  drawPtn();drawMarkers();drawPing()}
+function kicked(){toast('Bạn không còn ở trong cặp này',4000);leaveLocal()}
+function leaveLocal(){stopGeo();clearInterval(S.iv);clearInterval(S.iv2);S.code='';LS.del('code');LS.del('places_cache');S.couple=S.ptn=S.me=null;S.places=[];fitted=false;mkMe=mkPt=ccMe=ccPt=null;renderSetup('choose')}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&S.code&&$('#map')){refresh();if(S.sharing)locateOnce()}});
+
+// ===== Địa điểm =====
+async function loadPlaces(){if(!S.code)return;try{S.places=await API.listPlaces(S.code);LS.set('places_cache',S.places)}catch(e){}drawPlacesOnMap();if(S.tab==='pl')drawPlaces()}
+const myR=p=>p['r_'+NET.uid]||0;
+const ptnId=()=>{const m=(S.couple&&S.couple.members)||[];return m.find(x=>x!==NET.uid)};
+const ptR=p=>{const id=ptnId();return id?p['r_'+id]||0:0};
+const avgR=p=>{const a=[myR(p),ptR(p)].filter(Boolean);return a.length?a.reduce((x,y)=>x+y,0)/a.length:0};
+const stars=n=>{n=Math.round(n);return`<span class="stars">${'★'.repeat(n)}<span class="e">${'★'.repeat(5-n)}</span></span>`};
+function drawPlacesOnMap(){if(!plLayer)return;plLayer.clearLayers();for(const p of S.places){if(p.lat==null)continue;const c=CATS[p.cat]||CATS.other;
+  L.marker([p.lat,p.lng],{icon:L.divIcon({className:'',html:`<div class="pm">${c.e}</div>`,iconSize:[28,28],iconAnchor:[14,14]})}).addTo(plLayer)
+   .bindPopup(`<b>${esc(p.name)}</b><br>${avgR(p)?stars(avgR(p))+'<br>':''}${p.note?esc(p.note).slice(0,120)+'<br>':''}<a href="#" onclick="openPlace(S.places.find(x=>x.id==='${p.id}'));return false">Sửa / đánh giá</a>`)}}
+function drawPlaces(){const e=$('#pl');if(!e)return;const f=S.filter;let L2=S.places.slice();
+  if(f==='want')L2=L2.filter(p=>p.status==='want');else if(f!=='all')L2=L2.filter(p=>p.cat===f);
+  if(S.sort==='new')L2.sort((a,b)=>(b.t||0)-(a.t||0));else if(S.sort==='star')L2.sort((a,b)=>avgR(b)-avgR(a));else{const me=S.pos;L2.sort((a,b)=>(dist(me,a)??1e12)-(dist(me,b)??1e12))}
+  const pn=(S.ptn&&S.ptn.name)||'Người ấy';
+  e.innerHTML=`<div class="row" style="margin-bottom:10px"><h1 class="grow" style="margin:0">Nơi đôi ta đến</h1><button class="btn" id="add">＋ Thêm</button></div>
+    <div class="chips">${[['all','Tất cả'],['eat','🍜 Ăn uống'],['drink','☕ Cà phê'],['fun','🎡 Vui chơi'],['other','📍 Khác'],['want','📝 Muốn đi']].map(([k,n])=>`<button class="chip${f===k?' on':''}" data-f="${k}">${n}</button>`).join('')}</div>
+    <div class="row" style="margin-bottom:8px"><span class="mut grow">${L2.length} nơi</span><select class="t" id="srt" style="width:auto;padding:6px 10px;font-size:14px"><option value="new">Mới thêm</option><option value="star">Sao cao nhất</option><option value="near">Gần đây</option></select></div>
+    <div class="card" style="padding:4px 14px">${L2.length?L2.map(p=>{const c=CATS[p.cat]||CATS.other,d=dist(S.pos,p);return`<div class="pl" data-id="${p.id}">
+      <div class="em">${c.e}</div><div class="grow"><div class="nm">${esc(p.name)}${p.status==='want'?'<span class="tag w">Muốn đi</span>':''}</div>
+      <div class="rt"><span>Bạn: ${myR(p)?stars(myR(p)):'<i>chưa chấm</i>'}</span><span>${esc(pn)}: ${ptR(p)?stars(ptR(p)):'<i>chưa chấm</i>'}</span></div>
+      ${p.note?`<div class="nt">${esc(p.note)}</div>`:''}<div class="mut" style="font-size:12px;margin-top:2px">${c.n}${d!=null?' · '+fmtD(d):''}${p.addr?' · '+esc(p.addr):''}</div></div></div>`}).join('')
+      :`<div class="empty">Chưa có nơi nào. Bấm <b>＋ Thêm</b> để lưu quán ăn, quán cà phê, chỗ vui chơi đầu tiên 💕</div>`}</div>`;
+  $('#srt').value=S.sort;$('#srt').onchange=ev=>{S.sort=ev.target.value;drawPlaces()};
+  e.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{S.filter=b.dataset.f;drawPlaces()});
+  e.querySelectorAll('.pl').forEach(r=>r.onclick=()=>openPlace(S.places.find(x=>x.id===r.dataset.id)));
+  $('#add').onclick=()=>openPlace(null)}
+function openPlace(p){const isNew=!p||!p.id;const d=Object.assign({cat:'eat',status:'been',name:'',note:'',lat:null,lng:null,addr:''},p||{});d.my=p&&p.id?myR(p):(d.my||0);
+  S.pickDraft=d;
+  const sh=document.createElement('div');sh.className='sheet';sh.innerHTML=`<div>
+    <div class="row"><h2 class="grow" style="margin:0">${isNew?'Thêm địa điểm':'Sửa địa điểm'}</h2><button class="ib" id="x">✕</button></div>
+    <label class="f">Tên quán / địa điểm</label><input class="t" id="pn" maxlength="60" value="${esc(d.name)}" placeholder="Ví dụ: Bún chả Hàng Mành">
+    <label class="f">Loại</label><div class="seg" id="pc">${Object.keys(CATS).map(k=>`<button data-v="${k}" class="${d.cat===k?'on':''}">${CATS[k].e} ${CATS[k].n}</button>`).join('')}</div>
+    <label class="f">Trạng thái</label><div class="seg" id="ps"><button data-v="been" class="${d.status!=='want'?'on':''}">✅ Đã đến</button><button data-v="want" class="${d.status==='want'?'on':''}">📝 Muốn đi</button></div>
+    <label class="f">Bạn chấm mấy sao?</label><div class="srate" id="pr">${[1,2,3,4,5].map(i=>`<button data-v="${i}" class="${i<=d.my?'on':''}">★</button>`).join('')}</div>
+    ${!isNew&&ptR(p)?`<div class="mut">${esc((S.ptn&&S.ptn.name)||'Người ấy')} chấm: ${stars(ptR(p))}</div>`:''}
+    <label class="f">Ghi chú (món ngon, giá, kỷ niệm…)</label><textarea class="t" id="pt" maxlength="500">${esc(d.note)}</textarea>
+    <label class="f">Vị trí</label><div class="mut" id="ploc" style="margin-bottom:6px">${d.lat!=null?'📍 Đã chọn vị trí'+(d.addr?': '+esc(d.addr):''):'Chưa chọn'}</div>
+    <div class="row"><button class="btn sec grow" id="here">📍 Chỗ tôi đang đứng</button><button class="btn sec grow" id="onmap">🗺️ Chọn trên bản đồ</button></div>
+    <div class="row" style="margin-top:8px"><input class="t grow" id="q" placeholder="Hoặc tìm theo tên / địa chỉ"><button class="btn gh" id="qs">Tìm</button></div><div class="sres" id="qr"></div>
+    <div style="height:14px"></div><button class="btn w" id="sv">Lưu</button>
+    ${!isNew?'<div style="height:8px"></div><button class="btn red w" id="del">Xoá địa điểm này</button>':''}</div>`;
+  document.body.appendChild(sh);const q=s=>sh.querySelector(s),close=()=>sh.remove();
+  const sync=()=>{d.name=q('#pn').value;d.note=q('#pt').value};
+  q('#x').onclick=close;sh.onclick=ev=>{if(ev.target===sh)close()};
+  const seg=(id,key)=>q(id).querySelectorAll('button').forEach(b=>b.onclick=()=>{d[key]=b.dataset.v;q(id).querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))});
+  seg('#pc','cat');seg('#ps','status');
+  q('#pr').querySelectorAll('button').forEach(b=>b.onclick=()=>{const v=+b.dataset.v;d.my=d.my===v?0:v;q('#pr').querySelectorAll('button').forEach(x=>x.classList.toggle('on',+x.dataset.v<=d.my))});
+  const setLL=(la,ln,ad)=>{d.lat=la;d.lng=ln;if(ad!==undefined)d.addr=ad;q('#ploc').innerHTML='📍 Đã chọn vị trí'+(d.addr?': '+esc(d.addr):'')};
+  q('#here').onclick=()=>{if(S.pos)return setLL(S.pos.lat,S.pos.lng,'');navigator.geolocation.getCurrentPosition(p=>setLL(p.coords.latitude,p.coords.longitude,''),()=>toast('Không lấy được vị trí'),{enableHighAccuracy:true,timeout:15e3})};
+  q('#onmap').onclick=()=>{sync();close();tab('map');$('#pick').classList.remove('hide');S.pick=(la,ln)=>{d.lat=la;d.lng=ln;d.addr='';openPlace(Object.assign(p&&p.id?p:{},{},d,{id:p&&p.id}))}};
+  q('#qs').onclick=async()=>{const s=q('#q').value.trim();if(!s)return;q('#qr').innerHTML='<div class="mut" style="padding:8px">Đang tìm…</div>';
+    try{const c=S.pos?`&viewbox=${S.pos.lng-.5},${S.pos.lat+.5},${S.pos.lng+.5},${S.pos.lat-.5}`:'';
+      const r=await (await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=6&accept-language=vi&countrycodes=vn${c}&q=${encodeURIComponent(s)}`)).json();
+      q('#qr').innerHTML=r.length?r.map((x,i)=>`<button data-i="${i}">${esc(x.display_name)}</button>`).join(''):'<div class="mut" style="padding:8px">Không thấy. Thử “Chọn trên bản đồ”.</div>';
+      q('#qr').querySelectorAll('button').forEach(b=>b.onclick=()=>{const x=r[+b.dataset.i];const short=x.display_name.split(',').slice(0,3).join(',');if(!q('#pn').value.trim())q('#pn').value=x.display_name.split(',')[0];setLL(+x.lat,+x.lon,short);q('#qr').innerHTML=''})}
+    catch(e){q('#qr').innerHTML='<div class="mut" style="padding:8px">Lỗi mạng khi tìm</div>'}};
+  q('#sv').onclick=async ev=>{sync();if(!d.name.trim())return toast('Nhập tên địa điểm');ev.target.disabled=true;
+    const id=d.id||(Date.now().toString(36)+Math.random().toString(36).slice(2,7));
+    const o={name:d.name.trim(),cat:d.cat,status:d.status,note:d.note.trim(),addr:d.addr||'',['r_'+NET.uid]:d.my||0};
+    if(d.lat!=null){o.lat=d.lat;o.lng=d.lng}if(!d.id){o.by=NET.uid;o.t=Date.now()}
+    try{await API.savePlace(S.code,id,o);close();toast('Đã lưu ⭐');await loadPlaces()}catch(e){ev.target.disabled=false;toast(errMsg(e))}};
+  if(!isNew)q('#del').onclick=async()=>{if(!confirm('Xoá “'+d.name+'”?'))return;try{await API.delPlace(S.code,d.id);close();toast('Đã xoá');loadPlaces()}catch(e){toast(errMsg(e))}};
+  if(isNew&&!d.name)setTimeout(()=>q('#pn').focus(),100)}
+window.openPlace=openPlace;
+
+// ===== Cài đặt =====
+function drawSet(){const e=$('#set');const full=S.couple&&(S.couple.members||[]).length>=2;
+  e.innerHTML=`<h1>Cài đặt</h1>
+  <div class="card"><h2>Tên của bạn</h2><div class="row"><input class="t grow" id="nm" maxlength="20" value="${esc(S.name)}"><button class="btn" id="svn">Lưu</button></div></div>
+  <div class="card"><h2>Cặp của bạn</h2><div class="code">${fmtCode(S.code)}</div>
+    <p class="mut">${full?'Đã ghép với <b>'+esc((S.ptn&&S.ptn.name)||'người ấy')+'</b>.':'Chưa có người ấy. Gửi link mời nhé.'}</p>
+    ${full?'':'<button class="btn w" id="inv">Gửi link mời</button><div style="height:8px"></div>'}
+    ${full?`<button class="btn gh w" id="rst">Mời lại (khi người ấy đổi máy)</button><p class="mut">Gỡ máy cũ của người ấy khỏi cặp để họ vào lại bằng mã trên. Địa điểm đã lưu vẫn còn.</p>`:''}</div>
+  <div class="card"><h2>Chia sẻ vị trí</h2><p class="mut" style="margin-top:0">Hiện đang: <b>${S.sharing?'Đang chia sẻ':'Tạm dừng'}</b></p><button class="btn ${S.sharing?'sec':''} w" id="tg2">${S.sharing?'Tạm dừng chia sẻ':'Bật chia sẻ'}</button></div>
+  <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và người kia luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ người ấy mở app cập nhật.</p>
+    <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, hai bạn có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu cả hai dùng iPhone.</p></div>
+  <div class="card"><h2>Rời cặp</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi cặp này.</p><button class="btn red w" id="lv">Rời cặp</button></div>
+  <p class="mut" style="text-align:center">Đôi Ta · phiên bản 1${DEMO?' · xem thử':''}</p>`;
+  $('#svn').onclick=()=>{const n=$('#nm').value.trim();if(!n)return;S.name=n;LS.set('name',n);toast('Đã đổi tên');if(S.sharing&&S.pos)sendLoc();else API.setLoc(S.code,{name:n,sharing:false,t:Date.now()}).catch(()=>{});drawShare();drawMarkers()};
+  if($('#inv'))$('#inv').onclick=shareInvite;
+  if($('#rst'))$('#rst').onclick=async()=>{if(!confirm('Gỡ máy hiện tại của người ấy khỏi cặp? Người ấy cần mở link mời để vào lại.'))return;
+    try{await API.patchCouple(S.code,{members:[NET.uid]});toast('Đã gỡ. Gửi lại link mời cho người ấy.');await refresh();drawSet()}catch(er){toast(errMsg(er))}};
+  $('#tg2').onclick=async()=>{await toggleShare();drawSet()};
+  $('#lv').onclick=async()=>{if(!confirm('Rời cặp? Vị trí của bạn sẽ bị xoá và hai bạn sẽ không thấy nhau nữa.'))return;
+    try{await API.delLoc(S.code);const c=await API.getCouple(S.code);if(c)await API.patchCouple(S.code,{members:(c.members||[]).filter(x=>x!==NET.uid)})}catch(er){toast(errMsg(er));return}
+    toast('Đã rời cặp');leaveLocal()}}
+
+if('serviceWorker'in navigator&&!DEMO)navigator.serviceWorker.register('sw.js').catch(()=>{});
+boot();
+</script>
+</body>
+</html>

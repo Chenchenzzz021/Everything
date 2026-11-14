@@ -117,10 +117,17 @@ ul.ck li{margin:4px 0}
 .av{color:#fff}
 .av{position:relative;background-repeat:no-repeat}
 .av .eb{position:absolute;right:-4px;bottom:-4px;font-style:normal;font-size:14px;background:#fff;border-radius:50%;width:20px;height:20px;display:grid;place-items:center;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-.flag{position:relative;width:70px;height:40px}
-.flag .fl{position:absolute;left:4px;top:0;background:#fff;border:2px solid var(--pk);border-radius:8px 8px 8px 0;padding:1px 4px;font-size:15px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.25)}
-.flag .fl small{font-size:10px;font-weight:700;color:var(--pk);margin-left:2px}
-.flag .fp{position:absolute;left:4px;top:4px;width:2px;height:34px;background:var(--pk)}
+.flag{position:relative;width:80px;height:50px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.25))}
+.flag .fb{position:absolute;left:0;bottom:0;width:12px;height:5px;border-radius:50%;background:rgba(0,0,0,.25);filter:blur(1px)}
+.flag .fp{position:absolute;left:4px;top:3px;width:3px;height:45px;border-radius:2px;background:linear-gradient(90deg,#8b5e3c,#c89466 50%,#7a4f30)}
+.flag .fk{position:absolute;left:1.5px;top:0;width:8px;height:8px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff6c4,#f5b301 60%,#c98a00)}
+.flag .fl{position:absolute;left:7px;top:6px;height:28px;display:flex;align-items:center;gap:1px;padding:0 15px 0 6px;font-size:16px;line-height:1;white-space:nowrap;
+  background:linear-gradient(160deg,#ff8fb1 0%,var(--pk) 55%,#d9406a 100%);clip-path:polygon(0 0,100% 0,calc(100% - 9px) 50%,100% 100%,0 100%);border-radius:2px 0 0 2px;
+  transform-origin:left center;animation:fwave 2.6s ease-in-out infinite}
+.flag .fl::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 30%,rgba(255,255,255,.28) 55%,transparent 80%);pointer-events:none}
+.flag .fl small{font:700 10px/1 sans-serif;color:#fff;background:rgba(0,0,0,.18);border-radius:999px;padding:2px 4px;margin-left:2px}
+@keyframes fwave{0%,100%{transform:skewY(0) scaleX(1)}50%{transform:skewY(-3deg) scaleX(.97)}}
+.pstar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:16px;background:radial-gradient(circle at 35% 30%,#fffbe8,#fff3c2);border:2.5px solid #f5b301;box-shadow:0 2px 6px rgba(0,0,0,.28)}
 .vis{font-size:13px;margin-top:2px}
 .emg{display:grid;grid-template-columns:repeat(8,1fr);gap:4px}
 .emg button{font-size:22px;padding:6px 0;border-radius:10px;background:#fff;border:1px solid var(--ln)}
@@ -635,9 +642,9 @@ const avgR=p=>{const a=allR(p);return a.length?a.reduce((x,y)=>x+y.v,0)/a.length
 const stars=n=>{n=Math.round(n);return`<span class="stars">${'★'.repeat(n)}<span class="e">${'★'.repeat(5-n)}</span></span>`};
 function placeIcon(p){const V=visitors(p);
   if(isPers(p))return L.divIcon({className:'',html:`<div class="ppin"><span>${CATS[p.cat].e}</span></div>`,iconSize:[34,34],iconAnchor:[4,38]});
-  if(!V.length)return L.divIcon({className:'',html:`<div class="pm">⭐</div>`,iconSize:[28,28],iconAnchor:[14,14]});
+  if(!V.length)return L.divIcon({className:'',html:`<div class="pstar">⭐</div>`,iconSize:[30,30],iconAnchor:[15,15]});
   const E=emList(V),sh=E.slice(0,3).join('')+(E.length>3?'<small>+'+(E.length-3)+'</small>':'');
-  return L.divIcon({className:'',html:`<div class="flag"><div class="fl">${sh}</div><div class="fp"></div></div>`,iconSize:[70,40],iconAnchor:[6,38]})}
+  return L.divIcon({className:'',html:`<div class="flag"><div class="fb"></div><div class="fp"></div><div class="fl">${sh}</div><div class="fk"></div></div>`,iconSize:[80,50],iconAnchor:[6,48],popupAnchor:[0,-44]})}
 function drawPlacesOnMap(){if(!plLayer)return;plLayer.clearLayers();for(const p of S.places){if(p.lat==null)continue;const c=CATS[p.cat]||CATS.other,V=visitors(p);
   const ps=isPers(p);if(!ps&&(S.vf==='been'&&!V.length||S.vf==='not'&&V.length))continue;
   const mk=L.marker([p.lat,p.lng],{icon:placeIcon(p)});mk._pid=p.id;mk.addTo(plLayer)
@@ -959,7 +966,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 20${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 21${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

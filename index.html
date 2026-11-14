@@ -1019,10 +1019,10 @@ function ludoApply(g,k,t){const n=g.pl.length,s=g.turn,sl=slotsOf(n)[s],P=g.pos.
   return{P,kicked}}
 const DICE=['','⚀','⚁','⚂','⚃','⚄','⚅'];
 // ----- màn chơi -----
-async function openGame(id){const old=$('.gm');if(old)old.remove();const v=document.createElement('div');v.className='gm';document.body.appendChild(v);let g=null,busy=false,timer=null,rolling=false;
+async function openGame(id){const old=$('.gm');if(old)old.remove();const v=document.createElement('div');v.className='gm';document.body.appendChild(v);let g=null,busy=false,timer=null,rolling=false,sv=0;
   const close=()=>{clearInterval(timer);v.remove();loadGames()};
-  const load=async()=>{if(busy)return;try{const n=await gGet(id);if(!n){v.innerHTML='<div class="empty">Ván này đã bị xoá</div>';return}if(!g||n.upd!==g.upd||n.st!==g.st){const was=g;g=n;g.id=id;draw(was)}}catch(e){}};
-  const save=async o=>{busy=true;o.upd=Date.now();Object.assign(g,o);draw();try{await API.put(gPath(id),o,true)}catch(e){toast(errMsg(e))}busy=false;loadGames()};
+  const load=async()=>{if(busy)return;const ver=sv;try{const n=await gGet(id);if(busy||ver!==sv)return;if(!n){v.innerHTML='<div class="empty">Ván này đã bị xoá</div>';return}if(g&&(n.upd||0)<(g.upd||0))return;if(!g||n.upd!==g.upd||n.st!==g.st){const was=g;g=n;g.id=id;draw(was)}}catch(e){}};
+  const save=async o=>{busy=true;sv++;o.upd=Date.now();Object.assign(g,o);draw();try{await API.put(gPath(id),o,true)}catch(e){toast(errMsg(e))}busy=false;loadGames()};
   const chips=()=>(g.pl||[]).map((u,i)=>{const p=personOf(u),col=g.type==='ludo'?LCOL[slotsOf(g.pl.length)[i]]:(i===0?'#e8577a':'#3b82f6');
       return`<span class="gch${g.st==='play'&&g.turn===i?' on':''}" style="--c:${col}">${avHtml(p,26)}<span>${esc(nickOf(u)||p.name||'?')}${u===NET.uid?' (bạn)':''}</span>${g.type==='caro'?`<b style="color:${col}">${i===0?'✕':'◯'}</b>`:''}</span>`}).join('')
       +(g.st==='wait'?(g.inv||[]).filter(u=>!g.pl.includes(u)).map(u=>`<span class="gch wait">${avHtml(personOf(u),26)}<span>${esc(nameOf(u))} · chờ…</span></span>`).join(''):'');
@@ -1191,7 +1191,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 29${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 30${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

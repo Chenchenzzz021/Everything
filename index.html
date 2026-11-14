@@ -12,12 +12,15 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Itim&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
 :root{--pk:#e8577a;--pk2:#fde4ea;--bl:#3b82f6;--bl2:#dbeafe;--ink:#1f2330;--mut:#6b7280;--bg:#fff7f9;--card:#fff;--ln:#f1d5dc;--ok:#16a34a;--warn:#d97706;--sh:0 6px 24px rgba(232,87,122,.15)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:16px/1.45 Itim,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.leaflet-container,.leaflet-popup-content{font-family:Itim,-apple-system,"Segoe UI",Roboto,sans-serif!important;font-size:14px}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer;border:0;background:none}
 .hide{display:none!important}
@@ -177,7 +180,7 @@ nav button.on b .ic{stroke-width:2.3}
 .eframe>img{width:100%;height:100%;object-fit:cover;display:block;user-select:none;-webkit-user-select:none}
 .elay{position:absolute;inset:0}
 .stk{position:absolute;line-height:1;white-space:nowrap;cursor:grab;user-select:none;-webkit-user-select:none;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
-.stk.txt{font-weight:800;font-family:-apple-system,"Segoe UI",Roboto,sans-serif;paint-order:stroke fill;-webkit-text-stroke:.14em #fff}
+.stk.txt{font-weight:400;font-family:Itim,-apple-system,"Segoe UI",Roboto,sans-serif;paint-order:stroke fill;-webkit-text-stroke:.14em #fff}
 .stk.sel{outline:2px dashed #fff;outline-offset:4px;border-radius:8px;filter:drop-shadow(0 0 4px rgba(0,0,0,.4))}
 .eframe input{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);width:80%;border:0;border-radius:999px;padding:10px 14px;background:rgba(0,0,0,.45);color:#fff;text-align:center;font-size:15px;outline:none;z-index:2}
 .eframe input::placeholder{color:#eee}
@@ -757,9 +760,9 @@ function composePhoto(file){squareJpeg(file,img=>{const st={sel:LS.get('aud','al
     if(a==='sm')k.s=Math.max(.04,k.s/1.2);if(a==='lg')k.s=Math.min(.8,k.s*1.2);if(a==='rl')k.r-=15;if(a==='rr')k.r+=15;if(a==='del'){st.stk.splice(st.cur,1);st.cur=-1}if(a==='ok')st.cur=-1;drawStk()});
   q('#ex').onclick=()=>{if(st.stk.length&&!confirm('Bỏ ảnh này?'))return;ed.remove()};
   // ghép sticker vào ảnh rồi chọn người xem
-  q('#enext').onclick=()=>{const im=new Image();im.onload=()=>{const N=im.width,c=document.createElement('canvas');c.width=c.height=N;const g=c.getContext('2d');g.drawImage(im,0,0,N,N);
+  q('#enext').onclick=async()=>{try{await document.fonts.load('40px Itim')}catch(e){}const im=new Image();im.onload=()=>{const N=im.width,c=document.createElement('canvas');c.width=c.height=N;const g=c.getContext('2d');g.drawImage(im,0,0,N,N);
       for(const k of st.stk){g.save();g.translate(k.x*N,k.y*N);g.rotate(k.r*Math.PI/180);g.textAlign='center';g.textBaseline='middle';
-        if(k.t){g.font=`800 ${k.s*N}px -apple-system,"Segoe UI",Roboto,sans-serif`;g.lineJoin='round';g.lineWidth=k.s*N*.18;g.strokeStyle=k.c==='#ffffff'?'rgba(0,0,0,.55)':'#ffffff';g.strokeText(k.t,0,0);g.fillStyle=k.c;g.fillText(k.t,0,0)}
+        if(k.t){g.font=`${k.s*N}px Itim,-apple-system,"Segoe UI",Roboto,sans-serif`;g.lineJoin='round';g.lineWidth=k.s*N*.18;g.strokeStyle=k.c==='#ffffff'?'rgba(0,0,0,.55)':'#ffffff';g.strokeText(k.t,0,0);g.fillStyle=k.c;g.fillText(k.t,0,0)}
         else{g.font=`${k.s*N}px ${EMO_FONT}`;g.fillText(k.e,0,0)}g.restore()}
       let qv=.82,out=c.toDataURL('image/jpeg',qv);while(out.length>650000&&qv>.4){qv-=.1;out=c.toDataURL('image/jpeg',qv)}sendStep(out,q('#cap').value.trim())};im.src=img};
   const sendStep=(fin,cap)=>{const sh=document.createElement('div');sh.className='sheet';sh.style.zIndex=1700;sh.innerHTML=`<div>
@@ -908,7 +911,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 18${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 19${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

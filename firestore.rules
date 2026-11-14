@@ -27,6 +27,16 @@ service cloud.firestore {
       match /places/{pid} {
         allow read, write: if isMember(c);
       }
+      // ảnh: chỉ người có tên trong "see" mới xem được; chỉ người đăng mới sửa/xoá
+      match /photos/{pid} {
+        allow read: if isMember(c) && request.auth.uid in resource.data.see;
+        allow create: if isMember(c) && request.resource.data.by == request.auth.uid
+                      && request.auth.uid in request.resource.data.see
+                      && request.resource.data.img.size() < 900000;
+        allow update: if isMember(c) && resource.data.by == request.auth.uid
+                      && request.resource.data.by == request.auth.uid;
+        allow delete: if isMember(c) && resource.data.by == request.auth.uid;
+      }
     }
   }
 }

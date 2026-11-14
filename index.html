@@ -139,6 +139,28 @@ nav button.on b .ic{stroke-width:2.3}
 .btn .ic{width:18px;height:18px}
 .tg{display:inline-flex;align-items:center;gap:4px}.tg .ic{width:15px;height:15px}
 .ph .ic{width:18px;height:18px;color:var(--mut)}
+.camfab{position:absolute;left:50%;transform:translateX(-50%);bottom:14px;z-index:500;width:64px;height:64px;border-radius:50%;background:var(--pk);color:#fff;display:grid;place-items:center;box-shadow:0 6px 18px rgba(232,87,122,.45);border:4px solid #fff}
+.camfab .ic{width:28px;height:28px}
+.avw{position:relative;border-radius:50%;padding:2px;cursor:pointer;flex:none}
+.avw.new{background:conic-gradient(#f59e0b,#e8577a,#8b5cf6,#f59e0b)}
+.avw.new .av{border:2px solid #fff}
+.avw .pc{position:absolute;right:-4px;top:-4px;font-style:normal;font-size:10px;font-weight:700;background:var(--pk);color:#fff;border-radius:999px;min-width:16px;height:16px;display:grid;place-items:center;padding:0 3px;border:2px solid #fff}
+.phbox{position:relative;border-radius:28px;overflow:hidden;aspect-ratio:1;background:#111}
+.phbox img{width:100%;height:100%;object-fit:cover;display:block}
+.phbox input{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);width:80%;border:0;border-radius:999px;padding:10px 14px;background:rgba(0,0,0,.45);color:#fff;text-align:center;font-size:15px;outline:none}
+.phbox input::placeholder{color:#eee}
+.ck2{display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--ln)}
+.ck2 input{width:20px;height:20px;accent-color:var(--pk)}
+.viewer{position:fixed;inset:0;z-index:1500;background:#16121a;color:#fff;padding:calc(14px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));display:flex;flex-direction:column}
+.vtop{display:flex;align-items:center;gap:10px;margin-bottom:14px}.vs{font-size:12px;color:#c9c1cf}
+.vx{background:rgba(255,255,255,.12)!important;color:#fff!important}
+.vimg{position:relative;width:100%;max-width:520px;margin:0 auto;aspect-ratio:1;border-radius:32px;overflow:hidden;background:#2a2230}
+.vimg img{width:100%;height:100%;object-fit:cover;display:block}
+.vimg .spin{position:absolute;inset:0;display:grid;place-items:center;color:#aaa;font-size:14px}
+.vcap{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);max-width:85%;background:rgba(0,0,0,.5);padding:8px 14px;border-radius:999px;font-size:15px;text-align:center}
+.vnav{position:absolute;top:0;bottom:0;width:40%}.vnav.l{left:0}.vnav.r{right:0}
+.vdots{display:flex;justify-content:center;gap:5px;margin-top:12px}.vdots i{width:6px;height:6px;border-radius:50%;background:#5b5160}.vdots i.on{background:#fff;width:16px;border-radius:3px}
+.viewer .btn.sec{background:rgba(255,255,255,.12);color:#fff}
 </style>
 </head>
 <body>
@@ -202,7 +224,14 @@ const REAL={
   async listPlaces(c){let out=[],tk='';for(let i=0;i<10;i++){const j=await req(`/${COL}/${c}/places?pageSize=300${tk?'&pageToken='+tk:''}`);
     out=out.concat(((j&&j.documents)||[]).map(d=>Object.assign({id:d.name.split('/').pop()},decF(d.fields||{}))));if(!j||!j.nextPageToken)break;tk=j.nextPageToken}return out},
   async savePlace(c,id,o){await req(`/${COL}/${c}/places/${id}?${mask(o)}`,{method:'PATCH',body:JSON.stringify({fields:encF(o)})})},
-  async delPlace(c,id){await req(`/${COL}/${c}/places/${id}`,{method:'DELETE'})}
+  async delPlace(c,id){await req(`/${COL}/${c}/places/${id}`,{method:'DELETE'})},
+  // ảnh: chỉ lấy thông tin (không lấy ảnh) những tấm mình được xem
+  async listPhotos(c){const q={from:[{collectionId:'photos'}],where:{fieldFilter:{field:{fieldPath:'see'},op:'ARRAY_CONTAINS',value:{stringValue:NET.uid}}},select:{fields:['by','t','cap','see'].map(f=>({fieldPath:f}))}};
+    const j=await req(`/${COL}/${c}:runQuery`,{method:'POST',body:JSON.stringify({structuredQuery:q})});return(j||[]).filter(x=>x.document).map(x=>Object.assign({id:x.document.name.split('/').pop()},decF(x.document.fields||{})))},
+  async getPhoto(c,id){const d=await req(`/${COL}/${c}/photos/${id}`);return d?decF(d.fields||{}):null},
+  async addPhoto(c,id,o){await req(`/${COL}/${c}/photos/${id}?currentDocument.exists=false`,{method:'PATCH',body:JSON.stringify({fields:encF(o)})})},
+  async updPhoto(c,id,o){await req(`/${COL}/${c}/photos/${id}?${mask(o)}`,{method:'PATCH',body:JSON.stringify({fields:encF(o)})})},
+  async delPhoto(c,id){await req(`/${COL}/${c}/photos/${id}`,{method:'DELETE'})}
 };
 // ===== Máy chủ giả để xem thử (?demo=1): lưu trong máy, có người yêu giả =====
 const MOCK=(()=>{const db=()=>LS.get('mock',{c:{},loc:{},pl:{}}),sv=d=>LS.set('mock',d);const me='me_demo';
@@ -219,7 +248,12 @@ const MOCK=(()=>{const db=()=>LS.get('mock',{c:{},loc:{},pl:{}}),sv=d=>LS.set('m
   async listLoc(c){const L=db().loc[c]||{};return Object.keys(L).map(k=>Object.assign({id:k},L[k]))},
   async listPlaces(c){const L=db().pl[c]||{};return Object.keys(L).map(k=>Object.assign({id:k},L[k]))},
   async savePlace(c,id,o){const d=db();const P=(d.pl[c]=d.pl[c]||{});P[id]=Object.assign(P[id]||{},o);sv(d)},
-  async delPlace(c,id){const d=db();if(d.pl[c])delete d.pl[c][id];sv(d)}}})();
+  async delPlace(c,id){const d=db();if(d.pl[c])delete d.pl[c][id];sv(d)},
+  async listPhotos(c){const P=(db().ph||{})[c]||{};return Object.keys(P).filter(k=>(P[k].see||[]).includes(me)).map(k=>({id:k,by:P[k].by,t:P[k].t,cap:P[k].cap,see:P[k].see}))},
+  async getPhoto(c,id){return((db().ph||{})[c]||{})[id]||null},
+  async addPhoto(c,id,o){const d=db();d.ph=d.ph||{};(d.ph[c]=d.ph[c]||{})[id]=o;sv(d)},
+  async updPhoto(c,id,o){const d=db();Object.assign(d.ph[c][id],o);sv(d)},
+  async delPhoto(c,id){const d=db();delete d.ph[c][id];sv(d)}}})();
 const API=DEMO?MOCK:REAL;
 
 // ===== Trạng thái =====
@@ -359,6 +393,7 @@ function renderMain(){
   $('#app').innerHTML=`<div class="page" id="pg-map"><div id="map"></div>
     <div class="top"><div class="share" id="shr"></div><div id="pingbox"></div><div class="ppl" id="ppl"></div></div>
     <button class="fab" id="fsr" style="bottom:132px" title="Tìm địa điểm">${I.search}</button>
+    <button class="camfab" id="fcam" title="Chụp và chia sẻ ảnh">${I.cam}</button><input type="file" id="camf" accept="image/*" capture="environment" class="hide">
     <button class="fab" id="fme" style="bottom:72px" title="Về vị trí của tôi">${I.locate}</button>
     <button class="fab" id="fall" style="bottom:12px" title="Xem cả nhóm">${I.users}</button>
     <div class="pick hide" id="pick"><b>Chạm vào bản đồ để chọn chỗ</b><div class="mut">hoặc</div><button class="btn gh" id="pickx">Huỷ</button></div></div>
@@ -371,7 +406,7 @@ function renderMain(){
   plLayer=L.layerGroup().addTo(map);
   map.on('click',e=>{if(S.pick){const cb=S.pick;S.pick=null;$('#pick').classList.add('hide');cb(e.latlng.lat,e.latlng.lng)}});
   $('#fme').onclick=()=>{const p=S.pos||(S.me&&S.me.lat!=null&&S.me);if(p)map.setView([p.lat,p.lng],16);else locateOnce(true)};
-  $('#fall').onclick=()=>fitAll(true);$('#fsr').onclick=openSearch;
+  $('#fall').onclick=()=>fitAll(true);$('#fcam').onclick=()=>$('#camf').click();$('#camf').onchange=ev=>{const f=ev.target.files[0];ev.target.value='';if(f)composePhoto(f)};$('#fsr').onclick=openSearch;
   $('#pickx').onclick=()=>{S.pick=null;$('#pick').classList.add('hide');openPlace(S.pickDraft)};
   drawShare();drawPeople();drawPlacesOnMap();
   startGeo();refresh();loadPlaces();
@@ -411,7 +446,7 @@ function personRow(p){const me=S.pos||(S.me&&S.me.lat!=null?S.me:null);let st;
   else if(p.lat==null)st='Chưa có vị trí';
   else{const age=(Date.now()-p.t)/60e3,cls=age<10?'fresh':age>60?'stale':'',d=dist(me,p);st=`<span class="${cls}">● ${ago(p.t)}</span>${p.approx?' · <b>khu vực gần đúng</b>':''}${d!=null?' · cách '+(p.approx?'~':'')+fmtD(d):''}${p.bat!=null?' · 🔋'+p.bat+'%':''}`}
   const canNav=p.sharing!==false&&p.lat!=null;
-  return`<div class="pr" data-id="${p.id}">${avHtml(p,36)}<div class="grow"><div class="nm">${esc(p.name||'Thành viên mới')}</div><div class="st">${st}</div></div>
+  return`<div class="pr" data-id="${p.id}"><div class="avw${hasNew(p.id)?' new':''}" data-ph="${p.id}" title="Xem ảnh">${avHtml(p,36)}${phCount(p.id)?`<i class="pc">${phCount(p.id)}</i>`:''}</div><div class="grow"><div class="nm">${esc(p.name||'Thành viên mới')}</div><div class="st">${st}</div></div>
     <div class="acts">${canNav?`<button class="ib" data-go="${p.id}" title="Chỉ đường">${I.nav}</button>`:''}<button class="ib" data-pg="${p.id}" title="Nhờ cập nhật">${I.bell}</button></div></div>`}
 function drawPeople(){const e=$('#ppl');if(!e)return;
   if(!S.couple){e.innerHTML=`<div class="ph"><b>Đang tải…</b></div>`;return}
@@ -424,6 +459,7 @@ function drawPeople(){const e=$('#ppl');if(!e)return;
   if($('#pgall'))$('#pgall').onclick=()=>askUpdate('all');
   e.querySelectorAll('[data-go]').forEach(b=>b.onclick=ev=>{ev.stopPropagation();const p=O.find(x=>x.id===b.dataset.go);window.open(`https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`,'_blank')});
   e.querySelectorAll('[data-pg]').forEach(b=>b.onclick=ev=>{ev.stopPropagation();askUpdate(b.dataset.pg)});
+  e.querySelectorAll('[data-ph]').forEach(b=>b.onclick=ev=>{ev.stopPropagation();openViewer(b.dataset.ph)});
   e.querySelectorAll('.pr').forEach(r=>r.onclick=()=>{const p=O.find(x=>x.id===r.dataset.id);if(p&&p.lat!=null&&p.sharing!==false)map.setView([p.lat,p.lng],16);else toast('Người này chưa có vị trí')})}
 async function askUpdate(id){try{await API.patchCouple(S.code,{['ping_'+id]:Date.now(),['pingby_'+id]:S.name,['pingfrom_'+id]:NET.uid});
   toast(id==='all'?'Đã nhờ cả nhóm. Ai mở app sẽ thấy lời nhắn và gửi vị trí ngay.':'Đã nhờ. Lần tới người đó mở app sẽ thấy lời nhắn và vị trí được cập nhật.',4000)}catch(e){toast(errMsg(e))}}
@@ -439,7 +475,7 @@ function drawMarkers(){if(!map)return;const want={};
   for(const p of others())if(p.sharing!==false&&p.lat!=null)want[p.id]=p;
   for(const id in MK)if(!want[id]){map.removeLayer(MK[id].m);map.removeLayer(MK[id].c);delete MK[id]}
   for(const id in want){const p=want[id],ll=[p.lat,p.lng],col=colOf(id),r=Math.min(p.acc||0,2000),ic=mkIcon(p,col);
-    if(!MK[id])MK[id]={m:L.marker(ll,{icon:ic,zIndexOffset:id===NET.uid?100:200}).addTo(map),c:L.circle(ll,{radius:r,color:col,weight:1,fillOpacity:.08}).addTo(map)};
+    if(!MK[id])MK[id]={m:L.marker(ll,{icon:ic,zIndexOffset:id===NET.uid?100:200}).on('click',()=>openViewer(id)).addTo(map),c:L.circle(ll,{radius:r,color:col,weight:1,fillOpacity:.08}).addTo(map)};
     else{MK[id].m.setLatLng(ll).setIcon(ic);MK[id].c.setLatLng(ll).setRadius(r).setStyle({color:col})}}
   if(!fitted&&Object.keys(MK).length){fitted=true;fitAll()}}
 function fitAll(user){const pts=Object.values(MK).map(x=>x.m.getLatLng());if(!pts.length){if(user)toast('Chưa có vị trí nào');return}
@@ -479,6 +515,7 @@ async function sendLoc(){if(!S.pos||!S.sharing||S.sending)return;S.sending=true;
 async function refresh(){if(!S.code)return;try{const uid=await API.uid();const [c,locs]=await Promise.all([API.getCouple(S.code),API.listLoc(S.code)]);
     if(!c||!(c.members||[]).includes(uid)){return kicked()}
     S.couple=c;S.locs=locs;S.me=locs.find(l=>l.id===uid)||S.me;
+    loadPhotos();
     const P=myPing();if(P.t&&P.t>(LS.get('pingdone',0))&&S.sharing){LS.set('pingdone',P.t);locateOnce()}
   }catch(e){if(/SESSION_EXPIRED|NOAUTH|USER_NOT_FOUND|TOKEN_EXPIRED|USER_DISABLED/.test(e.message))return forceOut();if(e.status===403){S.err='máy chủ chưa cho phép';drawShare()}}
   ensureEm();drawPeople();drawMarkers();drawPing();if(S.tab==='map'&&!(map&&map._popup&&map.hasLayer(map._popup)))drawPlacesOnMap()}
@@ -571,6 +608,59 @@ function openPlace(p){const isNew=!p||!p.id;const d=Object.assign({cat:'eat',nam
   if(isNew&&!d.name)setTimeout(()=>q('#pn').focus(),100)}
 window.openPlace=openPlace;
 
+// ===== Khoảnh khắc: ảnh chia sẻ trong nhóm (kiểu Locket) =====
+const PHI={};let PH=[];
+const phOf=uid=>PH.filter(x=>x.by===uid).sort((a,b)=>b.t-a.t);
+const phCount=uid=>phOf(uid).length;
+const hasNew=uid=>{const L=phOf(uid);return L.length&&uid!==NET.uid&&L[0].t>LS.get('phseen_'+uid,0)};
+async function loadPhotos(){if(!S.code)return;try{const old=new Set(PH.map(x=>x.id)),L=await API.listPhotos(S.code);
+    const fresh=PH.length?L.filter(x=>!old.has(x.id)&&x.by!==NET.uid):[];PH=L;
+    if(fresh.length)toast('📸 '+nameOf(fresh[0].by)+' vừa chia sẻ ảnh. Bấm vào ảnh đại diện để xem',4000);drawPeople()}catch(e){}}
+async function phImg(id){if(PHI[id])return PHI[id];const d=await API.getPhoto(S.code,id);if(d&&d.img)PHI[id]=d.img;return PHI[id]}
+function squareJpeg(file,cb){const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const m=Math.min(im.width,im.height);let N=Math.min(900,m),q=.72,out;
+  const c=document.createElement('canvas');for(let k=0;k<6;k++){c.width=c.height=N;c.getContext('2d').drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,N,N);out=c.toDataURL('image/jpeg',q);if(out.length<650000)break;q-=.1;N=Math.round(N*.85)}cb(out)};
+  im.onerror=()=>toast('Không đọc được ảnh này');im.src=fr.result};fr.readAsDataURL(file)}
+// chọn người xem: all | me | danh sách uid
+function audHtml(sel){const O=others();return`<div class="seg" id="aud"><button data-a="all" class="${sel==='all'?'on':''}">👥 Cả nhóm</button><button data-a="pick" class="${Array.isArray(sel)?'on':''}">✅ Chọn người</button><button data-a="me" class="${sel==='me'?'on':''}">🙈 Chỉ mình tôi</button></div>
+  <div id="audl" class="${Array.isArray(sel)?'':'hide'}" style="margin-top:8px">${O.map(p=>`<label class="ck2"><input type="checkbox" value="${p.id}" ${Array.isArray(sel)&&sel.includes(p.id)?'checked':''}>${avHtml(p,28)}<span>${esc(p.name||'Thành viên')}</span></label>`).join('')||'<div class="mut">Nhóm chưa có ai khác</div>'}</div>`}
+function bindAud(root,st){root.querySelectorAll('#aud button').forEach(b=>b.onclick=()=>{const a=b.dataset.a;st.sel=a==='pick'?(Array.isArray(st.sel)?st.sel:[]):a;
+  root.querySelectorAll('#aud button').forEach(x=>x.classList.toggle('on',x===b));root.querySelector('#audl').classList.toggle('hide',a!=='pick')});
+  root.querySelectorAll('#audl input').forEach(i=>i.onchange=()=>{st.sel=[...root.querySelectorAll('#audl input:checked')].map(x=>x.value)})}
+const seeOf=sel=>sel==='all'?((S.couple&&S.couple.members)||[NET.uid]).slice():sel==='me'?[NET.uid]:[NET.uid].concat(sel);
+const selOf=see=>{const M=((S.couple&&S.couple.members)||[]).filter(x=>x!==NET.uid),o=(see||[]).filter(x=>x!==NET.uid);if(!o.length)return'me';if(M.every(x=>o.includes(x)))return'all';return o};
+const audLabel=see=>{const s2=selOf(see);return s2==='all'?'👥 Cả nhóm':s2==='me'?'🙈 Chỉ mình tôi':'✅ '+s2.map(nameOf).join(', ')};
+function composePhoto(file){squareJpeg(file,img=>{const st={sel:LS.get('aud','all')};if(Array.isArray(st.sel))st.sel=st.sel.filter(x=>others().some(p=>p.id===x));
+  const sh=document.createElement('div');sh.className='sheet';sh.innerHTML=`<div>
+    <div class="row"><h2 class="grow" style="margin:0">Chia sẻ khoảnh khắc</h2><button class="ib" id="x">${I.x}</button></div>
+    <div class="phbox" style="margin-top:10px"><img src="${img}"><input id="cap" maxlength="60" placeholder="Thêm lời nhắn…"></div>
+    <label class="f">Ai được xem ảnh này?</label>${audHtml(st.sel)}
+    <div style="height:14px"></div><button class="btn w" id="post">Gửi ảnh</button></div>`;
+  document.body.appendChild(sh);const q=x=>sh.querySelector(x);q('#x').onclick=()=>sh.remove();bindAud(sh,st);
+  q('#post').onclick=async ev=>{if(Array.isArray(st.sel)&&!st.sel.length)return toast('Chọn ít nhất một người, hoặc chọn “Chỉ mình tôi”');ev.target.disabled=true;
+    const id=Date.now().toString(36)+Math.random().toString(36).slice(2,6),o={by:NET.uid,t:Date.now(),cap:q('#cap').value.trim(),see:seeOf(st.sel),img};
+    try{await API.addPhoto(S.code,id,o);PHI[id]=img;LS.set('aud',st.sel);sh.remove();toast(st.sel==='me'?'Đã lưu ảnh (chỉ mình bạn xem)':'Đã gửi ảnh 📸');await loadPhotos()}catch(e){ev.target.disabled=false;toast(errMsg(e))}}})}
+async function openViewer(uid,start){await loadPhotos();const L=phOf(uid),p=personOf(uid),mine=uid===NET.uid;
+  if(!L.length){if(mine){toast('Bạn chưa có ảnh nào. Bấm nút máy ảnh để chụp nhé');return}toast((p.name||'Người này')+' chưa chia sẻ ảnh nào với bạn');return}
+  LS.set('phseen_'+uid,L[0].t);drawPeople();let i=start||0;
+  const v=document.createElement('div');v.className='viewer';document.body.appendChild(v);
+  const draw=async()=>{const x=L[i];v.innerHTML=`<div class="vtop">${avHtml(p,36)}<div class="grow"><b>${esc(p.name||'')}${mine?' (bạn)':''}</b><div class="vs">${ago(x.t)}${mine?' · '+audLabel(x.see):''}</div></div><span class="vs">${i+1}/${L.length}</span><button class="ib vx" id="vx">${I.x}</button></div>
+      <div class="vimg"><div class="spin">Đang tải ảnh…</div>${x.cap?`<div class="vcap">${esc(x.cap)}</div>`:''}<button class="vnav l" id="vp"></button><button class="vnav r" id="vn"></button></div>
+      <div class="vdots">${L.slice(0,20).map((_,k)=>`<i class="${k===i?'on':''}"></i>`).join('')}</div>
+      ${mine?`<div class="row" style="gap:8px;margin-top:12px"><button class="btn sec grow" id="vaud">${I.eye} Ai xem được</button><button class="btn red" id="vdel">Xoá</button></div>`:''}`;
+    v.querySelector('#vx').onclick=()=>v.remove();v.querySelector('#vp').onclick=()=>{if(i>0){i--;draw()}};v.querySelector('#vn').onclick=()=>{if(i<L.length-1){i++;draw()}else v.remove()};
+    if(mine){v.querySelector('#vdel').onclick=async()=>{if(!confirm('Xoá ảnh này?'))return;try{await API.delPhoto(S.code,x.id);toast('Đã xoá ảnh');v.remove();loadPhotos()}catch(e){toast(errMsg(e))}};
+      v.querySelector('#vaud').onclick=()=>editAud(x,()=>draw())}
+    const src=await phImg(x.id).catch(()=>null);const box=v.querySelector('.vimg');if(!box)return;const sp=box.querySelector('.spin');
+    if(src){const im=new Image();im.src=src;box.prepend(im);if(sp)sp.remove()}else if(sp)sp.textContent='Không tải được ảnh'};
+  let sx=null;v.addEventListener('touchstart',e=>{sx=e.touches[0].clientX},{passive:true});v.addEventListener('touchend',e=>{if(sx==null)return;const dx=e.changedTouches[0].clientX-sx;sx=null;if(Math.abs(dx)<50)return;if(dx<0&&i<L.length-1){i++;draw()}else if(dx>0&&i>0){i--;draw()}});
+  draw()}
+function editAud(x,done){const st={sel:selOf(x.see)};const sh=document.createElement('div');sh.className='sheet';sh.style.zIndex=1600;sh.innerHTML=`<div>
+  <div class="row"><h2 class="grow" style="margin:0">Ai xem được ảnh này?</h2><button class="ib" id="x">${I.x}</button></div><div style="height:10px"></div>${audHtml(st.sel)}
+  <div style="height:14px"></div><button class="btn w" id="ok">Lưu</button></div>`;document.body.appendChild(sh);sh.querySelector('#x').onclick=()=>sh.remove();bindAud(sh,st);
+  sh.querySelector('#ok').onclick=async()=>{if(Array.isArray(st.sel)&&!st.sel.length)return toast('Chọn ít nhất một người');const see=seeOf(st.sel);
+    try{await API.updPhoto(S.code,x.id,{see});x.see=see;sh.remove();toast(st.sel==='me'?'Đã ẩn ảnh với mọi người':'Đã cập nhật');done()}catch(e){toast(errMsg(e))}}}
+window.openViewer=openViewer;
+
 // ===== Tìm địa điểm trên bản đồ, gắn 🚩 đã đi / ⭐ chưa đi =====
 const fold=t=>String(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d');
 function guessCat(x){const t=(x.type||'')+' '+(x.class||'')+' '+(x.category||'');
@@ -615,6 +705,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
     :`<p class="mut" style="margin-top:0"><b style="color:#b91c1c">Chưa có tài khoản.</b> Nếu xoá app hay thoát ra, bạn sẽ mất nhóm này. Tạo tài khoản để giữ lại:</p>
       <label class="f">Tên đăng nhập</label><input class="t" id="us" maxlength="30" autocapitalize="none" autocomplete="username"><label class="f">Mật khẩu (ít nhất 6 ký tự)</label><input class="t" id="pw" type="password" autocomplete="new-password">
       <div style="height:10px"></div><button class="btn w" id="mkacc">Tạo tài khoản</button>`}</div>
+  <div class="card"><h2>Khoảnh khắc của bạn</h2><p class="mut" style="margin-top:0">${phCount(NET.uid)} ảnh đã chia sẻ. Bấm vào để xem, đổi người được xem hoặc xoá.</p><div class="row"><button class="btn sec grow" id="myph">${I.eye} Xem ảnh của tôi</button><button class="btn" id="newph">${I.cam} Chụp</button></div></div>
   <div class="card"><h2>Tên, ảnh và biểu tượng</h2>
     <div class="row" style="gap:12px">${avHtml({id:NET.uid,name:S.name,em:S.em,av:S.av},64)}<div class="grow"><button class="btn sec w" id="upav">${I.cam} ${S.av?'Đổi ảnh':'Tải ảnh lên'}</button>${S.av?'<button class="btn gh w" id="rmav" style="margin-top:6px;min-height:36px">Bỏ ảnh</button>':''}</div></div>
     <input type="file" id="avf" accept="image/*" class="hide">
@@ -635,11 +726,12 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 10${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 11${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};
   $('#svn').onclick=()=>{const n=$('#nm').value.trim();if(!n)return;S.name=n;LS.set('name',n);API.saveProfile({name:n}).catch(()=>{});toast('Đã đổi tên');if(S.sharing&&S.pos)sendLoc();else pushId();drawShare();drawMarkers()};
+  $('#myph').onclick=()=>openViewer(NET.uid);$('#newph').onclick=()=>{tab('map');$('#camf').click()};
   $('#upav').onclick=()=>$('#avf').click();
   $('#avf').onchange=ev=>{const f=ev.target.files[0];if(!f)return;resizeImg(f,u=>{S.av=u;LS.set('av',u);API.saveProfile({av:u}).catch(()=>{});pushId();toast('Đã đổi ảnh');drawSet();drawPeople();drawMarkers()})};
   if($('#rmav'))$('#rmav').onclick=()=>{S.av='';LS.set('av','');API.saveProfile({av:''}).catch(()=>{});pushId();drawSet();drawMarkers()};

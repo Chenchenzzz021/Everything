@@ -959,6 +959,16 @@ async function quickAdd(been,cat){const f=S.found;if(!f)return;const id=Date.now
 window.quickAdd=quickAdd;
 
 // ===== Cài đặt =====
+function askLeave(go){let step=1;const sh=document.createElement('div');sh.className='sheet';sh.style.zIndex=2000;document.body.appendChild(sh);sh.onclick=ev=>{if(ev.target===sh)sh.remove()};
+  const draw=()=>{sh.innerHTML=step===1?`<div><h2 style="margin:0 0 6px">Rời nhóm “${esc(gName())}”?</h2><p class="mut" style="margin:0 0 14px">Vị trí của bạn sẽ bị xoá khỏi nhóm và mọi người sẽ không thấy bạn nữa.</p>
+      <div class="row" style="gap:8px"><button class="btn sec grow" id="no">Ở lại</button><button class="btn red grow" id="yes">Rời nhóm</button></div></div>`
+    :`<div><h2 style="margin:0 0 6px">Bạn chắc chắn chứ? 🥺</h2><p class="mut" style="margin:0 0 14px">Muốn quay lại thì bạn cần mã nhóm hoặc link mời. Ảnh và tin nhắn trong nhóm sẽ không xem được nữa.</p>
+      <div class="row" style="gap:8px"><button class="btn grow" id="no">Không, ở lại</button><button class="btn red grow" id="yes" disabled>Chắc chắn rời (3)</button></div></div>`;
+    sh.querySelector('#no').onclick=()=>sh.remove();const y=sh.querySelector('#yes');
+    if(step===1)y.onclick=()=>{step=2;draw()};
+    else{let n=3;const t=setInterval(()=>{if(!sh.isConnected)return clearInterval(t);n--;if(n>0)y.textContent='Chắc chắn rời ('+n+')';else{clearInterval(t);y.textContent='Chắc chắn rời';y.disabled=false}},1000);
+      y.onclick=()=>{sh.remove();go()}}};
+  draw()}
 function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],owner=M[0]===NET.uid;
   e.innerHTML=`<h1>Cài đặt</h1>
   <div class="card"><h2>Tài khoản</h2>${S.user?`<p class="mut" style="margin-top:0">Đăng nhập với tên <b>${esc(S.user)}</b>. Đổi máy thì đăng nhập lại là vào đúng nhóm.</p><button class="btn gh w" id="lo">Đăng xuất</button>`
@@ -991,7 +1001,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 24${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 25${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};
@@ -1010,7 +1020,8 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
     try{const c=await API.getCouple(S.code);await API.patchCouple(S.code,{members:(c.members||[]).filter(x=>x!==id)});toast('Đã gỡ');await refresh();drawSet()}catch(er){toast(errMsg(er))}});
   $('#sbat').onchange=ev=>{S.showBat=ev.target.checked;LS.set('showbat',S.showBat);pushId();toast(S.showBat?'Mọi người sẽ thấy % pin của bạn':'Đã ẩn % pin')};
   e.querySelectorAll('.mopt').forEach(b=>b.onclick=async()=>{await setMode(b.dataset.m);drawSet()});
-  $('#lv').onclick=async()=>{if(!confirm('Rời nhóm? Vị trí của bạn sẽ bị xoá và mọi người sẽ không thấy bạn nữa.'))return;
+  $('#lv').onclick=()=>askLeave(doLeave);
+  const doLeave=async()=>{
     try{await API.delLoc(S.code);const c=await API.getCouple(S.code);if(c)await API.patchCouple(S.code,{members:(c.members||[]).filter(x=>x!==NET.uid)})}catch(er){toast(errMsg(er));return}
     API.saveProfile({code:''}).catch(()=>{});toast('Đã rời nhóm');leaveLocal()}}
 

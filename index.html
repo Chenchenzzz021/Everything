@@ -151,11 +151,11 @@ nav button.on b .ic{stroke-width:2.3}
 .phbox input::placeholder{color:#eee}
 .ck2{display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--ln)}
 .ck2 input{width:20px;height:20px;accent-color:var(--pk)}
-.viewer{position:fixed;inset:0;z-index:1500;background:#16121a;color:#fff;padding:calc(14px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));display:flex;flex-direction:column}
+.viewer{position:fixed;inset:0;z-index:1500;background:url(assets/phong-nen.jpg) center/cover no-repeat,#16121a;color:#fff;padding:calc(14px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));display:flex;flex-direction:column}
 .vtop{display:flex;align-items:center;gap:10px;margin-bottom:14px}.vs{font-size:12px;color:#c9c1cf}
 .vx{background:rgba(255,255,255,.12)!important;color:#fff!important}
 .vimg{position:relative;width:100%;max-width:520px;margin:0 auto;aspect-ratio:1;border-radius:32px;overflow:hidden;background:#2a2230}
-.vimg img{width:100%;height:100%;object-fit:cover;display:block}
+.vimg .pimg{width:100%;height:100%;object-fit:cover;display:block}
 .vimg .spin{position:absolute;inset:0;display:grid;place-items:center;color:#aaa;font-size:14px}
 .vcap{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);max-width:85%;background:rgba(0,0,0,.5);padding:8px 14px;border-radius:999px;font-size:15px;text-align:center}
 .vnav{position:absolute;top:0;bottom:0;width:40%}.vnav.l{left:0}.vnav.r{right:0}
@@ -164,6 +164,31 @@ nav button.on b .ic{stroke-width:2.3}
 .low{color:#dc2626;font-weight:600}
 .sw{display:flex;gap:12px;align-items:center;padding:10px 4px 2px}
 .sw input{width:22px;height:22px;accent-color:var(--pk);flex:none}
+.editor{position:fixed;inset:0;z-index:1500;display:flex;flex-direction:column;background:url(assets/phong-nen.jpg) center/cover no-repeat,linear-gradient(160deg,#ffe3ea 0%,#fff3f6 45%,#f3e8ff 100%);background-size:cover;background-position:center;padding:calc(10px + env(safe-area-inset-top)) 14px calc(10px + env(safe-area-inset-bottom))}
+.etop{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.editor .vx{background:#fff!important;color:var(--ink)!important;box-shadow:var(--sh)}
+.estage{display:flex;justify-content:center}
+.eframe{position:relative;width:min(100%,46vh,520px);aspect-ratio:1;border-radius:34px;overflow:hidden;background:#222;box-shadow:0 0 0 6px #fff,0 10px 30px rgba(232,87,122,.35);touch-action:none}
+.eframe>img{width:100%;height:100%;object-fit:cover;display:block;user-select:none;-webkit-user-select:none}
+.elay{position:absolute;inset:0}
+.stk{position:absolute;line-height:1;white-space:nowrap;cursor:grab;user-select:none;-webkit-user-select:none;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+.stk.txt{font-weight:800;font-family:-apple-system,"Segoe UI",Roboto,sans-serif;paint-order:stroke fill;-webkit-text-stroke:.14em #fff}
+.stk.sel{outline:2px dashed #fff;outline-offset:4px;border-radius:8px;filter:drop-shadow(0 0 4px rgba(0,0,0,.4))}
+.eframe input{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);width:80%;border:0;border-radius:999px;padding:10px 14px;background:rgba(0,0,0,.45);color:#fff;text-align:center;font-size:15px;outline:none;z-index:2}
+.eframe input::placeholder{color:#eee}
+.etools{display:flex;justify-content:center;gap:6px;margin-top:10px}
+.etools button{width:42px;height:38px;border-radius:12px;background:#fff;box-shadow:var(--sh);font-size:17px}
+.etabs{display:flex;gap:6px;overflow-x:auto;margin:12px 0 8px}
+.etabs button{white-space:nowrap;padding:7px 12px;border-radius:999px;background:#fff;font-size:13px;border:1px solid var(--ln)}
+.etabs button.on{background:var(--pk);color:#fff;border-color:var(--pk)}
+.egrid{flex:1;min-height:90px;overflow-y:auto;display:grid;grid-template-columns:repeat(8,1fr);gap:4px;background:rgba(255,255,255,.75);border-radius:18px;padding:8px;align-content:start}
+.egrid button{font-size:26px;padding:4px 0;border-radius:10px}
+.egrid button:active{background:var(--pk2)}
+.egrid.txtg{display:block}
+.cols{display:flex;gap:8px;margin:10px 0}.cols button{width:28px;height:28px;border-radius:50%;border:2px solid #ddd}.cols button.on{border:3px solid var(--ink)}
+.pre{display:flex;flex-wrap:wrap;gap:6px}.pre button{padding:7px 12px;border-radius:999px;background:var(--pk2);color:var(--pk);font-weight:700;font-size:13px}
+.fover{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none;z-index:3}
+.egrid.txtg .btn{font-size:15px;padding:8px 14px}
 </style>
 </head>
 <body>
@@ -635,29 +660,74 @@ function bindAud(root,st){root.querySelectorAll('#aud button').forEach(b=>b.oncl
 const seeOf=sel=>sel==='all'?((S.couple&&S.couple.members)||[NET.uid]).slice():sel==='me'?[NET.uid]:[NET.uid].concat(sel);
 const selOf=see=>{const M=((S.couple&&S.couple.members)||[]).filter(x=>x!==NET.uid),o=(see||[]).filter(x=>x!==NET.uid);if(!o.length)return'me';if(M.every(x=>o.includes(x)))return'all';return o};
 const audLabel=see=>{const s2=selOf(see);return s2==='all'?'👥 Cả nhóm':s2==='me'?'🙈 Chỉ mình tôi':'✅ '+s2.map(nameOf).join(', ')};
-function composePhoto(file){squareJpeg(file,img=>{const st={sel:LS.get('aud','all')};if(Array.isArray(st.sel))st.sel=st.sel.filter(x=>others().some(p=>p.id===x));
-  const sh=document.createElement('div');sh.className='sheet';sh.innerHTML=`<div>
-    <div class="row"><h2 class="grow" style="margin:0">Chia sẻ khoảnh khắc</h2><button class="ib" id="x">${I.x}</button></div>
-    <div class="phbox" style="margin-top:10px"><img src="${img}"><input id="cap" maxlength="60" placeholder="Thêm lời nhắn…"></div>
-    <label class="f">Ai được xem ảnh này?</label>${audHtml(st.sel)}
-    <div style="height:14px"></div><button class="btn w" id="post">Gửi ảnh</button></div>`;
-  document.body.appendChild(sh);const q=x=>sh.querySelector(x);q('#x').onclick=()=>sh.remove();bindAud(sh,st);
-  q('#post').onclick=async ev=>{if(Array.isArray(st.sel)&&!st.sel.length)return toast('Chọn ít nhất một người, hoặc chọn “Chỉ mình tôi”');ev.target.disabled=true;
-    const id=Date.now().toString(36)+Math.random().toString(36).slice(2,6),o={by:NET.uid,t:Date.now(),cap:q('#cap').value.trim(),see:seeOf(st.sel),img};
-    try{await API.addPhoto(S.code,id,o);PHI[id]=img;LS.set('aud',st.sel);sh.remove();toast(st.sel==='me'?'Đã lưu ảnh (chỉ mình bạn xem)':'Đã gửi ảnh 📸');await loadPhotos()}catch(e){ev.target.disabled=false;toast(errMsg(e))}}})}
+// ----- Màn chụp ảnh: kéo thả sticker, emoji, chữ -----
+const STK={'😊 Cảm xúc':'😀 😍 🥰 😘 😂 🤣 😎 🤩 🥺 😭 😡 😴 🤗 🤭 😋 🤪 😇 🥳 😏 🙈','💕 Tình yêu':'❤️ 💕 💖 💗 💘 💝 💞 💌 💋 🌹 💐 🥂 💑 🫶 🤟 🧸 💍 🫰 💓 ♥️',
+  '🍜 Ăn uống':'🍜 🍲 🍣 🍕 🍔 🍟 🍦 🍰 🧋 ☕ 🍹 🍺 🍓 🍑 🍉 🍩 🥟 🍗 🌮 🥤','✨ Trang trí':'✨ ⭐ 🌟 💫 🌈 ☀️ 🌙 ☁️ 🌸 🌼 🍀 🎀 🎈 🎉 🎂 🦋 🔥 💯 📍 🎵'};
+const TXT_PRE=['Yêu em','Nhớ anh','Đói quá','Đi chơi nè','Chill thôi','Ăn gì đây?','Hôm nay vui','Về nhà thôi'];
+const TXT_COL=['#ffffff','#e8577a','#f59e0b','#10b981','#3b82f6','#8b5cf6','#111111'];
+const EMO_FONT='"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
+function composePhoto(file){squareJpeg(file,img=>{const st={sel:LS.get('aud','all'),stk:[],cur:-1,tab:Object.keys(STK)[0],col:TXT_COL[0]};
+  if(Array.isArray(st.sel))st.sel=st.sel.filter(x=>others().some(p=>p.id===x));
+  const ed=document.createElement('div');ed.className='editor';ed.innerHTML=`
+    <div class="etop"><button class="ib vx" id="ex">${I.x}</button><b class="grow" style="text-align:center">Khoảnh khắc</b><button class="btn" id="enext" style="min-height:40px;padding:8px 16px">Tiếp</button></div>
+    <div class="estage"><div class="eframe" id="efr"><img src="${img}" draggable="false"><img class="fover" src="assets/khung-anh.png" onerror="this.remove()" alt=""><div class="elay" id="elay"></div><input id="cap" maxlength="60" placeholder="Thêm lời nhắn…"></div></div>
+    <div class="etools hide" id="etl"><button data-k="sm">➖</button><button data-k="lg">➕</button><button data-k="rl">↺</button><button data-k="rr">↻</button><button data-k="del">🗑</button><button data-k="ok">✓</button></div>
+    <div class="etabs" id="etabs"></div><div class="egrid" id="egrid"></div>`;
+  document.body.appendChild(ed);const q=x=>ed.querySelector(x),fr=q('#efr'),lay=q('#elay');
+  const W=()=>fr.clientWidth;
+  const drawStk=()=>{lay.innerHTML=st.stk.map((k,i)=>`<div class="stk${i===st.cur?' sel':''}${k.t?' txt':''}" data-i="${i}" style="left:${k.x*100}%;top:${k.y*100}%;font-size:${k.s*W()}px;transform:translate(-50%,-50%) rotate(${k.r}deg);${k.t?'color:'+k.c:''}">${esc(k.t||k.e)}</div>`).join('');
+    q('#etl').classList.toggle('hide',st.cur<0)};
+  const add=k=>{st.stk.push(Object.assign({x:.5,y:.45,s:k.t?.09:.18,r:0},k));st.cur=st.stk.length-1;drawStk()};
+  const tabs=()=>{q('#etabs').innerHTML=Object.keys(STK).concat(['✍️ Chữ']).map(t=>`<button class="${t===st.tab?'on':''}" data-t="${t}">${t}</button>`).join('');
+    q('#etabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{st.tab=b.dataset.t;tabs()});
+    const g=q('#egrid');if(st.tab==='✍️ Chữ'){g.className='egrid txtg';g.innerHTML=`<div class="row" style="gap:6px"><input class="t grow" id="etx" maxlength="24" placeholder="Gõ chữ của bạn…"><button class="btn" id="etadd" style="min-height:42px">Thêm</button></div>
+        <div class="cols">${TXT_COL.map(c=>`<button data-c="${c}" style="background:${c}" class="${c===st.col?'on':''}"></button>`).join('')}</div>
+        <div class="pre">${TXT_PRE.map(t=>`<button>${t}</button>`).join('')}</div>`;
+      g.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{st.col=b.dataset.c;if(st.cur>=0&&st.stk[st.cur].t){st.stk[st.cur].c=st.col;drawStk()}tabs()});
+      g.querySelectorAll('.pre button').forEach(b=>b.onclick=()=>add({t:b.textContent,c:st.col}));
+      q('#etadd').onclick=()=>{const v=q('#etx').value.trim();if(v){add({t:v,c:st.col});q('#etx').value=''}}}
+    else{g.className='egrid';g.innerHTML=STK[st.tab].split(' ').map(e=>`<button>${e}</button>`).join('');g.querySelectorAll('button').forEach(b=>b.onclick=()=>add({e:b.textContent}))}};
+  tabs();drawStk();
+  // kéo, phóng to bằng 2 ngón, xoay
+  const pts=new Map();let base=null;
+  lay.addEventListener('pointerdown',ev=>{const el=ev.target.closest('.stk');if(!el){if(pts.size===0){st.cur=-1;drawStk()}return}
+    const i=+el.dataset.i;if(st.cur!==i){st.cur=i;drawStk()}lay.setPointerCapture(ev.pointerId);pts.set(ev.pointerId,{x:ev.clientX,y:ev.clientY});
+    const k=st.stk[st.cur];base={k:{...k},p:[...pts.values()].map(o=>({...o}))};ev.preventDefault()});
+  lay.addEventListener('pointermove',ev=>{if(!pts.has(ev.pointerId)||st.cur<0||!base)return;pts.set(ev.pointerId,{x:ev.clientX,y:ev.clientY});const k=st.stk[st.cur],r=fr.getBoundingClientRect(),P=[...pts.values()];
+    if(P.length>=2&&base.p.length>=2){const d=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),an=(a,b)=>Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI;
+      k.s=Math.max(.04,Math.min(.8,base.k.s*d(P[0],P[1])/Math.max(10,d(base.p[0],base.p[1]))));k.r=base.k.r+an(P[0],P[1])-an(base.p[0],base.p[1])}
+    else if(P.length===1){const o=base.p[0];k.x=Math.max(0,Math.min(1,base.k.x+(P[0].x-o.x)/r.width));k.y=Math.max(0,Math.min(1,base.k.y+(P[0].y-o.y)/r.height))}
+    const el=lay.querySelector(`.stk[data-i="${st.cur}"]`);if(el){el.style.left=k.x*100+'%';el.style.top=k.y*100+'%';el.style.fontSize=k.s*W()+'px';el.style.transform=`translate(-50%,-50%) rotate(${k.r}deg)`}});
+  const up=ev=>{pts.delete(ev.pointerId);if(st.cur>=0)base={k:{...st.stk[st.cur]},p:[...pts.values()].map(o=>({...o}))}};lay.addEventListener('pointerup',up);lay.addEventListener('pointercancel',up);
+  q('#etl').querySelectorAll('button').forEach(b=>b.onclick=()=>{const k=st.stk[st.cur];if(!k)return;const a=b.dataset.k;
+    if(a==='sm')k.s=Math.max(.04,k.s/1.2);if(a==='lg')k.s=Math.min(.8,k.s*1.2);if(a==='rl')k.r-=15;if(a==='rr')k.r+=15;if(a==='del'){st.stk.splice(st.cur,1);st.cur=-1}if(a==='ok')st.cur=-1;drawStk()});
+  q('#ex').onclick=()=>{if(st.stk.length&&!confirm('Bỏ ảnh này?'))return;ed.remove()};
+  // ghép sticker vào ảnh rồi chọn người xem
+  q('#enext').onclick=()=>{const im=new Image();im.onload=()=>{const N=im.width,c=document.createElement('canvas');c.width=c.height=N;const g=c.getContext('2d');g.drawImage(im,0,0,N,N);
+      for(const k of st.stk){g.save();g.translate(k.x*N,k.y*N);g.rotate(k.r*Math.PI/180);g.textAlign='center';g.textBaseline='middle';
+        if(k.t){g.font=`800 ${k.s*N}px -apple-system,"Segoe UI",Roboto,sans-serif`;g.lineJoin='round';g.lineWidth=k.s*N*.18;g.strokeStyle=k.c==='#ffffff'?'rgba(0,0,0,.55)':'#ffffff';g.strokeText(k.t,0,0);g.fillStyle=k.c;g.fillText(k.t,0,0)}
+        else{g.font=`${k.s*N}px ${EMO_FONT}`;g.fillText(k.e,0,0)}g.restore()}
+      let qv=.82,out=c.toDataURL('image/jpeg',qv);while(out.length>650000&&qv>.4){qv-=.1;out=c.toDataURL('image/jpeg',qv)}sendStep(out,q('#cap').value.trim())};im.src=img};
+  const sendStep=(fin,cap)=>{const sh=document.createElement('div');sh.className='sheet';sh.style.zIndex=1700;sh.innerHTML=`<div>
+      <div class="row"><h2 class="grow" style="margin:0">Ai được xem ảnh này?</h2><button class="ib" id="x">${I.x}</button></div><div style="height:10px"></div>${audHtml(st.sel)}
+      <div style="height:14px"></div><button class="btn w" id="post">${I.send} Gửi ảnh</button></div>`;
+    document.body.appendChild(sh);sh.querySelector('#x').onclick=()=>sh.remove();bindAud(sh,st);
+    sh.querySelector('#post').onclick=async ev=>{if(Array.isArray(st.sel)&&!st.sel.length)return toast('Chọn ít nhất một người, hoặc chọn “Chỉ mình tôi”');ev.target.disabled=true;
+      const id=Date.now().toString(36)+Math.random().toString(36).slice(2,6),o={by:NET.uid,t:Date.now(),cap,see:seeOf(st.sel),img:fin};
+      try{await API.addPhoto(S.code,id,o);PHI[id]=fin;LS.set('aud',st.sel);sh.remove();ed.remove();toast(st.sel==='me'?'Đã lưu ảnh (chỉ mình bạn xem)':'Đã gửi ảnh 📸');await loadPhotos()}catch(e){ev.target.disabled=false;toast(errMsg(e))}}}})}
 async function openViewer(uid,start){await loadPhotos();const L=phOf(uid),p=personOf(uid),mine=uid===NET.uid;
   if(!L.length){if(mine){toast('Bạn chưa có ảnh nào. Bấm nút máy ảnh để chụp nhé');return}toast((p.name||'Người này')+' chưa chia sẻ ảnh nào với bạn');return}
   LS.set('phseen_'+uid,L[0].t);drawPeople();let i=start||0;
   const v=document.createElement('div');v.className='viewer';document.body.appendChild(v);
   const draw=async()=>{const x=L[i];v.innerHTML=`<div class="vtop">${avHtml(p,36)}<div class="grow"><b>${esc(p.name||'')}${mine?' (bạn)':''}</b><div class="vs">${ago(x.t)}${mine?' · '+audLabel(x.see):''}</div></div><span class="vs">${i+1}/${L.length}</span><button class="ib vx" id="vx">${I.x}</button></div>
-      <div class="vimg"><div class="spin">Đang tải ảnh…</div>${x.cap?`<div class="vcap">${esc(x.cap)}</div>`:''}<button class="vnav l" id="vp"></button><button class="vnav r" id="vn"></button></div>
+      <div class="vimg"><img class="fover" src="assets/khung-anh.png" onerror="this.remove()" alt=""><div class="spin">Đang tải ảnh…</div>${x.cap?`<div class="vcap">${esc(x.cap)}</div>`:''}<button class="vnav l" id="vp"></button><button class="vnav r" id="vn"></button></div>
       <div class="vdots">${L.slice(0,20).map((_,k)=>`<i class="${k===i?'on':''}"></i>`).join('')}</div>
       ${mine?`<div class="row" style="gap:8px;margin-top:12px"><button class="btn sec grow" id="vaud">${I.eye} Ai xem được</button><button class="btn red" id="vdel">Xoá</button></div>`:''}`;
     v.querySelector('#vx').onclick=()=>v.remove();v.querySelector('#vp').onclick=()=>{if(i>0){i--;draw()}};v.querySelector('#vn').onclick=()=>{if(i<L.length-1){i++;draw()}else v.remove()};
     if(mine){v.querySelector('#vdel').onclick=async()=>{if(!confirm('Xoá ảnh này?'))return;try{await API.delPhoto(S.code,x.id);toast('Đã xoá ảnh');v.remove();loadPhotos()}catch(e){toast(errMsg(e))}};
       v.querySelector('#vaud').onclick=()=>editAud(x,()=>draw())}
     const src=await phImg(x.id).catch(()=>null);const box=v.querySelector('.vimg');if(!box)return;const sp=box.querySelector('.spin');
-    if(src){const im=new Image();im.src=src;box.prepend(im);if(sp)sp.remove()}else if(sp)sp.textContent='Không tải được ảnh'};
+    if(src){const im=new Image();im.src=src;im.className='pimg';box.prepend(im);if(sp)sp.remove()}else if(sp)sp.textContent='Không tải được ảnh'};
   let sx=null;v.addEventListener('touchstart',e=>{sx=e.touches[0].clientX},{passive:true});v.addEventListener('touchend',e=>{if(sx==null)return;const dx=e.changedTouches[0].clientX-sx;sx=null;if(Math.abs(dx)<50)return;if(dx<0&&i<L.length-1){i++;draw()}else if(dx>0&&i>0){i--;draw()}});
   draw()}
 function editAud(x,done){const st={sel:selOf(x.see)};const sh=document.createElement('div');sh.className='sheet';sh.style.zIndex=1600;sh.innerHTML=`<div>
@@ -733,7 +803,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 12${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 13${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

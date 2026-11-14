@@ -161,6 +161,9 @@ nav button.on b .ic{stroke-width:2.3}
 .vnav{position:absolute;top:0;bottom:0;width:40%}.vnav.l{left:0}.vnav.r{right:0}
 .vdots{display:flex;justify-content:center;gap:5px;margin-top:12px}.vdots i{width:6px;height:6px;border-radius:50%;background:#5b5160}.vdots i.on{background:#fff;width:16px;border-radius:3px}
 .viewer .btn.sec{background:rgba(255,255,255,.12);color:#fff}
+.low{color:#dc2626;font-weight:600}
+.sw{display:flex;gap:12px;align-items:center;padding:10px 4px 2px}
+.sw input{width:22px;height:22px;accent-color:var(--pk);flex:none}
 </style>
 </head>
 <body>
@@ -257,7 +260,7 @@ const MOCK=(()=>{const db=()=>LS.get('mock',{c:{},loc:{},pl:{}}),sv=d=>LS.set('m
 const API=DEMO?MOCK:REAL;
 
 // ===== Trạng thái =====
-const S={approx:LS.get('approx',false),user:LS.get('user',''),name:LS.get('name',''),em:LS.get('em',''),av:LS.get('av',''),vf:'all',code:LS.get('code',''),sharing:LS.get('sharing',true),tab:'map',
+const S={showBat:LS.get('showbat',true),approx:LS.get('approx',false),user:LS.get('user',''),name:LS.get('name',''),em:LS.get('em',''),av:LS.get('av',''),vf:'all',code:LS.get('code',''),sharing:LS.get('sharing',true),tab:'map',
   me:null,ptn:null,couple:null,places:LS.get('places_cache',[]),filter:'all',sort:'new',lastSent:0,lastSentPos:null,pos:null,bat:null,err:null,pick:null};
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -409,7 +412,7 @@ function renderMain(){
   $('#fall').onclick=()=>fitAll(true);$('#fcam').onclick=()=>$('#camf').click();$('#camf').onchange=ev=>{const f=ev.target.files[0];ev.target.value='';if(f)composePhoto(f)};$('#fsr').onclick=openSearch;
   $('#pickx').onclick=()=>{S.pick=null;$('#pick').classList.add('hide');openPlace(S.pickDraft)};
   drawShare();drawPeople();drawPlacesOnMap();
-  startGeo();refresh();loadPlaces();
+  initBat();startGeo();refresh();loadPlaces();
   clearInterval(S.iv);S.iv=setInterval(()=>{if(document.visibilityState==='visible')refresh()},15e3);
   clearInterval(S.iv2);S.iv2=setInterval(()=>{drawPeople()},30e3);
 }
@@ -440,11 +443,12 @@ async function toggleShare(){S.sharing=!S.sharing;LS.set('sharing',S.sharing);dr
 // những người khác trong nhóm (kể cả người chưa mở app)
 function others(){const m=((S.couple&&S.couple.members)||[]).filter(x=>x!==NET.uid);return m.map(id=>(S.locs||[]).find(l=>l.id===id)||{id,name:null})}
 const nameOf=uid=>uid===NET.uid?S.name:(((S.locs||[]).find(l=>l.id===uid)||{}).name||'Thành viên');
+const batTxt=p=>p.bat==null?'':` · <span class="${p.bat<=20&&!p.batc?'low':''}">${p.batc?'⚡':'🔋'}${p.bat}%</span>`;
 function personRow(p){const me=S.pos||(S.me&&S.me.lat!=null?S.me:null);let st;
   if(!p.t)st='Chưa mở app lần nào';
-  else if(p.sharing===false)st=`<b>🙈 Đang ẩn vị trí</b> · ${ago(p.t)}`;
+  else if(p.sharing===false)st=`<b>🙈 Đang ẩn vị trí</b> · ${ago(p.t)}${batTxt(p)}`;
   else if(p.lat==null)st='Chưa có vị trí';
-  else{const age=(Date.now()-p.t)/60e3,cls=age<10?'fresh':age>60?'stale':'',d=dist(me,p);st=`<span class="${cls}">● ${ago(p.t)}</span>${p.approx?' · <b>khu vực gần đúng</b>':''}${d!=null?' · cách '+(p.approx?'~':'')+fmtD(d):''}${p.bat!=null?' · 🔋'+p.bat+'%':''}`}
+  else{const age=(Date.now()-p.t)/60e3,cls=age<10?'fresh':age>60?'stale':'',d=dist(me,p);st=`<span class="${cls}">● ${ago(p.t)}</span>${p.approx?' · <b>khu vực gần đúng</b>':''}${d!=null?' · cách '+(p.approx?'~':'')+fmtD(d):''}${batTxt(p)}`}
   const canNav=p.sharing!==false&&p.lat!=null;
   return`<div class="pr" data-id="${p.id}"><div class="avw${hasNew(p.id)?' new':''}" data-ph="${p.id}" title="Xem ảnh">${avHtml(p,36)}${phCount(p.id)?`<i class="pc">${phCount(p.id)}</i>`:''}</div><div class="grow"><div class="nm">${esc(p.name||'Thành viên mới')}</div><div class="st">${st}</div></div>
     <div class="acts">${canNav?`<button class="ib" data-go="${p.id}" title="Chỉ đường">${I.nav}</button>`:''}<button class="ib" data-pg="${p.id}" title="Nhờ cập nhật">${I.bell}</button></div></div>`}
@@ -489,7 +493,7 @@ const takenEm=()=>others().map(p=>p.em).filter(Boolean);
 function avHtml(p,size,col){size=size||36;const st=`width:${size}px;height:${size}px;font-size:${Math.round(size*.5)}px;background:${col||colOf(p.id)}`;
   if(p.av)return`<div class="av" style="${st};background-image:url('${p.av}');background-size:cover;background-position:center">${p.em?`<em class="eb">${p.em}</em>`:''}</div>`;
   return`<div class="av" style="${st}">${p.em?`<span style="font-size:${Math.round(size*.6)}px">${p.em}</span>`:esc(ini(p.name))}</div>`}
-const idDoc=()=>{const o={name:S.name};if(S.em)o.em=S.em;if(S.av)o.av=S.av;return o};
+const idDoc=()=>{const o={name:S.name};if(S.showBat&&S.bat!=null){o.bat=S.bat;o.batc=!!S.charging}if(S.em)o.em=S.em;if(S.av)o.av=S.av;return o};
 // tự nhận một emoji chưa ai dùng khi vào nhóm
 function ensureEm(){if(!S.couple)return;const t=takenEm();if(S.em&&!t.includes(S.em))return;const free=EMOJIS.find(x=>!t.includes(x));if(!free)return;S.em=free;LS.set('em',free);API.saveProfile({em:free}).catch(()=>{});pushId()}
 function pushId(){if(!S.code)return;if(S.sharing&&S.pos){S.lastSent=0;sendLoc()}else API.setLoc(S.code,Object.assign(idDoc(),{sharing:S.sharing&&!!S.me&&S.me.sharing!==false,t:Date.now()},S.sharing&&S.me&&S.me.lat!=null?{lat:S.me.lat,lng:S.me.lng,acc:S.me.acc||0,approx:!!S.me.approx}:{})).catch(()=>{})}
@@ -500,7 +504,9 @@ function resizeImg(file,cb){const fr=new FileReader();fr.onload=()=>{const im=ne
 let watchId=null;
 function startGeo(){if(!S.sharing||watchId!=null||!navigator.geolocation)return;
   watchId=navigator.geolocation.watchPosition(onPos,onGeoErr,{enableHighAccuracy:true,maximumAge:15e3,timeout:30e3});
-  if(navigator.getBattery)navigator.getBattery().then(b=>{const f=()=>S.bat=Math.round(b.level*100);f();b.addEventListener('levelchange',f)}).catch(()=>{})}
+}
+function initBat(){if(S.batInit||!navigator.getBattery)return;S.batInit=1;navigator.getBattery().then(b=>{let last=null;const f=()=>{S.bat=Math.round(b.level*100);S.charging=b.charging;
+    if(last!=null&&Math.abs(last-S.bat)>=5&&S.code)pushId();if(last==null)last=S.bat;else if(Math.abs(last-S.bat)>=5)last=S.bat};f();b.addEventListener('levelchange',f);b.addEventListener('chargingchange',f)}).catch(()=>{})}
 function stopGeo(){if(watchId!=null)navigator.geolocation.clearWatch(watchId);watchId=null}
 function locateOnce(center){if(!navigator.geolocation)return toast('Máy không hỗ trợ định vị');navigator.geolocation.getCurrentPosition(p=>{onPos(p,true);if(center)map.setView([p.coords.latitude,p.coords.longitude],16)},onGeoErr,{enableHighAccuracy:true,maximumAge:0,timeout:20e3})}
 function onPos(p,force){S.err=null;S.pos={lat:p.coords.latitude,lng:p.coords.longitude,acc:Math.round(p.coords.accuracy||0)};drawShare();drawMarkers();drawPeople();
@@ -508,7 +514,7 @@ function onPos(p,force){S.err=null;S.pos={lat:p.coords.latitude,lng:p.coords.lon
   if(force||Date.now()-S.lastSent>30e3||moved==null||moved>40)sendLoc()}
 function onGeoErr(e){S.err=e.code===1?'chưa cho phép định vị':'không lấy được vị trí';drawShare();
   if(e.code===1)toast(isIOS?'Hãy cho phép vị trí: Cài đặt › Quyền riêng tư › Dịch vụ định vị › Safari/Everything':'Hãy cho phép quyền vị trí cho trang này',5000)}
-async function sendLoc(){if(!S.pos||!S.sharing||S.sending)return;S.sending=true;const o={...idDoc(),sharing:true,lat:S.pos.lat,lng:S.pos.lng,acc:S.pos.acc,t:Date.now()};if(S.approx){o.lat=Math.round(o.lat*100)/100;o.lng=Math.round(o.lng*100)/100;o.acc=1500;o.approx=true}if(S.bat!=null)o.bat=S.bat;
+async function sendLoc(){if(!S.pos||!S.sharing||S.sending)return;S.sending=true;const o={...idDoc(),sharing:true,lat:S.pos.lat,lng:S.pos.lng,acc:S.pos.acc,t:Date.now()};if(S.approx){o.lat=Math.round(o.lat*100)/100;o.lng=Math.round(o.lng*100)/100;o.acc=1500;o.approx=true}
   try{await API.setLoc(S.code,o);S.lastSent=o.t;S.lastSentPos=S.pos;S.me=o}catch(e){S.err=errMsg(e).slice(0,40);drawShare()}S.sending=false}
 
 // ===== Làm mới dữ liệu =====
@@ -722,11 +728,12 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
       <div class="grow">${esc(nameOf(id))}${id===NET.uid?' (bạn)':''}${i===0?' <span class="tag">Trưởng nhóm</span>':''}</div>
       ${owner&&id!==NET.uid?`<button class="btn red" style="min-height:34px;padding:6px 10px;font-size:13px" data-rm="${id}">Gỡ</button>`:''}</div>`).join('')}
     ${owner?'<p class="mut">Trưởng nhóm có thể gỡ người khác, ví dụ khi ai đó đổi máy (họ vào lại bằng mã).</p>':''}</div>
-  <div class="card"><h2>Chia sẻ vị trí</h2>${MODES.map(([k,n,d])=>`<button class="mopt${k===curMode()?' on':''}" data-m="${k}"><b>${n}</b><span>${d}</span></button>`).join('')}</div>
+  <div class="card"><h2>Chia sẻ vị trí</h2>${MODES.map(([k,n,d])=>`<button class="mopt${k===curMode()?' on':''}" data-m="${k}"><b>${n}</b><span>${d}</span></button>`).join('')}
+    <label class="sw"><input type="checkbox" id="sbat" ${S.showBat?'checked':''}><span><b>Chia sẻ % pin</b><br><span class="mut">${navigator.getBattery?(S.bat!=null?'Pin máy bạn: '+S.bat+'%':'Đang đọc pin…'):'Máy/trình duyệt này không cho đọc pin (iPhone không hỗ trợ).'}</span></span></label></div>
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 11${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 12${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};
@@ -740,6 +747,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   $('#inv').onclick=shareInvite;
   e.querySelectorAll('[data-rm]').forEach(b=>b.onclick=async()=>{const id=b.dataset.rm;if(!confirm('Gỡ '+nameOf(id)+' khỏi nhóm?'))return;
     try{const c=await API.getCouple(S.code);await API.patchCouple(S.code,{members:(c.members||[]).filter(x=>x!==id)});toast('Đã gỡ');await refresh();drawSet()}catch(er){toast(errMsg(er))}});
+  $('#sbat').onchange=ev=>{S.showBat=ev.target.checked;LS.set('showbat',S.showBat);pushId();toast(S.showBat?'Mọi người sẽ thấy % pin của bạn':'Đã ẩn % pin')};
   e.querySelectorAll('.mopt').forEach(b=>b.onclick=async()=>{await setMode(b.dataset.m);drawSet()});
   $('#lv').onclick=async()=>{if(!confirm('Rời nhóm? Vị trí của bạn sẽ bị xoá và mọi người sẽ không thấy bạn nữa.'))return;
     try{await API.delLoc(S.code);const c=await API.getCouple(S.code);if(c)await API.patchCouple(S.code,{members:(c.members||[]).filter(x=>x!==NET.uid)})}catch(er){toast(errMsg(er));return}

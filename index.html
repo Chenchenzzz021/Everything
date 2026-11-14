@@ -185,8 +185,8 @@ ul.ck li{margin:4px 0}
 .ludo .lt{background:#fff;border:1px solid #f1e6d3;border-radius:5px;margin:1px;box-shadow:inset 0 -2px 0 rgba(0,0,0,.05)}
 .ludo .lt.ls{background:linear-gradient(145deg,color-mix(in srgb,var(--c) 75%,#fff),var(--c));border-color:transparent}.ludo .lt small{color:#fff;font-size:10px;text-shadow:0 1px 2px rgba(0,0,0,.3)}
 .ludo .lh{background:linear-gradient(145deg,color-mix(in srgb,var(--c) 70%,#fff),var(--c));border:1px solid rgba(255,255,255,.6);border-radius:5px;margin:1px;display:grid;place-items:center}.ludo .lh small{color:#fff;font-size:9px}
-.ludo .ly{background:var(--ci) center/88% no-repeat,radial-gradient(circle at 30% 25%,color-mix(in srgb,var(--c) 60%,#fff),var(--c) 70%);border-radius:18px;margin:3px;position:relative;box-shadow:inset 0 -4px 0 rgba(0,0,0,.12)}
-.ludo .ly.off{filter:grayscale(.6);opacity:.4}.ludo .ly.act{box-shadow:inset 0 -4px 0 rgba(0,0,0,.12),0 0 0 3px #fff,0 0 18px 4px var(--c);animation:yact 1.4s ease-in-out infinite}@keyframes yact{50%{filter:brightness(1.12)}}
+.ludo .ly{background:var(--ci) center/100% 100% no-repeat;border-radius:14%;margin:2px;position:relative;filter:drop-shadow(0 3px 3px rgba(0,0,0,.18))}.ludo .ly .lyin{display:none}
+.ludo .ly.off{filter:grayscale(.6);opacity:.4}.ludo .ly.act{box-shadow:0 0 0 3px #fff,0 0 18px 4px var(--c);animation:yact 1.4s ease-in-out infinite}@keyframes yact{50%{filter:brightness(1.12)}}
 .ludo .lyin{position:absolute;inset:16%;background:rgba(255,255,255,.88);border-radius:26%;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;place-items:center;box-shadow:inset 0 2px 6px rgba(0,0,0,.08)}
 .ludo .lyin i{width:58%;aspect-ratio:1;border-radius:50%;background:color-mix(in srgb,var(--c) 22%,#fff);box-shadow:inset 0 2px 4px rgba(0,0,0,.12)}
 .ludo .lyn{position:absolute;left:0;right:0;bottom:2%;text-align:center;font-size:10px;color:#fff;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,.35);white-space:nowrap;overflow:hidden}
@@ -1093,7 +1093,7 @@ async function openGame(id){const old=$('.gm');if(old)old.remove();const v=docum
     if(g.st==='wait'&&g.by===NET.uid)v.querySelector('#ga').innerHTML='';
     v.querySelectorAll('.caro button').forEach(bt=>bt.onclick=()=>{if(!myTurn(g)||busy)return;caroMove(+bt.dataset.i)});
     if(was&&g.last>=0&&was.last!==g.last){const c=v.querySelector(`.caro [data-i="${g.last}"]`);if(c)c.scrollIntoView({block:'nearest',inline:'nearest'})}};
-  const lxy=(sl,p,k)=>{let r,c;if(p===-1){const [yr,yc]=LYARD[sl];r=yr+1.75+(k>>1)*2.5;c=yc+1.75+(k&1)*2.5}else if(p===56){r=7+(sl===1?-.55:sl===3?.55:0);c=7+(sl===0?-.55:sl===2?.55:0)}else if(p>50){[r,c]=LHOME[sl][p-51]}else{[r,c]=LPATH[absOf(sl,p)]}return[r,c]};
+  const lxy=(sl,p,k)=>{let r,c;if(p===-1){const [yr,yc]=LYARD[sl];r=yr+1.66+(k>>1)*1.68;c=yc+1.66+(k&1)*1.68}else if(p===56){r=7+(sl===1?-.55:sl===3?.55:0);c=7+(sl===0?-.55:sl===2?.55:0)}else if(p>50){[r,c]=LHOME[sl][p-51]}else{[r,c]=LPATH[absOf(sl,p)]}return[r,c]};
   const drawLudo=was=>{const n=g.pl.length,SL=slotsOf(n),P=g.pos||[];let cells='';
     const used=new Set(SL);
     for(let r=0;r<15;r++)for(let c=0;c<15;c++){let cls='',st='';const yard=LYARD.findIndex(([yr,yc])=>r>=yr&&r<yr+6&&c>=yc&&c<yc+6);
@@ -1273,7 +1273,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 32${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 33${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

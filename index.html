@@ -436,10 +436,12 @@ async function refresh(){if(!S.code)return;try{const uid=await API.uid();const [
     if(!c||!(c.members||[]).includes(uid)){return kicked()}
     S.couple=c;S.locs=locs;S.me=locs.find(l=>l.id===uid)||S.me;
     const P=myPing();if(P.t&&P.t>(LS.get('pingdone',0))&&S.sharing){LS.set('pingdone',P.t);locateOnce()}
-  }catch(e){if(e.status===403){S.err='máy chủ chưa cho phép';drawShare()}}
+  }catch(e){if(/SESSION_EXPIRED|NOAUTH|USER_NOT_FOUND|TOKEN_EXPIRED|USER_DISABLED/.test(e.message))return forceOut();if(e.status===403){S.err='máy chủ chưa cho phép';drawShare()}}
   ensureEm();drawPeople();drawMarkers();drawPing();if(S.tab==='map'&&!(map&&map._popup&&map.hasLayer(map._popup)))drawPlacesOnMap()}
 function kicked(){toast('Bạn không còn ở trong nhóm này',4000);API.saveProfile({code:''}).catch(()=>{});leaveLocal()}
-function logout(){if(!confirm('Đăng xuất khỏi máy này? Đăng nhập lại bằng tên đăng nhập và mật khẩu là vào lại nhóm.'))return;
+function logout(){if(!confirm('Đăng xuất khỏi máy này? Đăng nhập lại bằng tên đăng nhập và mật khẩu là vào lại nhóm.'))return;doLogout()}
+function forceOut(){toast('Tài khoản không còn, hãy đăng nhập hoặc tạo tài khoản mới',5000);doLogout()}
+function doLogout(){
   stopGeo();clearInterval(S.iv);clearInterval(S.iv2);for(const k of ['fb','user','name','em','av','code','places_cache','pingseen','pingdone'])LS.del(k);
   Object.assign(S,{user:'',name:'',em:'',av:'',code:'',couple:null,me:null,locs:[],places:[]});NET.tok=null;NET.uid=null;fitted=false;for(const k in MK)delete MK[k];renderSetup('intro')}
 function leaveLocal(){stopGeo();clearInterval(S.iv);clearInterval(S.iv2);S.code='';LS.del('code');LS.del('places_cache');S.couple=S.me=null;S.locs=[];S.places=[];fitted=false;for(const k in MK)delete MK[k];renderSetup('choose')}
@@ -589,7 +591,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 7${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 8${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

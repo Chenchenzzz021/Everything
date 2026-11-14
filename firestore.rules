@@ -36,6 +36,30 @@ service cloud.firestore {
         allow update: if isMember(c) && resource.data.by == request.auth.uid
                       && request.resource.data.by == request.auth.uid;
         allow delete: if isMember(c) && resource.data.by == request.auth.uid;
+        // bình luận và thả cảm xúc: ai xem được ảnh thì được bình luận
+        function canSee(c, pid) {
+          return isMember(c) && request.auth.uid in get(/databases/$(database)/documents/doita/$(c)/photos/$(pid)).data.see;
+        }
+        match /cmts/{cid} {
+          allow read: if canSee(c, pid);
+          allow create: if canSee(c, pid) && request.resource.data.by == request.auth.uid;
+          allow delete: if isMember(c) && resource.data.by == request.auth.uid;
+        }
+        match /re/{uid} {
+          allow read: if canSee(c, pid);
+          allow write: if canSee(c, pid) && request.auth.uid == uid;
+        }
+      }
+      // tin nhắn riêng: mã cuộc trò chuyện = uid1_uid2, chỉ 2 người đó đọc/ghi
+      match /chats/{pid} {
+        allow get: if isMember(c) && request.auth.uid in pid.split('_');
+        allow list: if isMember(c) && request.auth.uid in resource.data.m;
+        allow write: if isMember(c) && request.auth.uid in pid.split('_') && request.resource.data.m == pid.split('_');
+        match /msgs/{mid} {
+          allow read: if isMember(c) && request.auth.uid in pid.split('_');
+          allow create: if isMember(c) && request.auth.uid in pid.split('_') && request.resource.data.by == request.auth.uid;
+          allow delete: if isMember(c) && resource.data.by == request.auth.uid;
+        }
       }
     }
   }

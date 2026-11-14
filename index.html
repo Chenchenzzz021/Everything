@@ -151,23 +151,25 @@ nav button.on b .ic{stroke-width:2.3}
 .phbox input::placeholder{color:#eee}
 .ck2{display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--ln)}
 .ck2 input{width:20px;height:20px;accent-color:var(--pk)}
-.viewer{overflow-y:auto;position:fixed;inset:0;z-index:1500;background:linear-gradient(rgba(16,28,48,.62),rgba(16,28,48,.62)),url(assets/phong-nen.jpg) center/cover no-repeat,#16121a;color:#fff;padding:calc(14px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));display:flex;flex-direction:column}
-.vtop{display:flex;align-items:center;gap:10px;margin-bottom:14px}.vs{font-size:12px;color:#c9c1cf}
-.vx{background:rgba(255,255,255,.12)!important;color:#fff!important}
-.vimg{position:relative;width:100%;max-width:520px;margin:0 auto;aspect-ratio:1;border-radius:32px;overflow:hidden;background:#2a2230;box-shadow:0 0 0 5px #cfe9fb}
+.viewer{overflow-y:auto;position:fixed;inset:0;z-index:1500;background:var(--bgimg,url(assets/nen-xanh.jpg)) center/cover no-repeat fixed,#eef6fd;color:#1f2937;padding:calc(14px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));display:flex;flex-direction:column}
+.vtop{display:flex;align-items:center;gap:10px;margin-bottom:14px}.vs{font-size:12px;color:#5b6472}
+.vx{background:rgba(255,255,255,.85)!important;color:#1f2937!important;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.vimg{position:relative;width:100%;max-width:520px;margin:0 auto;aspect-ratio:1;border-radius:32px;overflow:hidden;background:rgba(255,255,255,.6);box-shadow:0 0 0 5px #fff}
 .vimg .pimg{width:100%;height:100%;object-fit:cover;display:block}
 .vimg .spin{position:absolute;inset:0;display:grid;place-items:center;color:#aaa;font-size:14px}
-.vcap{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);max-width:85%;background:rgba(0,0,0,.5);padding:8px 14px;border-radius:999px;font-size:15px;text-align:center}
+.vcap{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);max-width:85%;background:rgba(0,0,0,.5);padding:8px 14px;border-radius:999px;font-size:15px;text-align:center;color:#fff}
 .vnav{position:absolute;top:0;bottom:0;width:40%}.vnav.l{left:0}.vnav.r{right:0}
-.vdots{display:flex;justify-content:center;gap:5px;margin-top:12px}.vdots i{width:6px;height:6px;border-radius:50%;background:#5b5160}.vdots i.on{background:#fff;width:16px;border-radius:3px}
-.viewer .btn.sec{background:rgba(255,255,255,.12);color:#fff}
+.vdots{display:flex;justify-content:center;gap:5px;margin-top:12px}.vdots i{width:6px;height:6px;border-radius:50%;background:rgba(0,0,0,.18)}.vdots i.on{background:#1f2937;width:16px;border-radius:3px}
+.viewer .btn.sec{background:rgba(255,255,255,.85);color:#1f2937}
 .low{color:#dc2626;font-weight:600}
 .sw{display:flex;gap:12px;align-items:center;padding:10px 4px 2px}
 .sw input{width:22px;height:22px;accent-color:var(--pk);flex:none}
-.editor{position:fixed;inset:0;z-index:1500;display:flex;flex-direction:column;background:url(assets/phong-nen.jpg) center/cover no-repeat,linear-gradient(160deg,#dff1fd 0%,#f2f9ff 45%,#e3f0ff 100%);background-size:cover;background-position:center;padding:calc(10px + env(safe-area-inset-top)) 14px calc(10px + env(safe-area-inset-bottom))}
+.editor{position:fixed;inset:0;z-index:1500;display:flex;flex-direction:column;background:var(--bgimg,url(assets/nen-xanh.jpg)) center/cover no-repeat,linear-gradient(160deg,#dff1fd 0%,#f2f9ff 45%,#e3f0ff 100%);background-size:cover;background-position:center;padding:calc(10px + env(safe-area-inset-top)) 14px calc(10px + env(safe-area-inset-bottom))}
 .etop{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .editor .vx{background:#fff!important;color:var(--ink)!important;box-shadow:var(--sh)}
 .estage{display:flex;justify-content:center}
+.eout{position:relative;width:min(100%,46vh,520px);aspect-ratio:1}.eout .eframe{width:100%}.eout.fr .eframe{position:absolute;inset:9.6%;width:auto;border-radius:17%;box-shadow:none}.eout .fover{z-index:4}
+.vimg.fr{background:transparent;box-shadow:none;overflow:visible;border-radius:0}.vimg.fr .pimg{position:absolute;inset:9.6%;width:80.8%;height:80.8%;border-radius:17%}.vimg.fr .vcap{bottom:15%}.vimg.fr .fover{z-index:2}
 .eframe{position:relative;width:min(100%,46vh,520px);aspect-ratio:1;border-radius:34px;overflow:hidden;background:#222;box-shadow:0 10px 30px rgba(90,160,220,.35);touch-action:none}
 .eframe>img{width:100%;height:100%;object-fit:cover;display:block;user-select:none;-webkit-user-select:none}
 .elay{position:absolute;inset:0}
@@ -187,6 +189,7 @@ nav button.on b .ic{stroke-width:2.3}
 .egrid.txtg{display:block}
 .cols{display:flex;gap:8px;margin:10px 0}.cols button{width:28px;height:28px;border-radius:50%;border:2px solid #ddd}.cols button.on{border:3px solid var(--ink)}
 .pre{display:flex;flex-wrap:wrap;gap:6px}.pre button{padding:7px 12px;border-radius:999px;background:var(--pk2);color:var(--pk);font-weight:700;font-size:13px}
+.thm{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 4px}.thm button{width:44px;height:44px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px var(--ln);font-size:18px;cursor:pointer}.thm button.on{box-shadow:0 0 0 3px #1f2937}.efrs{display:flex;gap:8px;justify-content:center;align-items:center;margin:4px 0 2px;font-size:13px;font-weight:600}.efrs button{width:30px;height:30px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.15);font-size:13px;padding:0}.efrs button.on{box-shadow:0 0 0 3px #1f2937}
 .fover{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none;z-index:3}
 .egrid.txtg .btn{font-size:15px;padding:8px 14px}
 .nb{position:absolute;top:-2px;right:6px;font-style:normal;background:#ef4444;color:#fff;font-size:10px;font-weight:700;min-width:16px;height:16px;border-radius:999px;display:grid;place-items:center;padding:0 4px}
@@ -195,26 +198,26 @@ nav button b{position:relative}
 .cprev{font-size:13px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cprev.un{color:var(--ink);font-weight:700}
 .vs2{font-size:12px;color:var(--mut)}
 .udot{width:10px;height:10px;border-radius:50%;background:var(--pk);flex:none}
-.conv{position:fixed;inset:0;z-index:1800;background:var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)}
-.ctop{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#fff;border-bottom:1px solid var(--ln)}
+.conv{position:fixed;inset:0;z-index:1800;background:var(--bgimg,url(assets/nen-xanh.jpg)) center/cover no-repeat,var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)}
+.ctop{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--ln)}
 .cmsgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:6px}
 .bub{max-width:78%;align-self:flex-start;background:#fff;border-radius:18px 18px 18px 6px;padding:8px 12px;box-shadow:0 1px 3px rgba(0,0,0,.06);white-space:pre-wrap;word-break:break-word;font-size:15px}
 .bub.me{align-self:flex-end;background:var(--pk);color:#fff;border-radius:18px 18px 6px 18px}
 .bub span{display:block;font-size:10px;opacity:.65;text-align:right;margin-top:2px}
 .bph{width:150px;height:150px;border-radius:14px;background:#ddd center/cover;margin-bottom:6px;font-size:12px;display:grid;place-items:center;color:#666}
-.cin{display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--ln)}
+.cin{display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-top:1px solid var(--ln)}
 .cin input{flex:1;border:1px solid var(--ln);border-radius:999px;padding:10px 14px;font-size:16px;outline:none}
 .cquote{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--pk2);font-size:13px}.cth{width:36px;height:36px;border-radius:8px;background:#ccc center/cover;flex:none}
 .vre{max-width:520px;margin:12px auto 0;width:100%}
-.rsum{display:flex;gap:8px;flex-wrap:wrap;font-size:14px;margin-bottom:8px}.rsum span{background:rgba(255,255,255,.12);padding:3px 10px;border-radius:999px}
-.rpick{display:flex;justify-content:space-between;background:rgba(255,255,255,.08);border-radius:999px;padding:4px 8px}
-.rpick button{font-size:26px;padding:4px 6px;border-radius:50%;transition:transform .15s}.rpick button.on{background:rgba(255,255,255,.25);transform:scale(1.15)}
+.rsum{display:flex;gap:8px;flex-wrap:wrap;font-size:14px;margin-bottom:8px}.rsum span{background:rgba(255,255,255,.8);padding:3px 10px;border-radius:999px}
+.rpick{display:flex;justify-content:space-between;background:rgba(255,255,255,.75);box-shadow:0 2px 10px rgba(0,0,0,.06);border-radius:999px;padding:4px 8px}
+.rpick button{font-size:26px;padding:4px 6px;border-radius:50%;transition:transform .15s}.rpick button.on{background:rgba(0,0,0,.08);transform:scale(1.15)}
 .vcm{max-width:520px;margin:10px auto 0;width:100%;display:flex;flex-direction:column;gap:8px}
-.cm{display:flex;gap:8px;align-items:flex-start;font-size:14px}.cm .vs{font-size:11px}.cmx{color:#aaa;font-size:13px;padding:2px 6px}
+.cm{display:flex;gap:8px;align-items:flex-start;font-size:14px;background:rgba(255,255,255,.78);padding:8px 10px;border-radius:16px}.cm .vs{font-size:11px}.cmx{color:#888;font-size:13px;padding:2px 6px}
 .vin{max-width:520px;margin:10px auto 0;width:100%;display:flex;gap:6px;align-items:center}
-.vin input{flex:1;min-width:0;border:0;border-radius:999px;padding:10px 14px;background:rgba(255,255,255,.12);color:#fff;font-size:15px;outline:none}
-.vin input::placeholder{color:#bbb}
-.vin .ib{background:rgba(255,255,255,.15);color:#fff}
+.vin input{flex:1;min-width:0;border:0;border-radius:999px;padding:10px 14px;background:rgba(255,255,255,.9);color:#1f2937;font-size:15px;outline:none;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.vin input::placeholder{color:#8a93a0}
+.vin .ib{background:rgba(255,255,255,.9);color:#1f2937}
 </style>
 </head>
 <body>
@@ -280,7 +283,7 @@ const REAL={
   async savePlace(c,id,o){await req(`/${COL}/${c}/places/${id}?${mask(o)}`,{method:'PATCH',body:JSON.stringify({fields:encF(o)})})},
   async delPlace(c,id){await req(`/${COL}/${c}/places/${id}`,{method:'DELETE'})},
   // ảnh: chỉ lấy thông tin (không lấy ảnh) những tấm mình được xem
-  async listPhotos(c){const q={from:[{collectionId:'photos'}],where:{fieldFilter:{field:{fieldPath:'see'},op:'ARRAY_CONTAINS',value:{stringValue:NET.uid}}},select:{fields:['by','t','cap','see'].map(f=>({fieldPath:f}))}};
+  async listPhotos(c){const q={from:[{collectionId:'photos'}],where:{fieldFilter:{field:{fieldPath:'see'},op:'ARRAY_CONTAINS',value:{stringValue:NET.uid}}},select:{fields:['by','t','cap','see','fr'].map(f=>({fieldPath:f}))}};
     const j=await req(`/${COL}/${c}:runQuery`,{method:'POST',body:JSON.stringify({structuredQuery:q})});return(j||[]).filter(x=>x.document).map(x=>Object.assign({id:x.document.name.split('/').pop()},decF(x.document.fields||{})))},
   async getPhoto(c,id){const d=await req(`/${COL}/${c}/photos/${id}`);return d?decF(d.fields||{}):null},
   async addPhoto(c,id,o){await req(`/${COL}/${c}/photos/${id}?currentDocument.exists=false`,{method:'PATCH',body:JSON.stringify({fields:encF(o)})})},
@@ -310,7 +313,7 @@ const MOCK=(()=>{const db=()=>LS.get('mock',{c:{},loc:{},pl:{}}),sv=d=>LS.set('m
   async listPlaces(c){const L=db().pl[c]||{};return Object.keys(L).map(k=>Object.assign({id:k},L[k]))},
   async savePlace(c,id,o){const d=db();const P=(d.pl[c]=d.pl[c]||{});P[id]=Object.assign(P[id]||{},o);sv(d)},
   async delPlace(c,id){const d=db();if(d.pl[c])delete d.pl[c][id];sv(d)},
-  async listPhotos(c){const P=(db().ph||{})[c]||{};return Object.keys(P).filter(k=>(P[k].see||[]).includes(me)).map(k=>({id:k,by:P[k].by,t:P[k].t,cap:P[k].cap,see:P[k].see}))},
+  async listPhotos(c){const P=(db().ph||{})[c]||{};return Object.keys(P).filter(k=>(P[k].see||[]).includes(me)).map(k=>({id:k,by:P[k].by,t:P[k].t,cap:P[k].cap,see:P[k].see,fr:P[k].fr}))},
   async getPhoto(c,id){return((db().ph||{})[c]||{})[id]||null},
   async addPhoto(c,id,o){const d=db();d.ph=d.ph||{};(d.ph[c]=d.ph[c]||{})[id]=o;sv(d)},
   async updPhoto(c,id,o){const d=db();Object.assign(d.ph[c][id],o);sv(d)},
@@ -322,7 +325,7 @@ const MOCK=(()=>{const db=()=>LS.get('mock',{c:{},loc:{},pl:{}}),sv=d=>LS.set('m
 const API=DEMO?MOCK:REAL;
 
 // ===== Trạng thái =====
-const S={showBat:LS.get('showbat',true),approx:LS.get('approx',false),user:LS.get('user',''),name:LS.get('name',''),em:LS.get('em',''),av:LS.get('av',''),vf:'all',code:LS.get('code',''),sharing:LS.get('sharing',true),tab:'map',
+const S={bg:LS.get('bg','xanh'),showBat:LS.get('showbat',true),approx:LS.get('approx',false),user:LS.get('user',''),name:LS.get('name',''),em:LS.get('em',''),av:LS.get('av',''),vf:'all',code:LS.get('code',''),sharing:LS.get('sharing',true),tab:'map',
   me:null,ptn:null,couple:null,places:LS.get('places_cache',[]),filter:'all',sort:'new',lastSent:0,lastSentPos:null,pos:null,bat:null,err:null,pick:null};
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -704,12 +707,16 @@ const STK={'😊 Cảm xúc':'😀 😍 🥰 😘 😂 🤣 😎 🤩 🥺 😭 
   '🍜 Ăn uống':'🍜 🍲 🍣 🍕 🍔 🍟 🍦 🍰 🧋 ☕ 🍹 🍺 🍓 🍑 🍉 🍩 🥟 🍗 🌮 🥤','✨ Trang trí':'✨ ⭐ 🌟 💫 🌈 ☀️ 🌙 ☁️ 🌸 🌼 🍀 🎀 🎈 🎉 🎂 🦋 🔥 💯 📍 🎵'};
 const TXT_PRE=['Yêu em','Nhớ anh','Đói quá','Đi chơi nè','Chill thôi','Ăn gì đây?','Hôm nay vui','Về nhà thôi'];
 const TXT_COL=['#ffffff','#e8577a','#f59e0b','#10b981','#3b82f6','#8b5cf6','#111111'];
+const THEMES={xanh:['Xanh dương','#8cc8f2'],hong:['Hồng','#f6a9c6'],la:['Xanh lá','#94d9a6'],vang:['Vàng','#f5d272']};
+const thk=k=>THEMES[k]?k:'xanh',frSrc=k=>'assets/khung-'+thk(k)+'.png';
+function applyBg(){document.documentElement.style.setProperty('--bgimg',`url(assets/nen-${thk(S.bg)}.jpg)`)}
 const EMO_FONT='"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
-function composePhoto(file){squareJpeg(file,img=>{const st={sel:LS.get('aud','all'),stk:[],cur:-1,tab:Object.keys(STK)[0],col:TXT_COL[0]};
+function composePhoto(file){squareJpeg(file,img=>{const st={sel:LS.get('aud','all'),stk:[],cur:-1,tab:Object.keys(STK)[0],col:TXT_COL[0],fr:LS.get('fr','xanh')};
   if(Array.isArray(st.sel))st.sel=st.sel.filter(x=>others().some(p=>p.id===x));
   const ed=document.createElement('div');ed.className='editor';ed.innerHTML=`
     <div class="etop"><button class="ib vx" id="ex">${I.x}</button><b class="grow" style="text-align:center">Khoảnh khắc</b><button class="btn" id="enext" style="min-height:40px;padding:8px 16px">Tiếp</button></div>
-    <div class="estage"><div class="eframe" id="efr"><img src="${img}" draggable="false"><img class="fover" src="assets/khung-anh.png" onerror="this.remove()" alt=""><div class="elay" id="elay"></div><input id="cap" maxlength="60" placeholder="Thêm lời nhắn…"></div></div>
+    <div class="estage"><div class="eout${st.fr==='none'?'':' fr'}" id="eout"><div class="eframe" id="efr"><img src="${img}" draggable="false"><div class="elay" id="elay"></div><input id="cap" maxlength="60" placeholder="Thêm lời nhắn…"></div><img class="fover" id="efo" src="${frSrc(st.fr)}" alt=""${st.fr==='none'?' style="display:none"':''}></div></div>
+    <div class="efrs" id="efrs"></div>
     <div class="etools hide" id="etl"><button data-k="sm">➖</button><button data-k="lg">➕</button><button data-k="rl">↺</button><button data-k="rr">↻</button><button data-k="del">🗑</button><button data-k="ok">✓</button></div>
     <div class="etabs" id="etabs"></div><div class="egrid" id="egrid"></div>`;
   document.body.appendChild(ed);const q=x=>ed.querySelector(x),fr=q('#efr'),lay=q('#elay');
@@ -726,6 +733,8 @@ function composePhoto(file){squareJpeg(file,img=>{const st={sel:LS.get('aud','al
       g.querySelectorAll('.pre button').forEach(b=>b.onclick=()=>add({t:b.textContent,c:st.col}));
       q('#etadd').onclick=()=>{const v=q('#etx').value.trim();if(v){add({t:v,c:st.col});q('#etx').value=''}}}
     else{g.className='egrid';g.innerHTML=STK[st.tab].split(' ').map(e=>`<button>${e}</button>`).join('');g.querySelectorAll('button').forEach(b=>b.onclick=()=>add({e:b.textContent}))}};
+  const frs=()=>{q('#efrs').innerHTML='Khung: '+Object.keys(THEMES).map(k=>`<button data-f="${k}" title="${THEMES[k][0]}" style="background:${THEMES[k][1]}" class="${k===st.fr?'on':''}"></button>`).join('')+`<button data-f="none" title="Không khung" style="background:#fff" class="${st.fr==='none'?'on':''}">⊘</button>`;
+    q('#efrs').querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{st.fr=b.dataset.f;LS.set('fr',st.fr);const o=q('#efo');q('#eout').classList.toggle('fr',st.fr!=='none');if(st.fr==='none')o.style.display='none';else{o.style.display='';o.src=frSrc(st.fr)}frs();drawStk()})};frs();
   tabs();drawStk();
   // kéo, phóng to bằng 2 ngón, xoay
   const pts=new Map();let base=null;
@@ -752,14 +761,14 @@ function composePhoto(file){squareJpeg(file,img=>{const st={sel:LS.get('aud','al
       <div style="height:14px"></div><button class="btn w" id="post">${I.send} Gửi ảnh</button></div>`;
     document.body.appendChild(sh);sh.querySelector('#x').onclick=()=>sh.remove();bindAud(sh,st);
     sh.querySelector('#post').onclick=async ev=>{if(Array.isArray(st.sel)&&!st.sel.length)return toast('Chọn ít nhất một người, hoặc chọn “Chỉ mình tôi”');ev.target.disabled=true;
-      const id=Date.now().toString(36)+Math.random().toString(36).slice(2,6),o={by:NET.uid,t:Date.now(),cap,see:seeOf(st.sel),img:fin};
+      const id=Date.now().toString(36)+Math.random().toString(36).slice(2,6),o={by:NET.uid,t:Date.now(),cap,see:seeOf(st.sel),img:fin,fr:st.fr};
       try{await API.addPhoto(S.code,id,o);PHI[id]=fin;LS.set('aud',st.sel);sh.remove();ed.remove();toast(st.sel==='me'?'Đã lưu ảnh (chỉ mình bạn xem)':'Đã gửi ảnh 📸');await loadPhotos()}catch(e){ev.target.disabled=false;toast(errMsg(e))}}}})}
 async function openViewer(uid,start){await loadPhotos();const L=phOf(uid),p=personOf(uid),mine=uid===NET.uid;
   if(!L.length){if(mine){toast('Bạn chưa có ảnh nào. Bấm nút máy ảnh để chụp nhé');return}toast((p.name||'Người này')+' chưa chia sẻ ảnh nào với bạn');return}
   LS.set('phseen_'+uid,L[0].t);drawPeople();let i=start||0;
   const v=document.createElement('div');v.className='viewer';document.body.appendChild(v);
   const draw=async()=>{const x=L[i];v.innerHTML=`<div class="vtop">${avHtml(p,36)}<div class="grow"><b>${esc(p.name||'')}${mine?' (bạn)':''}</b><div class="vs">${ago(x.t)}${mine?' · '+audLabel(x.see):''}</div></div><span class="vs">${i+1}/${L.length}</span><button class="ib vx" id="vx">${I.x}</button></div>
-      <div class="vimg"><img class="fover" src="assets/khung-anh.png" onerror="this.remove()" alt=""><div class="spin">Đang tải ảnh…</div>${x.cap?`<div class="vcap">${esc(x.cap)}</div>`:''}<button class="vnav l" id="vp"></button><button class="vnav r" id="vn"></button></div>
+      <div class="vimg${x.fr==='none'?'':' fr'}">${x.fr==='none'?'':`<img class="fover" src="${frSrc(x.fr)}" alt="">`}<div class="spin">Đang tải ảnh…</div>${x.cap?`<div class="vcap">${esc(x.cap)}</div>`:''}<button class="vnav l" id="vp"></button><button class="vnav r" id="vn"></button></div>
       <div class="vdots">${L.slice(0,20).map((_,k)=>`<i class="${k===i?'on':''}"></i>`).join('')}</div>
       ${mine?`<div class="row" style="gap:8px;margin-top:12px"><button class="btn sec grow" id="vaud">${I.eye} Ai xem được</button><button class="btn red" id="vdel">Xoá</button></div>`:''}
       <div class="vre" id="vre"></div><div class="vcm" id="vcm"></div>
@@ -869,6 +878,9 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
       <label class="f">Tên đăng nhập</label><input class="t" id="us" maxlength="30" autocapitalize="none" autocomplete="username"><label class="f">Mật khẩu (ít nhất 6 ký tự)</label><input class="t" id="pw" type="password" autocomplete="new-password">
       <div style="height:10px"></div><button class="btn w" id="mkacc">Tạo tài khoản</button>`}</div>
   <div class="card"><h2>Khoảnh khắc của bạn</h2><p class="mut" style="margin-top:0">${phCount(NET.uid)} ảnh đã chia sẻ. Bấm vào để xem, đổi người được xem hoặc xoá.</p><div class="row"><button class="btn sec grow" id="myph">${I.eye} Xem ảnh của tôi</button><button class="btn" id="newph">${I.cam} Chụp</button></div></div>
+  <div class="card"><h2>Màu ảnh</h2><label class="f">Phông nền khi chụp và xem ảnh</label><div class="thm" id="thbg">${Object.keys(THEMES).map(k=>`<button data-bg="${k}" title="${THEMES[k][0]}" style="background:${THEMES[k][1]}" class="${k===thk(S.bg)?'on':''}"></button>`).join('')}</div>
+    <label class="f">Khung ảnh mặc định (đổi được ngay lúc chụp)</label><div class="thm" id="thfr">${Object.keys(THEMES).map(k=>`<button data-fr="${k}" title="${THEMES[k][0]}" style="background:${THEMES[k][1]}" class="${k===LS.get('fr','xanh')?'on':''}"></button>`).join('')}<button data-fr="none" title="Không khung" style="background:#fff" class="${LS.get('fr','xanh')==='none'?'on':''}">⊘</button></div>
+    <p class="mut" style="margin:4px 0 0">Xanh dương · Hồng · Xanh lá · Vàng. Bạn bè thấy ảnh của bạn với đúng khung bạn chọn.</p></div>
   <div class="card"><h2>Tên, ảnh và biểu tượng</h2>
     <div class="row" style="gap:12px">${avHtml({id:NET.uid,name:S.name,em:S.em,av:S.av},64)}<div class="grow"><button class="btn sec w" id="upav">${I.cam} ${S.av?'Đổi ảnh':'Tải ảnh lên'}</button>${S.av?'<button class="btn gh w" id="rmav" style="margin-top:6px;min-height:36px">Bỏ ảnh</button>':''}</div></div>
     <input type="file" id="avf" accept="image/*" class="hide">
@@ -890,11 +902,13 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 15${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 16${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};
   $('#svn').onclick=()=>{const n=$('#nm').value.trim();if(!n)return;S.name=n;LS.set('name',n);API.saveProfile({name:n}).catch(()=>{});toast('Đã đổi tên');if(S.sharing&&S.pos)sendLoc();else pushId();drawShare();drawMarkers()};
+  document.querySelectorAll('#thbg [data-bg]').forEach(b=>b.onclick=()=>{S.bg=b.dataset.bg;LS.set('bg',S.bg);applyBg();drawSet()});
+  document.querySelectorAll('#thfr [data-fr]').forEach(b=>b.onclick=()=>{LS.set('fr',b.dataset.fr);drawSet()});
   $('#myph').onclick=()=>openViewer(NET.uid);$('#newph').onclick=()=>{tab('map');$('#camf').click()};
   $('#upav').onclick=()=>$('#avf').click();
   $('#avf').onchange=ev=>{const f=ev.target.files[0];if(!f)return;resizeImg(f,u=>{S.av=u;LS.set('av',u);API.saveProfile({av:u}).catch(()=>{});pushId();toast('Đã đổi ảnh');drawSet();drawPeople();drawMarkers()})};
@@ -911,7 +925,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
     API.saveProfile({code:''}).catch(()=>{});toast('Đã rời nhóm');leaveLocal()}}
 
 if('serviceWorker'in navigator&&!DEMO)navigator.serviceWorker.register('sw.js').catch(()=>{});
-boot();
+applyBg();boot();
 </script>
 </body>
 </html>

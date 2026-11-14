@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
-<title>Đôi Ta</title>
+<title>Everything</title>
 <meta name="theme-color" content="#e8577a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Đôi Ta">
+<meta name="apple-mobile-web-app-title" content="Everything">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -198,7 +198,7 @@ function boot(){
 function renderSetup(step){
   const A=$('#app');step=step||(S.invite?'join':(S.name?'choose':'intro'));
   if(step==='intro'){A.innerHTML=`<div class="page"><div class="scroll">
-    <div class="hero">💞</div><h1 style="text-align:center">Đôi Ta</h1>
+    <div class="hero">💞</div><h1 style="text-align:center">Everything</h1>
     <p class="mut" style="text-align:center;margin-top:0">Cùng nhau biết người kia đang ở đâu, và lưu lại những nơi hai đứa đã đi.</p>
     <div class="card"><h2>Cách hoạt động</h2><ul class="ck">
       <li>Cả hai cùng cài, cùng đồng ý. Ai cũng thấy được người kia, không có chuyện xem lén.</li>
@@ -241,8 +241,8 @@ function renderSetup(step){
       S.code=c;LS.set('code',c);S.invite='';history.replaceState(null,'',location.pathname+(DEMO?'?demo=1':''));renderMain();toast('Đã ghép đôi 💞')}catch(er){e.target.disabled=false;toast(errMsg(er),4500)}};return}
 }
 function errMsg(e){const m=String(e&&e.message||e);if(/PERMISSION|permission/.test(m))return'Máy chủ chưa cho phép. Cần dán luật bảo mật Firestore (xem hướng dẫn).';if(/offline|Failed to fetch|network|timeout|aborted/i.test(m))return'Không có mạng, thử lại sau nhé';return m}
-async function shareInvite(){const u=inviteLink(),t='Vào Đôi Ta với mình nhé 💞 Mã: '+fmtCode(S.code);
-  if(navigator.share){try{await navigator.share({title:'Đôi Ta',text:t,url:u});return}catch(e){if(e&&e.name==='AbortError')return}}copyInvite()}
+async function shareInvite(){const u=inviteLink(),t='Vào Everything với mình nhé 💞 Mã: '+fmtCode(S.code);
+  if(navigator.share){try{await navigator.share({title:'Everything',text:t,url:u});return}catch(e){if(e&&e.name==='AbortError')return}}copyInvite()}
 async function copyInvite(){try{await navigator.clipboard.writeText(inviteLink());toast('Đã sao chép link')}catch(e){prompt('Sao chép link này:',inviteLink())}}
 
 // ===== Giao diện chính =====
@@ -322,7 +322,7 @@ function onPos(p,force){S.err=null;S.pos={lat:p.coords.latitude,lng:p.coords.lon
   if(!S.sharing)return;const moved=dist(S.lastSentPos,S.pos);
   if(force||Date.now()-S.lastSent>30e3||moved==null||moved>40)sendLoc()}
 function onGeoErr(e){S.err=e.code===1?'chưa cho phép định vị':'không lấy được vị trí';drawShare();
-  if(e.code===1)toast(isIOS?'Hãy cho phép vị trí: Cài đặt › Quyền riêng tư › Dịch vụ định vị › Safari/Đôi Ta':'Hãy cho phép quyền vị trí cho trang này',5000)}
+  if(e.code===1)toast(isIOS?'Hãy cho phép vị trí: Cài đặt › Quyền riêng tư › Dịch vụ định vị › Safari/Everything':'Hãy cho phép quyền vị trí cho trang này',5000)}
 async function sendLoc(){if(!S.pos||!S.sharing||S.sending)return;S.sending=true;const o={name:S.name,sharing:true,lat:S.pos.lat,lng:S.pos.lng,acc:S.pos.acc,t:Date.now()};if(S.bat!=null)o.bat=S.bat;
   try{await API.setLoc(S.code,o);S.lastSent=o.t;S.lastSentPos=S.pos;S.me=o}catch(e){S.err=errMsg(e).slice(0,40);drawShare()}S.sending=false}
 
@@ -415,7 +415,7 @@ function drawSet(){const e=$('#set');const full=S.couple&&(S.couple.members||[])
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và người kia luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ người ấy mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, hai bạn có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu cả hai dùng iPhone.</p></div>
   <div class="card"><h2>Rời cặp</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi cặp này.</p><button class="btn red w" id="lv">Rời cặp</button></div>
-  <p class="mut" style="text-align:center">Đôi Ta · phiên bản 1${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 1${DEMO?' · xem thử':''}</p>`;
   $('#svn').onclick=()=>{const n=$('#nm').value.trim();if(!n)return;S.name=n;LS.set('name',n);toast('Đã đổi tên');if(S.sharing&&S.pos)sendLoc();else API.setLoc(S.code,{name:n,sharing:false,t:Date.now()}).catch(()=>{});drawShare();drawMarkers()};
   if($('#inv'))$('#inv').onclick=shareInvite;
   if($('#rst'))$('#rst').onclick=async()=>{if(!confirm('Gỡ máy hiện tại của người ấy khỏi cặp? Người ấy cần mở link mời để vào lại.'))return;

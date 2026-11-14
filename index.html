@@ -186,6 +186,8 @@ nav button.on b .ic{stroke-width:2.3}
 .vimg .pimg{width:100%;height:100%;object-fit:cover;display:block}
 .vimg .spin{position:absolute;inset:0;display:grid;place-items:center;color:#aaa;font-size:14px}
 .vcap{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);max-width:85%;background:rgba(0,0,0,.5);padding:8px 14px;border-radius:999px;font-size:15px;text-align:center;color:#fff}
+.fly{position:absolute;bottom:8%;z-index:5;pointer-events:none;line-height:1;opacity:0;animation-name:flyup;animation-timing-function:ease-out;animation-fill-mode:forwards;filter:drop-shadow(0 2px 3px rgba(0,0,0,.2))}
+@keyframes flyup{0%{opacity:0;transform:translate(0,0) scale(.4)}12%{opacity:1;transform:translate(calc(var(--dx)*.2),-20px) scale(1.1)}50%{transform:translate(calc(var(--dx)*-.4),-140px) scale(1) rotate(-8deg)}100%{opacity:0;transform:translate(var(--dx),-300px) scale(.9) rotate(10deg)}}
 .vnav{position:absolute;top:0;bottom:0;width:40%}.vnav.l{left:0}.vnav.r{right:0}
 .vdots{display:flex;justify-content:center;gap:5px;margin-top:12px}.vdots i{width:6px;height:6px;border-radius:50%;background:rgba(0,0,0,.18)}.vdots i.on{background:#1f2937;width:16px;border-radius:3px}
 .viewer .btn.sec{background:rgba(255,255,255,.85);color:#1f2937}
@@ -794,6 +796,9 @@ function composePhoto(file){squareJpeg(file,img=>{const st={sel:LS.get('aud','al
     sh.querySelector('#post').onclick=async ev=>{if(Array.isArray(st.sel)&&!st.sel.length)return toast('Chọn ít nhất một người, hoặc chọn “Chỉ mình tôi”');ev.target.disabled=true;
       const id=Date.now().toString(36)+Math.random().toString(36).slice(2,6),o={by:NET.uid,t:Date.now(),cap,see:seeOf(st.sel),img:fin,fr:st.fr};
       try{await API.addPhoto(S.code,id,o);PHI[id]=fin;LS.set('aud',st.sel);sh.remove();ed.remove();toast(st.sel==='me'?'Đã lưu ảnh (chỉ mình bạn xem)':'Đã gửi ảnh 📸');await loadPhotos()}catch(e){ev.target.disabled=false;toast(errMsg(e))}}}})}
+function burst(box,e,n){if(!box||!box.isConnected)return;n=n||6;for(let k=0;k<n;k++){const el=document.createElement('span');el.className='fly';el.textContent=e;
+  const x=12+Math.random()*76,dx=(Math.random()*2-1)*40,sz=22+Math.random()*20,du=1800+Math.random()*1400,dl=k*140+Math.random()*120;
+  el.style.cssText=`left:${x}%;font-size:${sz}px;--dx:${dx}px;animation-duration:${du}ms;animation-delay:${dl}ms`;box.appendChild(el);setTimeout(()=>el.remove(),du+dl+100)}}
 async function openViewer(uid,start){await loadPhotos();const L=phOf(uid),p=personOf(uid),mine=uid===NET.uid;
   if(!L.length){if(mine){toast('Bạn chưa có ảnh nào. Bấm nút máy ảnh để chụp nhé');return}toast((p.name||'Người này')+' chưa chia sẻ ảnh nào với bạn');return}
   LS.set('phseen_'+uid,L[0].t);drawPeople();let i=start||0;
@@ -806,13 +811,13 @@ async function openViewer(uid,start){await loadPhotos();const L=phOf(uid),p=pers
       <div class="vin"><input id="vci" maxlength="200" placeholder="Bình luận…"><button class="ib" id="vcs">${I.send}</button>${mine?'':`<button class="btn sec" id="vdm" style="min-height:40px;padding:6px 12px;font-size:13px">${I.chat} Nhắn riêng</button>`}</div>`;
     v.querySelector('#vx').onclick=()=>v.remove();v.querySelector('#vp').onclick=()=>{if(i>0){i--;draw()}};v.querySelector('#vn').onclick=()=>{if(i<L.length-1){i++;draw()}else v.remove()};
     const P=`${COL}/${S.code}/photos/${x.id}`,loadSocial=async()=>{let R=[],C=[];try{[R,C]=await Promise.all([API.listSub(P+'/re'),API.listSub(P+'/cmts','t',100)])}catch(e){}
-        if(!v.isConnected||L[i]!==x)return;const my=(R.find(r=>r.id===NET.uid)||{}).e;const cnt={};R.forEach(r=>{(cnt[r.e]=cnt[r.e]||[]).push(r.id)});
+        if(!v.isConnected||L[i]!==x)return;const my=(R.find(r=>r.id===NET.uid)||{}).e;{const box=v.querySelector('.vimg'),key=R.map(r=>r.id+r.e).sort().join();if(x._rk!==key){const old=x._rk==null?null:new Set((x._rk||'').split(','));const nw=R.filter(r=>r.id!==NET.uid&&(!old||!old.has(r.id+r.e)));nw.slice(0,6).forEach((r,j)=>setTimeout(()=>burst(box,r.e,old?8:4),j*450));x._rk=key}}const cnt={};R.forEach(r=>{(cnt[r.e]=cnt[r.e]||[]).push(r.id)});
         v.querySelector('#vre').innerHTML=`<div class="rsum">${Object.keys(cnt).map(e=>`<span title="${cnt[e].map(nameOf).join(', ')}">${e} ${cnt[e].length}</span>`).join('')||'<span class="vs">Chưa ai thả cảm xúc</span>'}</div>
           <div class="rpick">${REACTS.map(e=>`<button class="${e===my?'on':''}" data-e="${e}">${e}</button>`).join('')}</div>`;
-        v.querySelectorAll('[data-e]').forEach(b=>b.onclick=async()=>{const e=b.dataset.e;try{if(e===my)await API.del(P+'/re/'+NET.uid);else await API.put(P+'/re/'+NET.uid,{e,t:Date.now()});loadSocial()}catch(er){toast(errMsg(er))}});
+        v.querySelectorAll('[data-e]').forEach(b=>b.onclick=async()=>{const e=b.dataset.e;try{if(e===my)await API.del(P+'/re/'+NET.uid);else{burst(v.querySelector('.vimg'),e,9);await API.put(P+'/re/'+NET.uid,{e,t:Date.now()})}loadSocial()}catch(er){toast(errMsg(er))}});
         C.sort((a,b)=>a.t-b.t);v.querySelector('#vcm').innerHTML=C.map(c=>`<div class="cm">${avHtml(personOf(c.by),26)}<div class="grow"><b>${esc(nameOf(c.by))}</b> <span class="vs">${ago(c.t)}</span><div>${esc(c.txt)}</div></div>${c.by===NET.uid?`<button class="cmx" data-c="${c.id}">✕</button>`:''}</div>`).join('');
         v.querySelectorAll('[data-c]').forEach(b=>b.onclick=async()=>{try{await API.del(P+'/cmts/'+b.dataset.c);loadSocial()}catch(er){toast(errMsg(er))}})};
-    loadSocial();
+    loadSocial();clearInterval(v._pl);v._pl=setInterval(()=>{if(!v.isConnected)return clearInterval(v._pl);if(document.visibilityState==='visible')loadSocial()},5000);
     const sendC=async()=>{const t=v.querySelector('#vci').value.trim();if(!t)return;v.querySelector('#vci').value='';try{await API.put(P+'/cmts/'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),{by:NET.uid,t:Date.now(),txt:t});loadSocial()}catch(e){toast(errMsg(e))}};
     v.querySelector('#vcs').onclick=sendC;v.querySelector('#vci').onkeydown=e=>{if(e.key==='Enter')sendC()};
     if(!mine)v.querySelector('#vdm').onclick=()=>{openConv(uid,{ph:x.id,phby:uid})};
@@ -966,7 +971,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 21${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 22${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

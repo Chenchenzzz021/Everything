@@ -151,7 +151,7 @@ nav button.on b .ic{stroke-width:2.3}
 .phbox input::placeholder{color:#eee}
 .ck2{display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--ln)}
 .ck2 input{width:20px;height:20px;accent-color:var(--pk)}
-.viewer{overflow-y:auto;position:fixed;inset:0;z-index:1500;background:url(assets/phong-nen.jpg) center/cover no-repeat,#16121a;color:#fff;padding:calc(14px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));display:flex;flex-direction:column}
+.viewer{overflow-y:auto;position:fixed;inset:0;z-index:1500;background:linear-gradient(rgba(16,28,48,.62),rgba(16,28,48,.62)),url(assets/phong-nen.jpg) center/cover no-repeat,#16121a;color:#fff;padding:calc(14px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));display:flex;flex-direction:column}
 .vtop{display:flex;align-items:center;gap:10px;margin-bottom:14px}.vs{font-size:12px;color:#c9c1cf}
 .vx{background:rgba(255,255,255,.12)!important;color:#fff!important}
 .vimg{position:relative;width:100%;max-width:520px;margin:0 auto;aspect-ratio:1;border-radius:32px;overflow:hidden;background:#2a2230;box-shadow:0 0 0 5px #cfe9fb}
@@ -890,7 +890,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 14${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 15${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

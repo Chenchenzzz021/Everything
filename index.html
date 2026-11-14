@@ -149,6 +149,7 @@ ul.ck li{margin:4px 0}
 .sempty{padding:28px 20px;text-align:center;color:var(--mut)}
 .sload{display:flex;gap:6px;justify-content:center;padding:16px}.sload i{width:8px;height:8px;border-radius:50%;background:var(--pk);opacity:.3;animation:sdot 1s infinite}.sload i:nth-child(2){animation-delay:.15s}.sload i:nth-child(3){animation-delay:.3s}
 @keyframes sdot{50%{opacity:1;transform:translateY(-3px)}}
+.page.swl{animation:swl .22s ease-out}.page.swr{animation:swr .22s ease-out}@keyframes swl{from{transform:translateX(40px);opacity:.4}to{transform:none;opacity:1}}@keyframes swr{from{transform:translateX(-40px);opacity:.4}to{transform:none;opacity:1}}
 .qa2{display:flex;gap:6px}.qa2 button{flex:1;text-align:center!important;padding:8px 4px!important;background:#eef2ff!important;color:#4f46e5!important}
 .qa{display:flex;flex-direction:column;gap:6px;margin-top:8px}
 .qa button{padding:8px 10px;border-radius:10px;background:var(--pk2);color:var(--pk);font-weight:600;font-size:13px;text-align:left}
@@ -503,6 +504,7 @@ function renderMain(){
   <div class="page hide" id="pg-set"><div class="scroll" id="set"></div></div>
   <nav><button data-t="map" class="on"><b>${I.map}</b>Bản đồ</button><button data-t="pl"><b>${I.star}</b>Địa điểm</button><button data-t="chat"><b>${I.chat}<i class="nb hide" id="nbadge"></i></b>Tin nhắn</button><button data-t="set"><b>${I.set}</b>Cài đặt</button></nav>`;
   document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>tab(b.dataset.t));
+  initSwipe();
   map=L.map('map',{zoomControl:false,attributionControl:true}).setView([16.05,108.2],5);
   addTiles();
   plLayer=L.layerGroup().addTo(map);
@@ -515,6 +517,17 @@ function renderMain(){
   clearInterval(S.iv);S.iv=setInterval(()=>{if(document.visibilityState==='visible')refresh()},15e3);
   clearInterval(S.iv2);S.iv2=setInterval(()=>{drawPeople()},30e3);
 }
+const SWT=['map','pl','chat'];
+function initSwipe(){const app=$('#app');if(app._sw)return;app._sw=1;let st=null;
+  app.addEventListener('touchstart',e=>{st=null;if(e.touches.length!==1)return;const t=e.touches[0],cur=S.tab;if(!SWT.includes(cur))return;
+    if(document.querySelector('.sheet,.viewer,.conv,.editor,.srch'))return;
+    const tg=e.target;if(tg.closest('input,textarea,select,.chips,.leaflet-popup,.emg,.thm'))return;
+    if(cur==='map'&&!(t.clientX>innerWidth-28||tg.closest('.top')))return;
+    st={x:t.clientX,y:t.clientY,t:Date.now(),tab:cur}},{passive:true,capture:true});
+  app.addEventListener('touchend',e=>{if(!st)return;const t=e.changedTouches[0],dx=t.clientX-st.x,dy=t.clientY-st.y,dt=Date.now()-st.t,s0=st;st=null;
+    if(Math.abs(dx)<60||Math.abs(dx)<Math.abs(dy)*1.6||dt>800||S.tab!==s0.tab)return;
+    const i=SWT.indexOf(s0.tab)+(dx<0?1:-1);if(i<0||i>=SWT.length)return;tab(SWT[i]);
+    const pg=$('#pg-'+SWT[i]);if(pg){pg.classList.remove('swl','swr');void pg.offsetWidth;pg.classList.add(dx<0?'swl':'swr')}},{passive:true,capture:true})}
 function tab(t){S.tab=t;document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
   $('#pg-map').classList.toggle('hide',t!=='map');$('#pg-pl').classList.toggle('hide',t!=='pl');$('#pg-set').classList.toggle('hide',t!=='set');$('#pg-chat').classList.toggle('hide',t!=='chat');if(t==='chat'){drawChats();loadChats()}
   if(t==='map')setTimeout(()=>map.invalidateSize(),50);if(t==='pl'){drawPlaces();loadPlaces()}if(t==='set')drawSet()}
@@ -1001,7 +1014,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 25${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 26${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

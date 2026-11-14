@@ -124,6 +124,9 @@ ul.ck li{margin:4px 0}
 #vf button{font-size:12.5px;padding:8px 2px}
 .qa{display:flex;flex-direction:column;gap:6px;margin-top:8px}
 .qa button{padding:8px 10px;border-radius:10px;background:var(--pk2);color:var(--pk);font-weight:600;font-size:13px;text-align:left}
+.mopt{display:block;width:100%;text-align:left;padding:12px 14px;border-radius:14px;border:1px solid var(--ln);background:#fff;margin-bottom:8px}
+.mopt b{display:block;font-size:15px}.mopt span{font-size:13px;color:var(--mut)}
+.mopt.on{border:2px solid var(--pk);background:var(--pk2)}
 </style>
 </head>
 <body>
@@ -208,7 +211,7 @@ const MOCK=(()=>{const db=()=>LS.get('mock',{c:{},loc:{},pl:{}}),sv=d=>LS.set('m
 const API=DEMO?MOCK:REAL;
 
 // ===== Trạng thái =====
-const S={user:LS.get('user',''),name:LS.get('name',''),em:LS.get('em',''),av:LS.get('av',''),vf:'all',code:LS.get('code',''),sharing:LS.get('sharing',true),tab:'map',
+const S={approx:LS.get('approx',false),user:LS.get('user',''),name:LS.get('name',''),em:LS.get('em',''),av:LS.get('av',''),vf:'all',code:LS.get('code',''),sharing:LS.get('sharing',true),tab:'map',
   me:null,ptn:null,couple:null,places:LS.get('places_cache',[]),filter:'all',sort:'new',lastSent:0,lastSentPos:null,pos:null,bat:null,err:null,pick:null};
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -350,11 +353,22 @@ function tab(t){S.tab=t;document.querySelectorAll('nav button').forEach(b=>b.cla
   if(t==='map')setTimeout(()=>map.invalidateSize(),50);if(t==='pl'){drawPlaces();loadPlaces()}if(t==='set')drawSet()}
 
 function drawShare(){const e=$('#shr');if(!e)return;e.className='share'+(S.sharing?'':' off');
-  e.innerHTML=S.sharing?`<span class="dot"></span><span>Đang chia sẻ vị trí${S.err?` · <span style="color:#b91c1c">${esc(S.err)}</span>`:''}</span><button class="tg" id="tg">Tạm dừng</button>`
-    :`<span class="dot"></span><span>Đã tạm dừng chia sẻ</span><button class="tg" id="tg" style="background:var(--pk);color:#fff">Bật lại</button>`;
-  $('#tg').onclick=toggleShare}
+  e.innerHTML=S.sharing?`<span class="dot"${S.approx?' style="background:#f59e0b"':''}></span><span>${S.approx?'Chia sẻ vị trí gần đúng (~1 km)':'Đang chia sẻ vị trí chính xác'}${S.err?` · <span style="color:#b91c1c">${esc(S.err)}</span>`:''}</span><button class="tg" id="tg">Ẩn / đổi</button>`
+    :`<span class="dot"></span><span>Đang ẩn vị trí</span><button class="tg" id="tg" style="background:var(--pk);color:#fff">Bật lại</button>`;
+  $('#tg').onclick=modeSheet}
+const curMode=()=>!S.sharing?'off':S.approx?'approx':'exact';
+const MODES=[['exact','📍 Chính xác','Mọi người thấy đúng chỗ bạn đang đứng.'],['approx','🟠 Gần đúng','Chỉ thấy khu vực bạn đang ở, lệch khoảng 1 km.'],['off','🙈 Ẩn vị trí','Không ai thấy bạn ở đâu. Mọi người chỉ thấy chữ “Đang ẩn”.']];
+function modeSheet(){const sh=document.createElement('div');sh.className='sheet';const m=curMode();
+  sh.innerHTML=`<div><div class="row"><h2 class="grow" style="margin:0">Chia sẻ vị trí của bạn</h2><button class="ib" id="x">✕</button></div><div style="height:10px"></div>
+    ${MODES.map(([k,n,d])=>`<button class="mopt${k===m?' on':''}" data-m="${k}"><b>${n}</b><span>${d}</span></button>`).join('')}</div>`;
+  document.body.appendChild(sh);sh.querySelector('#x').onclick=()=>sh.remove();sh.onclick=ev=>{if(ev.target===sh)sh.remove()};
+  sh.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{sh.remove();setMode(b.dataset.m)})}
+async function setMode(m){if(m===curMode())return;const wasOff=!S.sharing;S.approx=m==='approx';LS.set('approx',S.approx);
+  if(m==='off'){if(S.sharing)await toggleShare();return}
+  if(wasOff)return toggleShare();
+  drawShare();S.lastSent=0;toast(m==='approx'?'Mọi người chỉ thấy khu vực gần đúng của bạn':'Đã chia sẻ vị trí chính xác');if(S.pos)sendLoc();else locateOnce();if($('#set')&&S.tab==='set')drawSet()}
 async function toggleShare(){S.sharing=!S.sharing;LS.set('sharing',S.sharing);drawShare();
-  if(S.sharing){toast('Đã bật chia sẻ');startGeo();locateOnce()}else{stopGeo();toast('Đã tạm dừng. Cả nhóm sẽ thấy bạn đang tạm dừng.');
+  if(S.sharing){toast('Đã bật chia sẻ');startGeo();locateOnce()}else{stopGeo();toast('Đã ẩn vị trí. Cả nhóm sẽ thấy bạn đang ẩn.');
     try{await API.setLoc(S.code,Object.assign(idDoc(),{sharing:false,t:Date.now()}))}catch(e){toast(errMsg(e))}}
   refresh()}
 
@@ -363,9 +377,9 @@ function others(){const m=((S.couple&&S.couple.members)||[]).filter(x=>x!==NET.u
 const nameOf=uid=>uid===NET.uid?S.name:(((S.locs||[]).find(l=>l.id===uid)||{}).name||'Thành viên');
 function personRow(p){const me=S.pos||(S.me&&S.me.lat!=null?S.me:null);let st;
   if(!p.t)st='Chưa mở app lần nào';
-  else if(p.sharing===false)st=`<b>Đã tạm dừng</b> · ${ago(p.t)}`;
+  else if(p.sharing===false)st=`<b>🙈 Đang ẩn vị trí</b> · ${ago(p.t)}`;
   else if(p.lat==null)st='Chưa có vị trí';
-  else{const age=(Date.now()-p.t)/60e3,cls=age<10?'fresh':age>60?'stale':'',d=dist(me,p);st=`<span class="${cls}">● ${ago(p.t)}</span>${d!=null?' · cách '+fmtD(d):''}${p.bat!=null?' · 🔋'+p.bat+'%':''}`}
+  else{const age=(Date.now()-p.t)/60e3,cls=age<10?'fresh':age>60?'stale':'',d=dist(me,p);st=`<span class="${cls}">● ${ago(p.t)}</span>${p.approx?' · <b>khu vực gần đúng</b>':''}${d!=null?' · cách '+(p.approx?'~':'')+fmtD(d):''}${p.bat!=null?' · 🔋'+p.bat+'%':''}`}
   const canNav=p.sharing!==false&&p.lat!=null;
   return`<div class="pr" data-id="${p.id}">${avHtml(p,36)}<div class="grow"><div class="nm">${esc(p.name||'Thành viên mới')}</div><div class="st">${st}</div></div>
     <div class="acts">${canNav?`<button class="ib" data-go="${p.id}" title="Chỉ đường">🧭</button>`:''}<button class="ib" data-pg="${p.id}" title="Nhờ cập nhật">🔔</button></div></div>`}
@@ -412,7 +426,7 @@ function avHtml(p,size,col){size=size||36;const st=`width:${size}px;height:${siz
 const idDoc=()=>{const o={name:S.name};if(S.em)o.em=S.em;if(S.av)o.av=S.av;return o};
 // tự nhận một emoji chưa ai dùng khi vào nhóm
 function ensureEm(){if(!S.couple)return;const t=takenEm();if(S.em&&!t.includes(S.em))return;const free=EMOJIS.find(x=>!t.includes(x));if(!free)return;S.em=free;LS.set('em',free);API.saveProfile({em:free}).catch(()=>{});pushId()}
-function pushId(){if(!S.code)return;if(S.sharing&&S.pos){S.lastSent=0;sendLoc()}else API.setLoc(S.code,Object.assign(idDoc(),{sharing:S.sharing&&!!S.me&&S.me.sharing!==false,t:Date.now()},S.sharing&&S.me&&S.me.lat!=null?{lat:S.me.lat,lng:S.me.lng,acc:S.me.acc||0}:{})).catch(()=>{})}
+function pushId(){if(!S.code)return;if(S.sharing&&S.pos){S.lastSent=0;sendLoc()}else API.setLoc(S.code,Object.assign(idDoc(),{sharing:S.sharing&&!!S.me&&S.me.sharing!==false,t:Date.now()},S.sharing&&S.me&&S.me.lat!=null?{lat:S.me.lat,lng:S.me.lng,acc:S.me.acc||0,approx:!!S.me.approx}:{})).catch(()=>{})}
 function resizeImg(file,cb){const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const N=96,c=document.createElement('canvas');c.width=c.height=N;const g=c.getContext('2d');
   const m=Math.min(im.width,im.height);g.drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,N,N);cb(c.toDataURL('image/jpeg',.72))};im.onerror=()=>toast('Không đọc được ảnh này');im.src=fr.result};fr.readAsDataURL(file)}
 
@@ -428,7 +442,7 @@ function onPos(p,force){S.err=null;S.pos={lat:p.coords.latitude,lng:p.coords.lon
   if(force||Date.now()-S.lastSent>30e3||moved==null||moved>40)sendLoc()}
 function onGeoErr(e){S.err=e.code===1?'chưa cho phép định vị':'không lấy được vị trí';drawShare();
   if(e.code===1)toast(isIOS?'Hãy cho phép vị trí: Cài đặt › Quyền riêng tư › Dịch vụ định vị › Safari/Everything':'Hãy cho phép quyền vị trí cho trang này',5000)}
-async function sendLoc(){if(!S.pos||!S.sharing||S.sending)return;S.sending=true;const o={...idDoc(),sharing:true,lat:S.pos.lat,lng:S.pos.lng,acc:S.pos.acc,t:Date.now()};if(S.bat!=null)o.bat=S.bat;
+async function sendLoc(){if(!S.pos||!S.sharing||S.sending)return;S.sending=true;const o={...idDoc(),sharing:true,lat:S.pos.lat,lng:S.pos.lng,acc:S.pos.acc,t:Date.now()};if(S.approx){o.lat=Math.round(o.lat*100)/100;o.lng=Math.round(o.lng*100)/100;o.acc=1500;o.approx=true}if(S.bat!=null)o.bat=S.bat;
   try{await API.setLoc(S.code,o);S.lastSent=o.t;S.lastSentPos=S.pos;S.me=o}catch(e){S.err=errMsg(e).slice(0,40);drawShare()}S.sending=false}
 
 // ===== Làm mới dữ liệu =====
@@ -587,11 +601,11 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
       <div class="grow">${esc(nameOf(id))}${id===NET.uid?' (bạn)':''}${i===0?' <span class="tag">Trưởng nhóm</span>':''}</div>
       ${owner&&id!==NET.uid?`<button class="btn red" style="min-height:34px;padding:6px 10px;font-size:13px" data-rm="${id}">Gỡ</button>`:''}</div>`).join('')}
     ${owner?'<p class="mut">Trưởng nhóm có thể gỡ người khác, ví dụ khi ai đó đổi máy (họ vào lại bằng mã).</p>':''}</div>
-  <div class="card"><h2>Chia sẻ vị trí</h2><p class="mut" style="margin-top:0">Hiện đang: <b>${S.sharing?'Đang chia sẻ':'Tạm dừng'}</b></p><button class="btn ${S.sharing?'sec':''} w" id="tg2">${S.sharing?'Tạm dừng chia sẻ':'Bật chia sẻ'}</button></div>
+  <div class="card"><h2>Chia sẻ vị trí</h2>${MODES.map(([k,n,d])=>`<button class="mopt${k===curMode()?' on':''}" data-m="${k}"><b>${n}</b><span>${d}</span></button>`).join('')}</div>
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 8${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 9${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};
@@ -604,7 +618,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   $('#inv').onclick=shareInvite;
   e.querySelectorAll('[data-rm]').forEach(b=>b.onclick=async()=>{const id=b.dataset.rm;if(!confirm('Gỡ '+nameOf(id)+' khỏi nhóm?'))return;
     try{const c=await API.getCouple(S.code);await API.patchCouple(S.code,{members:(c.members||[]).filter(x=>x!==id)});toast('Đã gỡ');await refresh();drawSet()}catch(er){toast(errMsg(er))}});
-  $('#tg2').onclick=async()=>{await toggleShare();drawSet()};
+  e.querySelectorAll('.mopt').forEach(b=>b.onclick=async()=>{await setMode(b.dataset.m);drawSet()});
   $('#lv').onclick=async()=>{if(!confirm('Rời nhóm? Vị trí của bạn sẽ bị xoá và mọi người sẽ không thấy bạn nữa.'))return;
     try{await API.delLoc(S.code);const c=await API.getCouple(S.code);if(c)await API.patchCouple(S.code,{members:(c.members||[]).filter(x=>x!==NET.uid)})}catch(er){toast(errMsg(er));return}
     API.saveProfile({code:''}).catch(()=>{});toast('Đã rời nhóm');leaveLocal()}}

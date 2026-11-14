@@ -168,8 +168,8 @@ nav button.on b .ic{stroke-width:2.3}
 .etop{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .editor .vx{background:#fff!important;color:var(--ink)!important;box-shadow:var(--sh)}
 .estage{display:flex;justify-content:center}
-.eout{position:relative;width:min(100%,46vh,520px);aspect-ratio:1}.eout .eframe{width:100%}.eout.fr .eframe{position:absolute;inset:9.6%;width:auto;border-radius:17%;box-shadow:none}.eout .fover{z-index:4}
-.vimg.fr{background:transparent;box-shadow:none;overflow:visible;border-radius:0}.vimg.fr .pimg{position:absolute;inset:9.6%;width:80.8%;height:80.8%;border-radius:17%}.vimg.fr .vcap{bottom:15%}.vimg.fr .fover{z-index:2}
+.eout{position:relative;width:min(100%,46vh,520px);aspect-ratio:1}.eout .eframe{width:100%}.eout.fr .eframe{position:absolute;inset:var(--fi,10%);width:auto;border-radius:13%;box-shadow:none}.eout .fover{z-index:4}
+.vimg.fr{background:transparent;box-shadow:none;overflow:visible;border-radius:0}.vimg.fr .pimg{position:absolute;inset:var(--fi,10%);width:calc(100% - 2*var(--fi,10%));height:calc(100% - 2*var(--fi,10%));border-radius:13%}.vimg.fr .vcap{bottom:15%}.vimg.fr .fover{z-index:2}
 .eframe{position:relative;width:min(100%,46vh,520px);aspect-ratio:1;border-radius:34px;overflow:hidden;background:#222;box-shadow:0 10px 30px rgba(90,160,220,.35);touch-action:none}
 .eframe>img{width:100%;height:100%;object-fit:cover;display:block;user-select:none;-webkit-user-select:none}
 .elay{position:absolute;inset:0}
@@ -708,14 +708,15 @@ const STK={'😊 Cảm xúc':'😀 😍 🥰 😘 😂 🤣 😎 🤩 🥺 😭 
 const TXT_PRE=['Yêu em','Nhớ anh','Đói quá','Đi chơi nè','Chill thôi','Ăn gì đây?','Hôm nay vui','Về nhà thôi'];
 const TXT_COL=['#ffffff','#e8577a','#f59e0b','#10b981','#3b82f6','#8b5cf6','#111111'];
 const THEMES={xanh:['Xanh dương','#8cc8f2'],hong:['Hồng','#f6a9c6'],la:['Xanh lá','#94d9a6'],vang:['Vàng','#f5d272']};
-const thk=k=>THEMES[k]?k:'xanh',frSrc=k=>'assets/khung-'+thk(k)+'.png';
+const FRI={xanh:11.7,hong:10.2,la:12.2,vang:9.5};
+const thk=k=>THEMES[k]?k:'xanh',fiOf=k=>'--fi:'+FRI[thk(k)]+'%',frSrc=k=>'assets/khung-'+thk(k)+'.png';
 function applyBg(){document.documentElement.style.setProperty('--bgimg',`url(assets/nen-${thk(S.bg)}.jpg)`)}
 const EMO_FONT='"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
 function composePhoto(file){squareJpeg(file,img=>{const st={sel:LS.get('aud','all'),stk:[],cur:-1,tab:Object.keys(STK)[0],col:TXT_COL[0],fr:LS.get('fr','xanh')};
   if(Array.isArray(st.sel))st.sel=st.sel.filter(x=>others().some(p=>p.id===x));
   const ed=document.createElement('div');ed.className='editor';ed.innerHTML=`
     <div class="etop"><button class="ib vx" id="ex">${I.x}</button><b class="grow" style="text-align:center">Khoảnh khắc</b><button class="btn" id="enext" style="min-height:40px;padding:8px 16px">Tiếp</button></div>
-    <div class="estage"><div class="eout${st.fr==='none'?'':' fr'}" id="eout"><div class="eframe" id="efr"><img src="${img}" draggable="false"><div class="elay" id="elay"></div><input id="cap" maxlength="60" placeholder="Thêm lời nhắn…"></div><img class="fover" id="efo" src="${frSrc(st.fr)}" alt=""${st.fr==='none'?' style="display:none"':''}></div></div>
+    <div class="estage"><div class="eout${st.fr==='none'?'':' fr'}" id="eout" style="${fiOf(st.fr)}"><div class="eframe" id="efr"><img src="${img}" draggable="false"><div class="elay" id="elay"></div><input id="cap" maxlength="60" placeholder="Thêm lời nhắn…"></div><img class="fover" id="efo" src="${frSrc(st.fr)}" alt=""${st.fr==='none'?' style="display:none"':''}></div></div>
     <div class="efrs" id="efrs"></div>
     <div class="etools hide" id="etl"><button data-k="sm">➖</button><button data-k="lg">➕</button><button data-k="rl">↺</button><button data-k="rr">↻</button><button data-k="del">🗑</button><button data-k="ok">✓</button></div>
     <div class="etabs" id="etabs"></div><div class="egrid" id="egrid"></div>`;
@@ -734,7 +735,7 @@ function composePhoto(file){squareJpeg(file,img=>{const st={sel:LS.get('aud','al
       q('#etadd').onclick=()=>{const v=q('#etx').value.trim();if(v){add({t:v,c:st.col});q('#etx').value=''}}}
     else{g.className='egrid';g.innerHTML=STK[st.tab].split(' ').map(e=>`<button>${e}</button>`).join('');g.querySelectorAll('button').forEach(b=>b.onclick=()=>add({e:b.textContent}))}};
   const frs=()=>{q('#efrs').innerHTML='Khung: '+Object.keys(THEMES).map(k=>`<button data-f="${k}" title="${THEMES[k][0]}" style="background:${THEMES[k][1]}" class="${k===st.fr?'on':''}"></button>`).join('')+`<button data-f="none" title="Không khung" style="background:#fff" class="${st.fr==='none'?'on':''}">⊘</button>`;
-    q('#efrs').querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{st.fr=b.dataset.f;LS.set('fr',st.fr);const o=q('#efo');q('#eout').classList.toggle('fr',st.fr!=='none');if(st.fr==='none')o.style.display='none';else{o.style.display='';o.src=frSrc(st.fr)}frs();drawStk()})};frs();
+    q('#efrs').querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{st.fr=b.dataset.f;LS.set('fr',st.fr);const o=q('#efo');q('#eout').classList.toggle('fr',st.fr!=='none');q('#eout').setAttribute('style',fiOf(st.fr));if(st.fr==='none')o.style.display='none';else{o.style.display='';o.src=frSrc(st.fr)}frs();drawStk()})};frs();
   tabs();drawStk();
   // kéo, phóng to bằng 2 ngón, xoay
   const pts=new Map();let base=null;
@@ -768,7 +769,7 @@ async function openViewer(uid,start){await loadPhotos();const L=phOf(uid),p=pers
   LS.set('phseen_'+uid,L[0].t);drawPeople();let i=start||0;
   const v=document.createElement('div');v.className='viewer';document.body.appendChild(v);
   const draw=async()=>{const x=L[i];v.innerHTML=`<div class="vtop">${avHtml(p,36)}<div class="grow"><b>${esc(p.name||'')}${mine?' (bạn)':''}</b><div class="vs">${ago(x.t)}${mine?' · '+audLabel(x.see):''}</div></div><span class="vs">${i+1}/${L.length}</span><button class="ib vx" id="vx">${I.x}</button></div>
-      <div class="vimg${x.fr==='none'?'':' fr'}">${x.fr==='none'?'':`<img class="fover" src="${frSrc(x.fr)}" alt="">`}<div class="spin">Đang tải ảnh…</div>${x.cap?`<div class="vcap">${esc(x.cap)}</div>`:''}<button class="vnav l" id="vp"></button><button class="vnav r" id="vn"></button></div>
+      <div class="vimg${x.fr==='none'?'':' fr'}" style="${fiOf(x.fr)}">${x.fr==='none'?'':`<img class="fover" src="${frSrc(x.fr)}" alt="">`}<div class="spin">Đang tải ảnh…</div>${x.cap?`<div class="vcap">${esc(x.cap)}</div>`:''}<button class="vnav l" id="vp"></button><button class="vnav r" id="vn"></button></div>
       <div class="vdots">${L.slice(0,20).map((_,k)=>`<i class="${k===i?'on':''}"></i>`).join('')}</div>
       ${mine?`<div class="row" style="gap:8px;margin-top:12px"><button class="btn sec grow" id="vaud">${I.eye} Ai xem được</button><button class="btn red" id="vdel">Xoá</button></div>`:''}
       <div class="vre" id="vre"></div><div class="vcm" id="vcm"></div>
@@ -880,7 +881,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Khoảnh khắc của bạn</h2><p class="mut" style="margin-top:0">${phCount(NET.uid)} ảnh đã chia sẻ. Bấm vào để xem, đổi người được xem hoặc xoá.</p><div class="row"><button class="btn sec grow" id="myph">${I.eye} Xem ảnh của tôi</button><button class="btn" id="newph">${I.cam} Chụp</button></div></div>
   <div class="card"><h2>Màu ảnh</h2><label class="f">Phông nền khi chụp và xem ảnh</label><div class="thm" id="thbg">${Object.keys(THEMES).map(k=>`<button data-bg="${k}" title="${THEMES[k][0]}" style="background:${THEMES[k][1]}" class="${k===thk(S.bg)?'on':''}"></button>`).join('')}</div>
     <label class="f">Khung ảnh mặc định (đổi được ngay lúc chụp)</label><div class="thm" id="thfr">${Object.keys(THEMES).map(k=>`<button data-fr="${k}" title="${THEMES[k][0]}" style="background:${THEMES[k][1]}" class="${k===LS.get('fr','xanh')?'on':''}"></button>`).join('')}<button data-fr="none" title="Không khung" style="background:#fff" class="${LS.get('fr','xanh')==='none'?'on':''}">⊘</button></div>
-    <p class="mut" style="margin:4px 0 0">Xanh dương · Hồng · Xanh lá · Vàng. Bạn bè thấy ảnh của bạn với đúng khung bạn chọn.</p></div>
+    <p class="mut" style="margin:4px 0 0">Nền và khung chọn riêng, không cần cùng màu. Bạn bè thấy ảnh của bạn với đúng khung bạn chọn.</p></div>
   <div class="card"><h2>Tên, ảnh và biểu tượng</h2>
     <div class="row" style="gap:12px">${avHtml({id:NET.uid,name:S.name,em:S.em,av:S.av},64)}<div class="grow"><button class="btn sec w" id="upav">${I.cam} ${S.av?'Đổi ảnh':'Tải ảnh lên'}</button>${S.av?'<button class="btn gh w" id="rmav" style="margin-top:6px;min-height:36px">Bỏ ảnh</button>':''}</div></div>
     <input type="file" id="avf" accept="image/*" class="hide">
@@ -902,7 +903,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 16${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 17${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

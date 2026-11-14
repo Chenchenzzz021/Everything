@@ -68,6 +68,7 @@ textarea.t{min-height:70px;resize:vertical}
 .mk{display:flex;flex-direction:column;align-items:center}
 .mk i{width:36px;height:36px;border-radius:50%;border:3px solid #fff;display:grid;place-items:center;color:#fff;font-style:normal;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.3)}
 .mk span{margin-top:2px;background:#fff;border-radius:8px;padding:1px 6px;font-size:11px;font-weight:600;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.ppin{width:34px;height:34px;border-radius:50% 50% 50% 4px;transform:rotate(-45deg);background:#fff;border:3px solid #6366f1;display:grid;place-items:center;box-shadow:0 2px 6px rgba(0,0,0,.3)}.ppin span{transform:rotate(45deg);font-size:17px;line-height:1}
 .pm{font-size:22px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.4));text-align:center;line-height:1}
 .pick{position:absolute;left:12px;right:12px;bottom:12px;z-index:600;background:#fff;border-radius:16px;padding:12px;box-shadow:var(--sh);text-align:center}
 /* địa điểm */
@@ -89,6 +90,7 @@ textarea.t{min-height:70px;resize:vertical}
 .srate button.on{color:#f59e0b}
 .seg{display:flex;background:#f3f4f6;border-radius:12px;padding:3px}
 .seg button{flex:1;padding:9px 4px;border-radius:10px;font-size:14px}
+.segw{flex-wrap:wrap;gap:3px}.segw button{flex:1 1 30%}
 .seg button.on{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.1);font-weight:600}
 .sheet{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.35);display:flex;align-items:flex-end}
 .sheet>div{background:var(--bg);width:100%;max-height:92%;overflow-y:auto;border-radius:22px 22px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom))}
@@ -122,6 +124,7 @@ ul.ck li{margin:4px 0}
 .emg button.on{border:2px solid var(--pk);background:var(--pk2)}
 .emg button:disabled{opacity:.25}
 #vf button{font-size:12.5px;padding:8px 2px}
+.qa2{display:flex;gap:6px}.qa2 button{flex:1;text-align:center!important;padding:8px 4px!important;background:#eef2ff!important;color:#4f46e5!important}
 .qa{display:flex;flex-direction:column;gap:6px;margin-top:8px}
 .qa button{padding:8px 10px;border-radius:10px;background:var(--pk2);color:var(--pk);font-weight:600;font-size:13px;text-align:left}
 .mopt{display:block;width:100%;text-align:left;padding:12px 14px;border-radius:14px;border:1px solid var(--ln);background:#fff;margin-bottom:8px}
@@ -341,7 +344,8 @@ const newCode=()=>{const a='ABCDEFGHJKMNPQRSTUVWXYZ23456789',b=new Uint32Array(1
 const fmtCode=c=>c.slice(0,5)+'-'+c.slice(5);
 const cleanCode=c=>String(c||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
 const inviteLink=()=>location.origin+location.pathname+'?moi='+S.code+(DEMO?'&demo=1':'');
-const CATS={eat:{n:'Ăn uống',e:'🍜'},drink:{n:'Cà phê',e:'☕'},fun:{n:'Vui chơi',e:'🎡'},other:{n:'Khác',e:'📍'}};
+const CATS={eat:{n:'Ăn uống',e:'🍜'},drink:{n:'Cà phê',e:'☕'},fun:{n:'Vui chơi',e:'🎡'},home:{n:'Nhà riêng',e:'🏠',p:1},work:{n:'Công ty',e:'🏢',p:1},school:{n:'Trường học',e:'🏫',p:1},other:{n:'Khác',e:'📍'}};
+const isPers=p=>!!(CATS[p.cat]||{}).p;
 
 // ===== Bộ icon nét vẽ =====
 const IC=(d,f)=>`<svg class="ic" viewBox="0 0 24 24" fill="${f||'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
@@ -612,28 +616,29 @@ const allR=p=>Object.keys(p).filter(k=>k.startsWith('r_')&&p[k]>0).map(k=>({id:k
 const avgR=p=>{const a=allR(p);return a.length?a.reduce((x,y)=>x+y.v,0)/a.length:0};
 const stars=n=>{n=Math.round(n);return`<span class="stars">${'★'.repeat(n)}<span class="e">${'★'.repeat(5-n)}</span></span>`};
 function placeIcon(p){const V=visitors(p);
+  if(isPers(p))return L.divIcon({className:'',html:`<div class="ppin"><span>${CATS[p.cat].e}</span></div>`,iconSize:[34,34],iconAnchor:[4,38]});
   if(!V.length)return L.divIcon({className:'',html:`<div class="pm">⭐</div>`,iconSize:[28,28],iconAnchor:[14,14]});
   const E=emList(V),sh=E.slice(0,3).join('')+(E.length>3?'<small>+'+(E.length-3)+'</small>':'');
   return L.divIcon({className:'',html:`<div class="flag"><div class="fl">${sh}</div><div class="fp"></div></div>`,iconSize:[70,40],iconAnchor:[6,38]})}
 function drawPlacesOnMap(){if(!plLayer)return;plLayer.clearLayers();for(const p of S.places){if(p.lat==null)continue;const c=CATS[p.cat]||CATS.other,V=visitors(p);
-  if(S.vf==='been'&&!V.length||S.vf==='not'&&V.length)continue;
+  const ps=isPers(p);if(!ps&&(S.vf==='been'&&!V.length||S.vf==='not'&&V.length))continue;
   const mk=L.marker([p.lat,p.lng],{icon:placeIcon(p)});mk._pid=p.id;mk.addTo(plLayer)
-   .bindPopup(`<b>${c.e} ${esc(p.name)}</b><br>${V.length?'Đã đến: '+V.map(id=>(emOf(id)||'')+' '+esc(nameOf(id))).join(', '):'⭐ Chưa ai đến'}<br>${avgR(p)?stars(avgR(p))+' '+avgR(p).toFixed(1)+'<br>':''}${p.note?esc(p.note).slice(0,120)+'<br>':''}<div class="qa"><button onclick="toggleVisit('${p.id}')">${V.includes(NET.uid)?'↩️ Bỏ đánh dấu đã đi':'🚩 '+(S.em||'')+' Mình đã đi'}</button><button onclick="openPlace(S.places.find(x=>x.id==='${p.id}'))">✏️ Chi tiết / chấm sao</button></div>`,POP)}}
+   .bindPopup(ps?`<b>${c.e} ${esc(p.name)}</b><br><span style="color:#6b7280">${c.n}${p.by?' · '+esc(nameOf(p.by)):''}</span><br>${p.note?esc(p.note).slice(0,120)+'<br>':''}<div class="qa"><button onclick="openPlace(S.places.find(x=>x.id==='${p.id}'))">✏️ Chi tiết</button></div>`:`<b>${c.e} ${esc(p.name)}</b><br>${V.length?'Đã đến: '+V.map(id=>(emOf(id)||'')+' '+esc(nameOf(id))).join(', '):'⭐ Chưa ai đến'}<br>${avgR(p)?stars(avgR(p))+' '+avgR(p).toFixed(1)+'<br>':''}${p.note?esc(p.note).slice(0,120)+'<br>':''}<div class="qa"><button onclick="toggleVisit('${p.id}')">${V.includes(NET.uid)?'↩️ Bỏ đánh dấu đã đi':'🚩 '+(S.em||'')+' Mình đã đi'}</button><button onclick="openPlace(S.places.find(x=>x.id==='${p.id}'))">✏️ Chi tiết / chấm sao</button></div>`,POP)}}
 async function toggleVisit(id){const p=S.places.find(x=>x.id===id);if(!p)return;const v=!iVisited(p);try{await API.savePlace(S.code,id,{['v_'+NET.uid]:v});toast(v?'Đã cắm cờ 🚩':'Đã bỏ cờ');await loadPlaces();focusPlace(id)}catch(e){toast(errMsg(e))}}
 window.toggleVisit=toggleVisit;
 function drawPlaces(){const e=$('#pl');if(!e)return;const f=S.filter,vf=S.vf;let L2=S.places.slice();
-  const nb=L2.filter(p=>visitors(p).length).length,nn=L2.length-nb;
-  if(vf==='been')L2=L2.filter(p=>visitors(p).length);else if(vf==='not')L2=L2.filter(p=>!visitors(p).length);else if(vf==='me')L2=L2.filter(p=>!iVisited(p));
+  const LP=L2.filter(p=>!isPers(p)),nb=LP.filter(p=>visitors(p).length).length,nn=LP.length-nb;
+  if(vf==='been')L2=LP.filter(p=>visitors(p).length);else if(vf==='not')L2=LP.filter(p=>!visitors(p).length);else if(vf==='me')L2=LP.filter(p=>!iVisited(p));
   if(f!=='all')L2=L2.filter(p=>p.cat===f);
   if(S.sort==='new')L2.sort((a,b)=>(b.t||0)-(a.t||0));else if(S.sort==='star')L2.sort((a,b)=>avgR(b)-avgR(a));else{const me=S.pos;L2.sort((a,b)=>(dist(me,a)??1e12)-(dist(me,b)??1e12))}
   e.innerHTML=`<div class="row" style="margin-bottom:10px"><h1 class="grow" style="margin:0">Địa điểm</h1><button class="btn" id="add">${I.plus} Thêm</button></div>
     <div class="seg" id="vf" style="margin-bottom:10px">${[['all','Tất cả'],['been','🚩 Đã đi ('+nb+')'],['not','⭐ Chưa đi ('+nn+')'],['me','🙋 Mình chưa đi']].map(([k,n])=>`<button data-v="${k}" class="${vf===k?'on':''}">${n}</button>`).join('')}</div>
-    <div class="chips">${[['all','Mọi loại'],['eat','🍜 Ăn uống'],['drink','☕ Cà phê'],['fun','🎡 Vui chơi'],['other','📍 Khác']].map(([k,n])=>`<button class="chip${f===k?' on':''}" data-f="${k}">${n}</button>`).join('')}</div>
+    <div class="chips">${[['all','Mọi loại'],['eat','🍜 Ăn uống'],['drink','☕ Cà phê'],['fun','🎡 Vui chơi'],['home','🏠 Nhà riêng'],['work','🏢 Công ty'],['school','🏫 Trường học'],['other','📍 Khác']].map(([k,n])=>`<button class="chip${f===k?' on':''}" data-f="${k}">${n}</button>`).join('')}</div>
     <div class="row" style="margin-bottom:8px"><span class="mut grow">${L2.length} nơi</span><select class="t" id="srt" style="width:auto;padding:6px 10px;font-size:14px"><option value="new">Mới thêm</option><option value="star">Sao cao nhất</option><option value="near">Gần đây</option></select></div>
     <div class="card" style="padding:4px 14px">${L2.length?L2.map(p=>{const c=CATS[p.cat]||CATS.other,d=dist(S.pos,p),R=allR(p),av=avgR(p);return`<div class="pl" data-id="${p.id}">
       <div class="em">${c.e}</div><div class="grow"><div class="nm">${esc(p.name)}</div>
-      <div class="vis">${visitors(p).length?'🚩 Đã đến: '+visitors(p).map(id=>`<span title="${esc(nameOf(id))}">${emOf(id)||'🙂'}</span>`).join(' '):'<span class="tag w">⭐ Chưa ai đến</span>'}</div>
-      <div class="rt">${R.length?`<span>${stars(av)} <b>${av.toFixed(1)}</b> · ${R.length} người chấm</span>`:'<i>Chưa ai chấm</i>'}<span>Bạn: ${myR(p)?myR(p)+'★':'<i>chưa chấm</i>'}</span></div>
+      <div class="vis">${isPers(p)?`<span class="tag w">${c.e} ${c.n}${p.by?' của '+esc(nameOf(p.by)):''}</span>`:visitors(p).length?'🚩 Đã đến: '+visitors(p).map(id=>`<span title="${esc(nameOf(id))}">${emOf(id)||'🙂'}</span>`).join(' '):'<span class="tag w">⭐ Chưa ai đến</span>'}</div>
+      ${isPers(p)?'':`<div class="rt">${R.length?`<span>${stars(av)} <b>${av.toFixed(1)}</b> · ${R.length} người chấm</span>`:'<i>Chưa ai chấm</i>'}<span>Bạn: ${myR(p)?myR(p)+'★':'<i>chưa chấm</i>'}</span></div>`}
       ${p.note?`<div class="nt">${esc(p.note)}</div>`:''}<div class="mut" style="font-size:12px;margin-top:2px">${c.n}${d!=null?' · '+fmtD(d):''}${p.addr?' · '+esc(p.addr):''}${p.by?' · '+esc(nameOf(p.by))+' thêm':''}</div></div></div>`}).join('')
       :`<div class="empty">Chưa có nơi nào. Bấm <b>${I.plus} Thêm</b> để lưu quán ăn, quán cà phê, chỗ vui chơi đầu tiên 💕</div>`}</div>`;
   $('#srt').value=S.sort;$('#srt').onchange=ev=>{S.sort=ev.target.value;drawPlaces()};
@@ -646,11 +651,11 @@ function openPlace(p){const isNew=!p||!p.id;const d=Object.assign({cat:'eat',nam
   const sh=document.createElement('div');sh.className='sheet';sh.innerHTML=`<div>
     <div class="row"><h2 class="grow" style="margin:0">${isNew?'Thêm địa điểm':'Sửa địa điểm'}</h2><button class="ib" id="x">${I.x}</button></div>
     <label class="f">Tên quán / địa điểm</label><input class="t" id="pn" maxlength="60" value="${esc(d.name)}" placeholder="Ví dụ: Bún chả Hàng Mành">
-    <label class="f">Loại</label><div class="seg" id="pc">${Object.keys(CATS).map(k=>`<button data-v="${k}" class="${d.cat===k?'on':''}">${CATS[k].e} ${CATS[k].n}</button>`).join('')}</div>
-    <label class="f">Bạn đã đến đây chưa?</label><div class="seg" id="ps"><button data-v="1" class="${d.been?'on':''}">🚩 ${S.em||''} Mình đã đến</button><button data-v="0" class="${d.been?'':'on'}">⭐ Chưa đến</button></div>
+    <label class="f">Loại</label><div class="seg segw" id="pc">${Object.keys(CATS).map(k=>`<button data-v="${k}" class="${d.cat===k?'on':''}">${CATS[k].e} ${CATS[k].n}</button>`).join('')}</div>
+    <div id="pvis"${(CATS[d.cat]||{}).p?' class="hide"':''}><label class="f">Bạn đã đến đây chưa?</label><div class="seg" id="ps"><button data-v="1" class="${d.been?'on':''}">🚩 ${S.em||''} Mình đã đến</button><button data-v="0" class="${d.been?'':'on'}">⭐ Chưa đến</button></div>
     ${!isNew&&visitors(p).filter(x=>x!==NET.uid).length?`<div class="mut" style="margin-top:4px">Cũng đã đến: ${visitors(p).filter(x=>x!==NET.uid).map(id=>(emOf(id)||'')+' '+esc(nameOf(id))).join(', ')}</div>`:''}
     <label class="f">Bạn chấm mấy sao?</label><div class="srate" id="pr">${[1,2,3,4,5].map(i=>`<button data-v="${i}" class="${i<=d.my?'on':''}">★</button>`).join('')}</div>
-    ${OR.length?`<div class="mut">${OR.map(r=>esc(nameOf(r.id))+': '+stars(r.v)).join('<br>')}</div>`:''}
+    ${OR.length?`<div class="mut">${OR.map(r=>esc(nameOf(r.id))+': '+stars(r.v)).join('<br>')}</div>`:''}</div>
     <label class="f">Ghi chú (món ngon, giá, kỷ niệm…)</label><textarea class="t" id="pt" maxlength="500">${esc(d.note)}</textarea>
     <label class="f">Vị trí</label><div class="mut" id="ploc" style="margin-bottom:6px">${d.lat!=null?'📍 Đã chọn vị trí'+(d.addr?': '+esc(d.addr):''):'Chưa chọn'}</div>
     <div class="row"><button class="btn sec grow" id="here">📍 Chỗ tôi đang đứng</button><button class="btn sec grow" id="onmap">🗺️ Chọn trên bản đồ</button></div>
@@ -661,7 +666,7 @@ function openPlace(p){const isNew=!p||!p.id;const d=Object.assign({cat:'eat',nam
   const sync=()=>{d.name=q('#pn').value;d.note=q('#pt').value};
   q('#x').onclick=close;sh.onclick=ev=>{if(ev.target===sh)close()};
   const seg=(id,key)=>q(id).querySelectorAll('button').forEach(b=>b.onclick=()=>{d[key]=b.dataset.v;q(id).querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))});
-  seg('#pc','cat');q('#ps').querySelectorAll('button').forEach(b=>b.onclick=()=>{d.been=b.dataset.v==='1';q('#ps').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))});
+  seg('#pc','cat');q('#pc').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>q('#pvis').classList.toggle('hide',!!(CATS[d.cat]||{}).p)));q('#ps').querySelectorAll('button').forEach(b=>b.onclick=()=>{d.been=b.dataset.v==='1';q('#ps').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))});
   q('#pr').querySelectorAll('button').forEach(b=>b.onclick=()=>{const v=+b.dataset.v;d.my=d.my===v?0:v;q('#pr').querySelectorAll('button').forEach(x=>x.classList.toggle('on',+x.dataset.v<=d.my))});
   const setLL=(la,ln,ad)=>{d.lat=la;d.lng=ln;if(ad!==undefined)d.addr=ad;q('#ploc').innerHTML='📍 Đã chọn vị trí'+(d.addr?': '+esc(d.addr):'')};
   q('#here').onclick=()=>{if(S.pos)return setLL(S.pos.lat,S.pos.lng,'');navigator.geolocation.getCurrentPosition(p=>setLL(p.coords.latitude,p.coords.longitude,''),()=>toast('Không lấy được vị trí'),{enableHighAccuracy:true,timeout:15e3})};
@@ -674,7 +679,7 @@ function openPlace(p){const isNew=!p||!p.id;const d=Object.assign({cat:'eat',nam
     catch(e){q('#qr').innerHTML='<div class="mut" style="padding:8px">Lỗi mạng khi tìm</div>'}};
   q('#sv').onclick=async ev=>{sync();if(!d.name.trim())return toast('Nhập tên địa điểm');ev.target.disabled=true;
     const id=d.id||(Date.now().toString(36)+Math.random().toString(36).slice(2,7));
-    const o={name:d.name.trim(),cat:d.cat,note:d.note.trim(),addr:d.addr||'',['r_'+NET.uid]:d.my||0,['v_'+NET.uid]:!!d.been};if(d.status){o.status='';if(d.status==='been'&&d.by&&d.by!==NET.uid&&!('v_'+d.by in d))o['v_'+d.by]=true}
+    const o={name:d.name.trim(),cat:d.cat,note:d.note.trim(),addr:d.addr||'',['r_'+NET.uid]:(CATS[d.cat]||{}).p?0:(d.my||0),['v_'+NET.uid]:(CATS[d.cat]||{}).p?false:!!d.been};if(d.status){o.status='';if(d.status==='been'&&d.by&&d.by!==NET.uid&&!('v_'+d.by in d))o['v_'+d.by]=true}
     if(d.lat!=null){o.lat=d.lat;o.lng=d.lng}if(!d.id){o.by=NET.uid;o.t=Date.now()}
     try{await API.savePlace(S.code,id,o);close();toast('Đã lưu ⭐');await loadPlaces()}catch(e){ev.target.disabled=false;toast(errMsg(e))}};
   if(!isNew)q('#del').onclick=async()=>{if(!confirm('Xoá “'+d.name+'”?'))return;try{await API.delPlace(S.code,d.id);close();toast('Đã xoá');loadPlaces()}catch(e){toast(errMsg(e))}};
@@ -865,10 +870,10 @@ function showFound(x){tab('map');const lat=+x.lat,lng=+x.lon;const near=S.places
   S.found={name:nm,addr,lat,lng,cat:guessCat(x)};
   collapsePpl();map.setView([lat,lng],17,{animate:false});
   tmpMk=L.marker([lat,lng],{icon:L.divIcon({className:'',html:'<div class="pm" style="font-size:30px">📍</div>',iconSize:[34,34],iconAnchor:[17,30]}),zIndexOffset:500}).addTo(map)
-    .bindPopup(`<b>${esc(nm)}</b><br><span style="color:#6b7280">${esc(addr)}</span><div class="qa"><button onclick="quickAdd(true)">🚩 ${S.em||''} Mình đã đi</button><button onclick="quickAdd(false)">⭐ Lưu: chưa đi</button></div>`,POP).openPopup()}
-async function quickAdd(been){const f=S.found;if(!f)return;const id=Date.now().toString(36)+Math.random().toString(36).slice(2,7);
-  const o={name:f.name.slice(0,60),cat:f.cat,note:'',addr:f.addr.slice(0,120),lat:f.lat,lng:f.lng,by:NET.uid,t:Date.now(),['v_'+NET.uid]:!!been,['r_'+NET.uid]:0};
-  try{await API.savePlace(S.code,id,o);if(tmpMk){map.removeLayer(tmpMk);tmpMk=null}S.found=null;toast(been?'Đã cắm cờ 🚩':'Đã lưu vào “Chưa đi” ⭐');await loadPlaces();focusPlace(id)}catch(e){toast(errMsg(e))}}
+    .bindPopup(`<b>${esc(nm)}</b><br><span style="color:#6b7280">${esc(addr)}</span><div class="qa"><button onclick="quickAdd(true)">🚩 ${S.em||''} Mình đã đi</button><button onclick="quickAdd(false)">⭐ Lưu: chưa đi</button><div class="qa2"><button onclick="quickAdd(false,'home')">🏠 Nhà</button><button onclick="quickAdd(false,'work')">🏢 Cty</button><button onclick="quickAdd(false,'school')">🏫 Trường</button></div></div>`,POP).openPopup()}
+async function quickAdd(been,cat){const f=S.found;if(!f)return;const id=Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+  const o={name:f.name.slice(0,60),cat:cat||f.cat,note:'',addr:f.addr.slice(0,120),lat:f.lat,lng:f.lng,by:NET.uid,t:Date.now(),['v_'+NET.uid]:!!been,['r_'+NET.uid]:0};
+  try{await API.savePlace(S.code,id,o);if(tmpMk){map.removeLayer(tmpMk);tmpMk=null}S.found=null;toast(cat?'Đã lưu '+CATS[cat].e+' '+CATS[cat].n:been?'Đã cắm cờ 🚩':'Đã lưu vào “Chưa đi” ⭐');await loadPlaces();focusPlace(id)}catch(e){toast(errMsg(e))}}
 window.quickAdd=quickAdd;
 
 // ===== Cài đặt =====
@@ -903,7 +908,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 17${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 18${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

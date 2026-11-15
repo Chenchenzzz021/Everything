@@ -75,6 +75,11 @@ textarea.t{min-height:70px;resize:vertical}
 .mk span{margin-top:2px;background:#fff;border-radius:8px;padding:1px 6px;font-size:11px;font-weight:600;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.2)}
 .ppin{width:34px;height:34px;border-radius:50% 50% 50% 4px;transform:rotate(-45deg);background:#fff;border:3px solid #6366f1;display:grid;place-items:center;box-shadow:0 2px 6px rgba(0,0,0,.3)}.ppin span{transform:rotate(45deg);font-size:17px;line-height:1}
 .pm{font-size:22px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.4));text-align:center;line-height:1}
+.meas{position:absolute;left:12px;right:12px;bottom:12px;z-index:650;background:#fff;border-radius:16px;padding:12px;box-shadow:var(--sh);text-align:center}
+.fflag.on{box-shadow:0 0 0 3px #e8577a,var(--sh)}
+.mpin{width:30px;height:30px;border-radius:50%;background:#ef4444;color:#fff;font-weight:700;display:grid;place-items:center;border:3px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.3);animation:dfl .4s cubic-bezier(.3,1.6,.6,1)}
+.mtip{background:#fff;border:0;border-radius:12px;padding:3px 9px;font:inherit;font-weight:700;color:#ef4444;box-shadow:0 2px 8px rgba(0,0,0,.2)}.mtip::before{display:none}
+.mres{display:flex;flex-direction:column;align-items:center;gap:2px;background:#fef2f2;border-radius:14px;padding:10px 12px}.mres span{color:#6b7280;font-size:13px}.mres b{color:#ef4444;font-size:24px}.mres small{color:#6b7280}
 .fflag{font-size:22px;background:linear-gradient(145deg,#fff,#ffe4ef)}
 .dropflag{width:40px;height:44px;position:relative;animation:dfl .45s cubic-bezier(.3,1.6,.6,1)}.dropflag span{position:absolute;left:0;bottom:0;font-size:36px;line-height:1;filter:drop-shadow(0 3px 2px rgba(0,0,0,.3));transform-origin:10% 100%;animation:dfw 1.6s ease-in-out infinite}
 .dropflag::after{content:'';position:absolute;left:2px;bottom:-3px;width:14px;height:5px;border-radius:50%;background:rgba(0,0,0,.25)}
@@ -589,7 +594,9 @@ function renderMain(){
   if(!DEMO||1)setTimeout(()=>syncNick().then(()=>{drawPeople();drawMarkers()}),1500);
   $('#app').innerHTML=`<div class="page" id="pg-map"><div id="map"></div>
     <div class="top"><div class="share" id="shr"></div><div id="pingbox"></div><div class="ppl" id="ppl"></div></div>
+    <button class="fab fflag" id="fmeas" style="bottom:252px" title="Đo khoảng cách">📏</button>
     <button class="fab fflag" id="fflag" style="bottom:192px" title="Cắm cờ nơi muốn đến">🚩</button>
+    <div class="meas hide" id="meas"></div>
     <button class="fab" id="fsr" style="bottom:132px" title="Tìm địa điểm">${I.search}</button>
     <button class="camfab" id="fcam" title="Chụp và chia sẻ ảnh">${I.cam}</button><input type="file" id="camf" accept="image/*" capture="environment" class="hide">
     <button class="fab" id="fme" style="bottom:72px" title="Về vị trí của tôi">${I.locate}</button>
@@ -610,10 +617,11 @@ function renderMain(){
       const E=[...new Set(ps.flatMap(p=>isPers(p)?[CATS[p.cat].e]:visitors(p).length?emList(visitors(p)):['⭐']))].slice(0,3).join('');
       const sz=n<10?46:54;return L.divIcon({className:'',html:`<div class="clu" style="width:${sz}px;height:${sz}px"><b>${n}</b><span>${E}</span></div>`,iconSize:[sz,sz],iconAnchor:[sz/2,sz/2]})}}):L.layerGroup()).addTo(map);
   if(plLayer.on)plLayer.on('spiderfied',e=>{const c=map.latLngToLayerPoint(e.cluster.getLatLng());e.markers.forEach(m=>{const el=m.getElement&&m.getElement(),f=el&&el.querySelector('.flag');if(f)f.classList.toggle('flip',map.latLngToLayerPoint(m.getLatLng()).x<c.x-2)})}).on('unspiderfied',e=>{e.markers.forEach(m=>{const el=m.getElement&&m.getElement(),f=el&&el.querySelector('.flag');if(f)f.classList.remove('flip')})});
-  map.on('click',e=>{if(S.pick){const cb=S.pick;S.pick=null;$('#pick').classList.add('hide');cb(e.latlng.lat,e.latlng.lng)}});
+  map.on('click',e=>{if(MS.on&&!MS.b){measPt(e.latlng);return}if(S.pick){const cb=S.pick;S.pick=null;$('#pick').classList.add('hide');cb(e.latlng.lat,e.latlng.lng)}});
   $('#fme').onclick=()=>{const p=S.pos||(S.me&&S.me.lat!=null&&S.me);if(p)map.setView([p.lat,p.lng],16);else locateOnce(true)};
   $('#fall').onclick=()=>fitAll(true);$('#fcam').onclick=()=>$('#camf').click();$('#camf').onchange=ev=>{const f=ev.target.files[0];ev.target.value='';if(f)composePhoto(f)};$('#fsr').onclick=openSearch;
   $('#pickx').onclick=()=>{S.pick=null;$('#pick').classList.add('hide');if(S.pickCancel){const f=S.pickCancel;S.pickCancel=null;f()}else openPlace(S.pickDraft)};
+  $('#fmeas').onclick=()=>MS.on?measEnd():measStart();if(plLayer.on)plLayer.on('click',e=>{if(MS.on&&!MS.b){map.closePopup();measPt(e.layer.getLatLng())}});
   $('#fflag').onclick=()=>pickMode('🚩 Chạm vào chỗ bạn muốn cắm cờ',(la,ln)=>dropFlag(la,ln));
   map.on('contextmenu',e=>{if(!S.pick)dropFlag(e.latlng.lat,e.latlng.lng)});initLongPress();
   drawShare();drawPeople();drawPlacesOnMap();
@@ -710,7 +718,7 @@ function drawMarkers(){if(!map)return;const want={};
   for(const p of others())if(p.sharing!==false&&p.lat!=null)want[p.id]=p;
   for(const id in MK)if(!want[id]){map.removeLayer(MK[id].m);map.removeLayer(MK[id].c);delete MK[id]}
   for(const id in want){const p=want[id],ll=[p.lat,p.lng],col=colOf(id),r=Math.min(p.acc||0,2000),ic=mkIcon(p,col);
-    if(!MK[id])MK[id]={m:L.marker(ll,{icon:ic,zIndexOffset:id===NET.uid?100:200}).on('click',()=>openViewer(id)).addTo(map),c:L.circle(ll,{radius:r,color:col,weight:1,fillOpacity:.08}).addTo(map)};
+    if(!MK[id])MK[id]={m:L.marker(ll,{icon:ic,zIndexOffset:id===NET.uid?100:200}).on('click',ev=>{if(MS.on&&!MS.b){measPt(ev.target.getLatLng());return}openViewer(id)}).addTo(map),c:L.circle(ll,{radius:r,color:col,weight:1,fillOpacity:.08}).addTo(map)};
     else{MK[id].m.setLatLng(ll).setIcon(ic);MK[id].c.setLatLng(ll).setRadius(r).setStyle({color:col})}}
   if(!fitted&&Object.keys(MK).length){fitted=true;fitAll()}}
 function fitAll(user){const pts=Object.values(MK).map(x=>x.m.getLatLng());if(!pts.length){if(user)toast('Chưa có vị trí nào');return}
@@ -796,7 +804,7 @@ function placeIcon(p){const V=visitors(p);
 function drawPlacesOnMap(){if(!plLayer)return;plLayer.clearLayers();for(const p of S.places){if(p.lat==null)continue;const c=CATS[p.cat]||CATS.other,V=visitors(p);
   const ps=isPers(p);if(!ps&&(S.vf==='been'&&!V.length||S.vf==='not'&&V.length))continue;
   const mk=L.marker([p.lat,p.lng],{icon:placeIcon(p)});mk._pid=p.id;mk.addTo(plLayer)
-   .bindPopup(ps?`<b>${c.e} ${esc(p.name)}</b><br><span style="color:#6b7280">${c.n}${p.by?' · '+esc(nameOf(p.by)):''}</span><br>${p.note?esc(p.note).slice(0,120)+'<br>':''}<div class="qa"><button onclick="openPlace(S.places.find(x=>x.id==='${p.id}'))">✏️ Chi tiết</button><button onclick="movePlace('${p.id}')">📍 Dời cờ</button></div>`:`<b>${c.e} ${esc(p.name)}</b><br>${V.length?'Đã đến: '+V.map(id=>(emOf(id)||'')+' '+esc(nameOf(id))).join(', '):'⭐ Chưa ai đến'}<br>${avgR(p)?stars(avgR(p))+' '+avgR(p).toFixed(1)+'<br>':''}${p.note?esc(p.note).slice(0,120)+'<br>':''}<div class="qa"><button onclick="toggleVisit('${p.id}')">${V.includes(NET.uid)?'↩️ Bỏ đánh dấu đã đi':'🚩 '+(S.em||'')+' Mình đã đi'}</button><button onclick="openPlace(S.places.find(x=>x.id==='${p.id}'))">✏️ Chi tiết / chấm sao</button><button onclick="movePlace('${p.id}')">📍 Dời cờ sang chỗ khác</button></div>`,POP)}}
+   .bindPopup(ps?`<b>${c.e} ${esc(p.name)}</b><br><span style="color:#6b7280">${c.n}${p.by?' · '+esc(nameOf(p.by)):''}</span><br>${p.note?esc(p.note).slice(0,120)+'<br>':''}<div class="qa"><button onclick="openPlace(S.places.find(x=>x.id==='${p.id}'))">✏️ Chi tiết</button><button onclick="movePlace('${p.id}')">📍 Dời cờ</button></div>`:`<b>${c.e} ${esc(p.name)}</b><br>${V.length?'Đã đến: '+V.map(id=>(emOf(id)||'')+' '+esc(nameOf(id))).join(', '):'⭐ Chưa ai đến'}<br>${avgR(p)?stars(avgR(p))+' '+avgR(p).toFixed(1)+'<br>':''}${p.note?esc(p.note).slice(0,120)+'<br>':''}<div class="qa"><button onclick="toggleVisit('${p.id}')">${V.includes(NET.uid)?'↩️ Bỏ đánh dấu đã đi':'🚩 '+(S.em||'')+' Mình đã đi'}</button><button onclick="openPlace(S.places.find(x=>x.id==='${p.id}'))">✏️ Chi tiết / chấm sao</button><button onclick="movePlace('${p.id}')">📍 Dời cờ sang chỗ khác</button><button onclick="measStart([${p.lat},${p.lng}])">📏 Đo khoảng cách từ đây</button></div>`,POP)}}
 async function toggleVisit(id){const p=S.places.find(x=>x.id===id);if(!p)return;const v=!iVisited(p);try{await API.savePlace(S.code,id,{['v_'+NET.uid]:v});toast(v?'Đã cắm cờ 🚩':'Đã bỏ cờ');await loadPlaces();focusPlace(id)}catch(e){toast(errMsg(e))}}
 window.toggleVisit=toggleVisit;
 function drawPlaces(){const e=$('#pl');if(!e)return;const f=S.filter,vf=S.vf;let L2=S.places.slice();
@@ -1301,7 +1309,29 @@ async function dropFlag(la,ln){tab('map');if(tmpMk)map.removeLayer(tmpMk);S.foun
   tmpMk.on('dragstart',()=>tmpMk.closePopup()).on('dragend',()=>{const ll=tmpMk.getLatLng();S.found.lat=ll.lat;S.found.lng=ll.lng;S.found.addr='Đang tìm địa chỉ…';tmpMk.openPopup();fill()});
   map.panTo([la,ln]);setTimeout(()=>tmpMk&&tmpMk.openPopup(),60);fill()}
 function movePlace(id){const p=S.places.find(x=>x.id===id);if(!p)return;pickMode('📍 Chạm vào chỗ mới cho “'+p.name+'”',async(la,ln)=>{try{await API.savePlace(S.code,id,{lat:la,lng:ln});toast('Đã dời cờ 📍');await loadPlaces();focusPlace(id)}catch(e){toast(errMsg(e))}})}
-window.movePlace=movePlace;window.dropFlag=dropFlag;
+window.movePlace=movePlace;
+// ===== Đo khoảng cách giữa 2 điểm: đường chim bay + đường đi thực tế (OSRM) =====
+const MS={on:false,a:null,b:null,ly:null,ab:null};
+const fmtDist=m=>m<1000?Math.round(m)+' m':(m/1000).toLocaleString('vi',{maximumFractionDigits:m<1e4?2:1})+' km';
+const fmtDur=s=>{const m=Math.max(1,Math.round(s/60));return m<60?m+' phút':Math.floor(m/60)+' giờ'+(m%60?' '+m%60+' phút':'')};
+function measStart(from){measEnd(true);MS.on=true;if(S.pick){S.pick=null;$('#pick').classList.add('hide')}tab('map');collapsePpl();map.closePopup();MS.ly=L.layerGroup().addTo(map);$('#fmeas').classList.add('on');if(from)measPt(L.latLng(from[0],from[1]));else measUI()}
+function measEnd(quiet){MS.on=false;MS.a=MS.b=MS.rt=null;if(MS.ab)MS.ab.abort();if(MS.ly){map.removeLayer(MS.ly);MS.ly=null}const e=$('#meas');if(e)e.classList.add('hide');const f=$('#fmeas');if(f)f.classList.remove('on')}
+function measPin(ll,t){const m=L.marker(ll,{draggable:true,zIndexOffset:900,icon:L.divIcon({className:'',html:`<div class="mpin">${t}</div>`,iconSize:[30,30],iconAnchor:[15,15]})}).addTo(MS.ly);
+  m.on('dragstart',()=>{if(MS.rt){MS.ly.removeLayer(MS.rt);MS.rt=null}}).on('dragend',()=>measDraw());return m}
+function measPt(ll){if(!MS.a){MS.a=measPin(ll,'A');measUI()}else if(!MS.b){MS.b=measPin(ll,'B');measDraw(true)}}
+function measUI(html){const e=$('#meas');e.classList.remove('hide');e.innerHTML=html||`<b>📏 ${MS.a?'Chạm điểm thứ hai (B)':'Chạm điểm thứ nhất (A)'}</b><div class="mut" style="font-size:13px">Chạm lên bản đồ, cờ địa điểm hoặc ảnh một người</div><button class="btn gh" id="mx">Huỷ</button>`;
+  const x=e.querySelector('#mx');if(x)x.onclick=()=>measEnd();const r=e.querySelector('#mr');if(r)r.onclick=()=>measStart()}
+async function measDraw(fit){if(!MS.a||!MS.b||!MS.ly)return;const A=MS.a.getLatLng(),B=MS.b.getLatLng();
+  if(MS.rt){MS.ly.removeLayer(MS.rt);MS.rt=null}
+  const box=r=>`<div class="mres"><span>🛵 Quãng đường đi</span><b>${r==null?'<i class="mut">đang tính…</i>':r===0?'<i class="mut">không tìm được đường đi</i>':fmtDist(r.distance)}</b>${r&&r.duration?`<small>khoảng ${fmtDur(r.duration*1.3)} đi xe máy</small>`:''}</div><div class="row" style="gap:8px;margin-top:8px"><button class="btn sec grow" id="mr">📏 Đo lại</button><button class="btn gh grow" id="mx">Đóng</button></div><div class="mut" style="font-size:11px;margin-top:4px">Kéo điểm A hoặc B để chỉnh</div>`;
+  measUI(box(null));if(fit)map.fitBounds(L.latLngBounds([A,B]),{paddingTopLeft:[40,160],paddingBottomRight:[70,220],maxZoom:17});
+  try{if(MS.ab)MS.ab.abort();const ab=MS.ab=new AbortController();setTimeout(()=>ab.abort(),8000);
+    const j=await(await fetch(`https://router.project-osrm.org/route/v1/driving/${A.lng},${A.lat};${B.lng},${B.lat}?overview=full&geometries=geojson`,{signal:ab.signal})).json();
+    const r=j.routes&&j.routes[0];if(!r)throw 0;if(!MS.ly||!MS.a||!MS.b||!MS.a.getLatLng().equals(A)||!MS.b.getLatLng().equals(B))return;
+    const pts=r.geometry.coordinates.map(c=>[c[1],c[0]]);MS.rt=L.layerGroup([L.polyline(pts,{color:'#fff',weight:9,opacity:.9}),L.polyline(pts,{color:'#ef4444',weight:5,opacity:.95})]).addTo(MS.ly);
+    const mid=pts[Math.floor(pts.length/2)];L.tooltip({permanent:true,direction:'center',className:'mtip'}).setLatLng(mid).setContent(fmtDist(r.distance)).addTo(MS.rt);
+    if(fit)map.fitBounds(L.latLngBounds(pts.concat([A,B])),{paddingTopLeft:[40,160],paddingBottomRight:[70,220],maxZoom:17});measUI(box(r))}catch(e){if(MS.ly&&MS.b&&MS.b.getLatLng().equals(B))measUI(box(0))}}
+window.measStart=measStart;window.dropFlag=dropFlag;
 
 // ===== Cài đặt =====
 function askLeave(go){let step=1;const sh=document.createElement('div');sh.className='sheet';sh.style.zIndex=2000;document.body.appendChild(sh);sh.onclick=ev=>{if(ev.target===sh)sh.remove()};
@@ -1348,7 +1378,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 38${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 39${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

@@ -1310,7 +1310,7 @@ async function openGame(id){const old=$('.gm');if(old)old.remove();const v=docum
       if(g.type==='caro'){caroMove(caroAI(g.b,g.turn===0?'x':'o'));return}
       if(g.type==='ty'){if(g.ph==='roll')await tyRoll(true);else tyAct(tyBotYes(g),true);return}
       if(!g.rolled){await roll(true);return}
-      const M=ludoMoves(g,g.d);if(M.length)doMove(ludoAI(g,M).k,true)},(g.type==='caro'?650:g.type==='ty'?Math.max(0,tyBusy-Date.now())+Math.min(7000,(g.ph==='roll'?2200:2800)+String(g.msg||'').length*30):900)+(host?0:2500))};
+      const M=ludoMoves(g,g.d);if(M.length)doMove(ludoAI(g,M).k,true)},(g.type==='caro'?650:g.type==='ty'?(g.ph==='roll'?1800:2600):900)+(host?0:2500))};
   const actor=()=>nameOf(g.pl[g.turn]);
   const nextTurn=(d,extra)=>extra?g.turn:(g.turn+1)%g.pl.length;
   const roll=async bot=>{if(rolling||busy||g.rolled||!(bot===true?BOTS[g.pl[g.turn]]:myTurn(g)))return;rolling=true;const gd=v.querySelector('#gd');let f=0;if(gd)gd.classList.add('roll');const an=setInterval(()=>{if(gd)gd.innerHTML=diceHtml(1+Math.floor(Math.random()*6))},90);
@@ -1577,7 +1577,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 54${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 55${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

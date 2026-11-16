@@ -381,6 +381,16 @@ nav button b{position:relative}
 .vin input{flex:1;min-width:0;border:0;border-radius:999px;padding:10px 14px;background:rgba(255,255,255,.9);color:#1f2937;font-size:15px;outline:none;box-shadow:0 2px 8px rgba(0,0,0,.06)}
 .vin input::placeholder{color:#8a93a0}
 .vin .ib{background:rgba(255,255,255,.9);color:#1f2937}
+
+/* xúc xắc ngà, chấm lõm, mặt 1 và 4 đỏ, lăn 3D */
+.dice,.tdice .pips{background:radial-gradient(circle at 28% 22%,#fff 0,#fffaf0 38%,#f1e5c8 100%);border:none;border-radius:24%;box-shadow:inset 0 -5px 7px rgba(150,115,60,.28),inset 0 4px 5px #fff,inset 0 0 0 1px rgba(255,255,255,.6),0 5px 0 #d4c19a,0 9px 14px rgba(0,0,0,.25)}
+.dice.go{box-shadow:inset 0 -5px 7px rgba(150,115,60,.28),inset 0 4px 5px #fff,0 5px 0 #d4c19a,0 0 0 4px var(--c),0 10px 20px rgba(0,0,0,.25)}
+.pips i.on{background:radial-gradient(circle at 42% 38%,#4b5563,#0b0f19 72%);box-shadow:inset 0 2px 3px rgba(0,0,0,.65),0 1px 0 rgba(255,255,255,.9)}
+.pips.f1 i.on,.pips.f4 i.on{background:radial-gradient(circle at 42% 38%,#fb7185,#be123c 70%);box-shadow:inset 0 2px 3px rgba(80,0,0,.55),0 1px 0 rgba(255,255,255,.9)}
+.pips.f1 i.on{transform:scale(2.1)}.dice .pips i{width:13px;height:13px}
+.dice.roll{animation:dtum .6s linear infinite}.tdice.roll .pips{animation:dtum .55s linear infinite}.tdice.roll .pips+.pips{animation-delay:-.22s;animation-direction:reverse}
+@keyframes dtum{0%{transform:perspective(260px) rotateX(0) rotateY(0) translateY(0)}25%{transform:perspective(260px) rotateX(180deg) rotateY(90deg) translateY(-12px) scale(1.06)}50%{transform:perspective(260px) rotateX(360deg) rotateY(180deg) translateY(0)}75%{transform:perspective(260px) rotateX(540deg) rotateY(270deg) translateY(-7px) scale(1.04)}100%{transform:perspective(260px) rotateX(720deg) rotateY(360deg) translateY(0)}}
+.pips{animation:dland .35s cubic-bezier(.3,1.6,.6,1)}@keyframes dland{0%{transform:scale(.85)}100%{transform:none}}
 </style>
 </head>
 <body>
@@ -1346,7 +1356,7 @@ function tyBotYes(t){const s=t.turn,i=t.pos[s],c=t.ph==='buy'?TB[i].p:tyUpCost(i
 const TYK=['pl','pos','cash','own','lv','skip','out','d1','d2','ph','turn','rd','pot','dbl','msg','ev','fx','mv','st','win'];
 const tyDiff=t=>{const o={};TYK.forEach(k=>{if(t[k]!==undefined)o[k]=t[k]});o.fx=(t.fx||[]).map(x=>x[0]+':'+x[1]);return o};
 function tyFx(tb,i,e){const [r,c]=tyRC(i),d=document.createElement('div');d.className='tyfx';d.textContent=e;d.style.left=(c+.5)/TK*100+'%';d.style.top=(r+.5)/TK*100+'%';tb.appendChild(d);setTimeout(()=>d.remove(),1200)}
-function diceHtml(n){const P={1:[5],2:[1,9],3:[1,5,9],4:[1,3,7,9],5:[1,3,5,7,9],6:[1,3,4,6,7,9]}[n]||[];return`<span class="pips">${[1,2,3,4,5,6,7,8,9].map(i=>`<i class="${P.includes(i)?'on':''}"></i>`).join('')}</span>`}
+function diceHtml(n){const P={1:[5],2:[1,9],3:[1,5,9],4:[1,3,7,9],5:[1,3,5,7,9],6:[1,3,4,6,7,9]}[n]||[];return`<span class="pips f${n}">${[1,2,3,4,5,6,7,8,9].map(i=>`<i class="${P.includes(i)?'on':''}"></i>`).join('')}</span>`}
 const PTS=100;const myPts=()=>Object.keys(S.gw||{}).length*PTS;
 function mergeGw(j){let o={};try{o=JSON.parse(j||'{}')}catch(e){}let add=0;for(const k in o)if(!S.gw[k]){S.gw[k]=1;add++}LS.set('gw',S.gw);if(Object.keys(S.gw).length>Object.keys(o).length)API.saveProfile({gwj:JSON.stringify(S.gw)}).catch(()=>{});return add>0}
 function award(g){if(!g||g.st!=='end'||g.win!==NET.uid||!g.id||S.gw[g.id])return;S.gw[g.id]=1;LS.set('gw',S.gw);API.saveProfile({gwj:JSON.stringify(S.gw)}).catch(()=>{});pushId()}
@@ -1523,7 +1533,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 43${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 44${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

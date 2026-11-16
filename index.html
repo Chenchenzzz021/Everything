@@ -194,7 +194,7 @@ ul.ck li{margin:4px 0}
 .cpick i{font-style:normal;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:20px;background:radial-gradient(circle at 50% 42%,#fff 0 46%,var(--c) 50%);border:2px solid #fff;box-shadow:0 3px 0 color-mix(in srgb,var(--c) 60%,#000)}.cpick b{font-size:12px;color:var(--c)}.cpick small{font-size:10px;color:#6b7280}.cpick button:disabled{opacity:.4}
 .tt.tc{background:linear-gradient(145deg,#fff7d6,#fde68a)}.tt.tc .te{font-size:clamp(16px,5vw,28px)}
 .tt.lit{transform:translateY(-3px) scale(1.1);z-index:2;box-shadow:inset 0 0 0 2px var(--o),0 0 0 2px #fff,0 0 12px 4px var(--lc)}
-.tt.tbuy{animation:tbuy .9s}@keyframes tbuy{30%{transform:scale(1.25);z-index:3}}
+.tt.tbuy{animation:tbuy .9s}.ty .ttk.hop{transition:left .28s ease-out,top .28s ease-out}.ty .ttk.jp{animation-duration:.3s}.ty .ttk.mv{transition-duration:.7s}.typ .tfx{animation-duration:3.2s}.ty .tyfx{animation-duration:2.2s}.ty .tt.tbuy{animation-duration:1.8s}.ty.ty.shake{animation-duration:.9s}.ty-on .tdice.roll .pips{animation-duration:1.1s}@keyframes tbuy{30%{transform:scale(1.25);z-index:3}}
 .tcen{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:radial-gradient(circle,rgba(255,255,255,.75),rgba(255,255,255,.25));border-radius:12px;margin:3px;padding:6px;text-align:center}
 .tlogo{font-size:clamp(14px,4.4vw,22px);color:#92400e;text-shadow:0 2px 0 #fff}.tlogo b{letter-spacing:1px}
 .tdice{display:flex;gap:8px}.tdice .pips{width:clamp(34px,10vw,52px);height:clamp(34px,10vw,52px);background:#fff;border-radius:10px;box-shadow:0 3px 0 #d1d5db,0 5px 8px rgba(0,0,0,.15);padding:6px}.tdice.roll .pips{animation:droll .35s infinite}.tdice .pips{box-sizing:border-box;gap:2px;padding:5px}.tdice .pips i{width:72%;height:72%}
@@ -1258,29 +1258,28 @@ async function openGame(id){const old=$('.gm');if(old)old.remove();const v=docum
     const ps=g.pl.map((u,s)=>{const out=(g.out||[])[s],c=(g.cash||[])[s]||0,as=W?0:tyAssets(g,s),rk=rank.indexOf(s);return`<div class="typ${g.st==='play'&&g.turn===s?' on':''}${out?' out':''}" data-s="${s}" style="--c:${tyCol(g,s)}"><span class="tav">${esc(emOf(u)||'🙂')}</span>
       <div class="tpi"><div class="tnm">${rk>=0&&!W?['🥇','🥈','🥉',''][rk]+' ':''}${esc(u===NET.uid?'Bạn':nickOf(u)||personOf(u).name||nameOf(u)||'?')}${poor===s?' <i class="tpoor">🔥 Lật kèo</i>':''}</div>
       ${W?'<small>Đang chờ</small>':out?'<small>💥 Phá sản</small>':`<div class="tmo"><span>💵 ${tyMoney(c)}</span><span>🏠 ${tyMoney(as)}</span></div><div class="ttot">Tổng <b>${tyMoney(c+as)}</b></div>`}</div></div>`}).join('');
-    const osc=v.querySelector('.tysc'),sx=osc?osc.scrollLeft:null,sy=osc?osc.scrollTop:null,zm=LS.get('tyz',true);
-    v.querySelector('#gb').innerHTML=`<div class="tywrap"><div class="typs">${ps}</div><div class="tysc${zm?' zm':''}"><div class="ty${zm?' zm':''}" id="tyb" style="grid-template-columns:repeat(${TK},minmax(0,1fr));grid-template-rows:repeat(${TK},minmax(0,1fr))${zm?';width:'+(TK*62)+'px':''}">${h}${tk}</div></div><button class="tyzb" id="tyz">${zm?'🗺️ Xem cả bàn':'🔍 Phóng to'}</button></div>`;
+    const osc=v.querySelector('.tysc'),sx=osc?osc.scrollLeft:null,sy=osc?osc.scrollTop:null,zm=false;
+    v.querySelector('#gb').innerHTML=`<div class="tywrap"><div class="typs">${ps}</div><div class="tysc${zm?' zm':''}"><div class="ty${zm?' zm':''}" id="tyb" style="grid-template-columns:repeat(${TK},minmax(0,1fr));grid-template-rows:repeat(${TK},minmax(0,1fr))${zm?';width:'+(TK*62)+'px':''}">${h}${tk}</div></div></div>`;
     const tb=v.querySelector('#tyb'),sc=v.querySelector('.tysc');
     const follow=(el,sm)=>{if(!zm||!el)return;sc.scrollTo({left:el.offsetLeft-sc.clientWidth/2,top:el.offsetTop-sc.clientHeight/2,behavior:sm?'smooth':'auto'})};
     if(zm){if(sx!=null){sc.scrollLeft=sx;sc.scrollTop=sy}else requestAnimationFrame(()=>follow(tb.querySelector(`.ttk[data-s="${g.turn||0}"]`)))}
-    v.querySelector('#tyz').onclick=()=>{LS.set('tyz',!zm);draw()};
     v.querySelectorAll('.tt').forEach(e=>e.onclick=()=>{const i=+e.dataset.t,T=TB[i],o=own[i];if(!T.p)return toast(T.e+' '+T.n+({go:' · đi qua nhận '+TY_GO,lk:' · rút một thẻ may mắn',jam:' · dừng ở đây mất 1 lượt',beach:' · nhận hết quỹ thuế',tax:' · đóng '+TY_TAX+' vào quỹ Bãi biển',fest:' · nhận '+TY_FEST}[T.k]||''),3000);
       toast(`${T.e||'📍'} ${T.n} · giá ${tyMoney(T.p)}${o>=0?' · của '+nameOf(g.pl[o])+' · thuê '+tyRent(g,i):' · chưa có chủ'}${T.k==='c'?' · xây nhà '+tyUpCost(i):''}`,3500)});
     if(anim.length)requestAnimationFrame(()=>requestAnimationFrame(()=>anim.forEach(([s,L,T,st,dx,dy])=>{const e=tb.querySelector(`.ttk[data-s="${s}"]`);if(!e)return;
-      if(!st.length){e.classList.add('mv');e.style.left=L+'%';e.style.top=T+'%';setTimeout(()=>follow(e,true),380);return}
-      let k=0;e.classList.add('hop');const step=()=>{const lit=q=>{const t=tb.querySelector(`.tt[data-t="${q}"]`);if(t){t.style.setProperty('--lc',tyCol(g,s));t.classList.remove('lit');void t.offsetWidth;t.classList.add('lit');setTimeout(()=>t.classList.remove('lit'),650)}};
-        if(k<st.length){const q=st[k++],[r,c]=tyRC(q);e.style.left=(c+.5+dx)/TK*100+'%';e.style.top=(r+.5+dy)/TK*100+'%';lit(q);follow(tb.querySelector(`.tt[data-t="${q}"]`),true);e.classList.remove('jp');void e.offsetWidth;e.classList.add('jp');setTimeout(step,150)}
-        else{e.style.left=L+'%';e.style.top=T+'%';lit(P[s]);e.classList.remove('jp');void e.offsetWidth;e.classList.add('jp');setTimeout(()=>e.classList.remove('hop','jp'),300)}};step()})));
+      if(!st.length){e.classList.add('mv');e.style.left=L+'%';e.style.top=T+'%';setTimeout(()=>follow(e,true),760);return}
+      let k=0;e.classList.add('hop');const step=()=>{const lit=q=>{const t=tb.querySelector(`.tt[data-t="${q}"]`);if(t){t.style.setProperty('--lc',tyCol(g,s));t.classList.remove('lit');void t.offsetWidth;t.classList.add('lit');setTimeout(()=>t.classList.remove('lit'),1100)}};
+        if(k<st.length){const q=st[k++],[r,c]=tyRC(q);e.style.left=(c+.5+dx)/TK*100+'%';e.style.top=(r+.5+dy)/TK*100+'%';lit(q);follow(tb.querySelector(`.tt[data-t="${q}"]`),true);e.classList.remove('jp');void e.offsetWidth;e.classList.add('jp');setTimeout(step,300)}
+        else{e.style.left=L+'%';e.style.top=T+'%';lit(P[s]);e.classList.remove('jp');void e.offsetWidth;e.classList.add('jp');setTimeout(()=>e.classList.remove('hop','jp'),600)}};step()})));
     // hiệu ứng tiền và sự kiện
-    if(was&&was.type==='ty'&&g.upd!==was.upd&&!W){const delay=(g.mv==='walk'?Math.min(13,(()=>{let c=0;g.pl.forEach((u,s)=>{if(WP&&WP[s]!==P[s])c=Math.max(c,(P[s]-WP[s]+TN)%TN)});return c})())*150:0)+200;
-      setTimeout(()=>{(g.fx||[]).forEach(f=>{const [s,a]=String(f).split(':').map(Number),el=v.querySelector(`.typ[data-s="${s}"]`);if(!el)return;const d=document.createElement('i');d.className='tfx '+(a>0?'up':'dn');d.textContent=(a>0?'+':'')+tyMoney(a);el.appendChild(d);setTimeout(()=>d.remove(),1600)});
+    if(was&&was.type==='ty'&&g.upd!==was.upd&&!W){const delay=(g.mv==='walk'?Math.min(13,(()=>{let c=0;g.pl.forEach((u,s)=>{if(WP&&WP[s]!==P[s])c=Math.max(c,(P[s]-WP[s]+TN)%TN)});return c})())*300:0)+400;
+      setTimeout(()=>{(g.fx||[]).forEach(f=>{const [s,a]=String(f).split(':').map(Number),el=v.querySelector(`.typ[data-s="${s}"]`);if(!el)return;const d=document.createElement('i');d.className='tfx '+(a>0?'up':'dn');d.textContent=(a>0?'+':'')+tyMoney(a);el.appendChild(d);setTimeout(()=>d.remove(),3200)});
         const [ek,ei]=String(g.ev||'').split(':');const ti=+ei,te=tb.querySelector(`.tt[data-t="${ti}"]`);
-        if(ek==='buy'&&te){te.classList.add('tbuy');tyFx(tb,ti,'🏠');banner('🏠 MUA ĐẤT '+TB[ti].n.toUpperCase()+'!',tyCol(g,g.own[ti]))}
-        else if(ek==='up'&&te){te.classList.add('tbuy');tyFx(tb,ti,g.lv[ti]===3?'🏨':'🏗️');banner(g.lv[ti]===3?'🏨 KHÁCH SẠN!':'🏗️ XÂY NHÀ!',tyCol(g,g.own[ti]))}
+        if(ek==='buy'&&te){te.classList.add('tbuy');tyFx(tb,ti,'🏠');banner('🏠 MUA ĐẤT '+TB[ti].n.toUpperCase()+'!',tyCol(g,g.own[ti]),3000)}
+        else if(ek==='up'&&te){te.classList.add('tbuy');tyFx(tb,ti,g.lv[ti]===3?'🏨':'🏗️');banner(g.lv[ti]===3?'🏨 KHÁCH SẠN!':'🏗️ XÂY NHÀ!',tyCol(g,g.own[ti]),3000)}
         else if(ek==='rent'&&te){tyFx(tb,ti,'💸');tb.classList.remove('shake');void tb.offsetWidth;tb.classList.add('shake')}
-        else if(ek==='luck')banner('🎁 MAY MẮN!','#a855f7');else if(ek==='pot')banner('🏖️ ĂN QUỸ BÃI BIỂN!','#0ea5e9');
-        if(/phá sản/.test(g.msg||''))banner('💥 PHÁ SẢN!','#ef4444');
-        if((was.rd||0)<TY_ROUNDS-TY_LAST&&(g.rd||0)>=TY_ROUNDS-TY_LAST&&g.st==='play')setTimeout(()=>banner('🔥 10 VÒNG CUỐI · GIỜ LẬT KÈO!','#f97316'),1600)},delay)}
+        else if(ek==='luck')banner('🎁 MAY MẮN!','#a855f7',3000);else if(ek==='pot')banner('🏖️ ĂN QUỸ BÃI BIỂN!','#0ea5e9',3000);
+        if(/phá sản/.test(g.msg||''))banner('💥 PHÁ SẢN!','#ef4444',3000);
+        if((was.rd||0)<TY_ROUNDS-TY_LAST&&(g.rd||0)>=TY_ROUNDS-TY_LAST&&g.st==='play')setTimeout(()=>banner('🔥 10 VÒNG CUỐI · GIỜ LẬT KÈO!','#f97316',3000),3200)},delay)}
     const ga=v.querySelector('#ga');if(W){waitUI(ga);return}if(g.st!=='play'){ga.innerHTML='';return}
     const me=myTurn(g),s=g.turn,i=P[s],T=TB[i];
     const bar=`<div class="tbar"><span class="tdice tdc">${diceHtml(g.d1||5)}${diceHtml(g.d2||2)}</span><span class="tbm">${esc(g.msg||'Chúc cả nhà chơi vui!')}</span></div>`;
@@ -1290,7 +1289,7 @@ async function openGame(id){const old=$('.gm');if(old)old.remove();const v=docum
     else if(g.ph==='up')ga.innerHTML=bar+`<div class="tq">${g.lv[i]===2?'Xây khách sạn':'Xây thêm nhà'} ở <b>${T.n}</b> giá <b>${tyMoney(tyUpCost(i))}</b>? Tiền thuê sẽ tăng mạnh</div><div class="row" style="gap:8px;width:100%"><button class="btn grow" id="ty1">${g.lv[i]===2?'🏨':'🏗️'} Xây</button><button class="btn gh grow" id="ty0">Bỏ qua</button></div>`;
     const tr=v.querySelector('#tr');if(tr)tr.onclick=()=>tyRoll();const y1=v.querySelector('#ty1'),y0=v.querySelector('#ty0');if(y1)y1.onclick=()=>tyAct(true);if(y0)y0.onclick=()=>tyAct(false)};
   const tyRoll=async bot=>{if(rolling||busy||g.ph!=='roll'||!(bot===true?BOTS[g.pl[g.turn]]:myTurn(g)))return;rolling=true;const dcs=[...v.querySelectorAll('#tdc,.tdc')];dcs.forEach(d=>d.classList.add('roll'));
-    const an=setInterval(()=>dcs.forEach(dc=>dc.innerHTML=diceHtml(1+Math.floor(Math.random()*6))+diceHtml(1+Math.floor(Math.random()*6))),90);await new Promise(r=>setTimeout(r,700));clearInterval(an);rolling=false;
+    const an=setInterval(()=>dcs.forEach(dc=>dc.innerHTML=diceHtml(1+Math.floor(Math.random()*6))+diceHtml(1+Math.floor(Math.random()*6))),150);await new Promise(r=>setTimeout(r,1400));clearInterval(an);rolling=false;
     await save(tyDiff(tyRollState(g)))};
   const tyAct=(yes,bot)=>{if(busy||(g.ph!=='buy'&&g.ph!=='up')||!(bot===true?BOTS[g.pl[g.turn]]:myTurn(g)))return;save(tyDiff(tyDecide(g,yes)))};
   const waitUI=ga=>{const hum=g.pl.length,bots=g.bots!==false?Math.max(0,4-hum):0,ok=g.by===NET.uid&&hum+bots>=2;
@@ -1303,7 +1302,7 @@ async function openGame(id){const old=$('.gm');if(old)old.remove();const v=docum
       if(g.type==='caro'){caroMove(caroAI(g.b,g.turn===0?'x':'o'));return}
       if(g.type==='ty'){if(g.ph==='roll')await tyRoll(true);else tyAct(tyBotYes(g),true);return}
       if(!g.rolled){await roll(true);return}
-      const M=ludoMoves(g,g.d);if(M.length)doMove(ludoAI(g,M).k,true)},(g.type==='caro'?650:g.type==='ty'?(g.ph==='roll'?900:1300):900)+(host?0:2500))};
+      const M=ludoMoves(g,g.d);if(M.length)doMove(ludoAI(g,M).k,true)},(g.type==='caro'?650:g.type==='ty'?(g.ph==='roll'?1800:2600):900)+(host?0:2500))};
   const actor=()=>nameOf(g.pl[g.turn]);
   const nextTurn=(d,extra)=>extra?g.turn:(g.turn+1)%g.pl.length;
   const roll=async bot=>{if(rolling||busy||g.rolled||!(bot===true?BOTS[g.pl[g.turn]]:myTurn(g)))return;rolling=true;const gd=v.querySelector('#gd');let f=0;if(gd)gd.classList.add('roll');const an=setInterval(()=>{if(gd)gd.innerHTML=diceHtml(1+Math.floor(Math.random()*6))},90);
@@ -1383,7 +1382,7 @@ function tyDecide(g,yes){tyUse(g);const t=JSON.parse(JSON.stringify(g));t.fx=[];
 function tyBotYes(t){tyUse(t);const s=t.turn,i=t.pos[s],c=t.ph==='buy'?TB[i].p:tyUpCost(i);return t.cash[s]-c>=(t.ph==='buy'?80:150)}
 const TYK=['cities','pl','pos','cash','own','lv','skip','out','d1','d2','ph','turn','rd','pot','dbl','msg','ev','fx','mv','st','win'];
 const tyDiff=t=>{const o={};TYK.forEach(k=>{if(t[k]!==undefined)o[k]=t[k]});o.fx=(t.fx||[]).map(x=>x[0]+':'+x[1]);return o};
-function tyFx(tb,i,e){const [r,c]=tyRC(i),d=document.createElement('div');d.className='tyfx';d.textContent=e;d.style.left=(c+.5)/TK*100+'%';d.style.top=(r+.5)/TK*100+'%';tb.appendChild(d);setTimeout(()=>d.remove(),1200)}
+function tyFx(tb,i,e){const [r,c]=tyRC(i),d=document.createElement('div');d.className='tyfx';d.textContent=e;d.style.left=(c+.5)/TK*100+'%';d.style.top=(r+.5)/TK*100+'%';tb.appendChild(d);setTimeout(()=>d.remove(),2400)}
 function diceHtml(n){const P={1:[5],2:[1,9],3:[1,5,9],4:[1,3,7,9],5:[1,3,5,7,9],6:[1,3,4,6,7,9]}[n]||[];return`<span class="pips f${n}">${[1,2,3,4,5,6,7,8,9].map(i=>`<i class="${P.includes(i)?'on':''}"></i>`).join('')}</span>`}
 const PTS=100;const myPts=()=>Object.keys(S.gw||{}).length*PTS;
 function mergeGw(j){let o={};try{o=JSON.parse(j||'{}')}catch(e){}let add=0;for(const k in o)if(!S.gw[k]){S.gw[k]=1;add++}LS.set('gw',S.gw);if(Object.keys(S.gw).length>Object.keys(o).length)API.saveProfile({gwj:JSON.stringify(S.gw)}).catch(()=>{});return add>0}
@@ -1391,7 +1390,7 @@ function award(g){if(!g||g.st!=='end'||g.win!==NET.uid||!g.id||S.gw[g.id])return
 function lfx(lb,r,c,e,cls){const d=document.createElement('div');d.className='lfx '+cls;d.textContent=e;d.style.left=(c+.5)/15*100+'%';d.style.top=(r+.5)/15*100+'%';lb.appendChild(d);
   if(cls==='kick'||cls==='out')for(let i=0;i<8;i++){const sp=document.createElement('i');sp.className='lspark';sp.textContent=cls==='kick'?'⭐':'✨';sp.style.left=d.style.left;sp.style.top=d.style.top;sp.style.setProperty('--a',i*45+'deg');lb.appendChild(sp);setTimeout(()=>sp.remove(),900)}
   setTimeout(()=>d.remove(),1200)}
-function banner(t,col){const old=document.querySelector('.gban');if(old)old.remove();const b=document.createElement('div');b.className='gban';b.style.setProperty('--c',col);b.textContent=t;document.body.appendChild(b);setTimeout(()=>b.remove(),1500)}
+function banner(t,col,ms){const old=document.querySelector('.gban');if(old)old.remove();const b=document.createElement('div');b.className='gban';b.style.setProperty('--c',col);b.textContent=t;if(ms)b.style.animationDuration=ms/1000+'s';document.body.appendChild(b);setTimeout(()=>b.remove(),ms||1500)}
 function showResult(v,g){const me=(g.pl||[]).includes(NET.uid),win=g.win===NET.uid,draw=!g.win;const o=document.createElement('div');o.className='gres '+(win?'win':draw?'draw':'lose');
   const img=win?'ludo-win':draw?'':'ludo-lose',em=win?'🏆':draw?'🤝':'😭';
   o.innerHTML=`<div class="grbox"><div class="grimg">${img?`<img src="assets/${img}.png" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'${em}'}))">`:`<span>${em}</span>`}</div>
@@ -1561,7 +1560,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 48${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 49${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

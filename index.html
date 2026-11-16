@@ -277,10 +277,10 @@ ul.ck li{margin:4px 0}
 .gres.win .grimg span,.gres.win .grimg img{animation:grb 1.2s ease-in-out infinite}@keyframes grb{50%{transform:translateY(-8px) rotate(-4deg)}}
 .gres h2{margin:6px 0 4px;font-size:28px}.gres.win h2{color:#0284c7}.gres.lose h2{color:#64748b}.gres p{color:#6b7280;margin:0 0 14px}
 .gres.lose .grimg{filter:saturate(.85)}.rd{position:absolute;top:-20px;pointer-events:none;animation:rdf 1.6s linear infinite}@keyframes rdf{to{transform:translateY(105vh)}}
-.gm.ty-on{background:url(assets/ty-nen.jpg) center/cover no-repeat,url(assets/ludo-bg.jpg) center/cover no-repeat,var(--bg)}
+.gm.ludo-on.ty-on{background:url(assets/ty-nen.jpg) center/cover no-repeat,url(assets/ludo-bg.jpg) center/cover no-repeat,var(--bg)}
 .tt .ti{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}.tt .ti~.te{display:none}.tt .ti~b,.tt .ti~small{position:relative;z-index:1;background:rgba(255,255,255,.8);border-radius:4px;padding:0 2px;margin-top:auto}
 .tt .th{width:1.3em;height:1.3em;object-fit:contain;vertical-align:middle}
-.tcen{background-image:url(assets/ty-giua.jpg),radial-gradient(circle,rgba(255,255,255,.75),rgba(255,255,255,.25));background-size:cover;background-position:center}
+.tcen{background-image:linear-gradient(rgba(255,255,255,.3),rgba(255,255,255,.3)),url(assets/ty-giua.jpg);background-size:cover;background-position:center}
 .gm.ludo-on{background:url(assets/ludo-bg.jpg) center/cover no-repeat,var(--bgimg,url(assets/nen-xanh.jpg)) center/cover no-repeat,var(--bg)}
 .qa2{display:flex;gap:6px}.qa2 button{flex:1;text-align:center!important;padding:8px 4px!important;background:#eef2ff!important;color:#4f46e5!important}
 .qa{display:flex;flex-direction:column;gap:6px;margin-top:8px}
@@ -1523,7 +1523,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 42${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 43${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

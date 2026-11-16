@@ -1316,8 +1316,8 @@ async function openGame(id){const old=$('.gm');if(old)old.remove();const v=docum
   v.innerHTML='<div class="empty">Đang tải…</div>';await load();timer=setInterval(()=>{if(!v.isConnected)return clearInterval(timer);if(document.visibilityState==='visible')load()},1500)}
 // ===== Cờ tỉ phú: bàn 24 ô các tỉnh thành Việt Nam =====
 const TGC=['#92400e','#a3a3a3','#38bdf8','#ec4899','#f97316','#ef4444','#eab308','#84cc16','#22c55e','#14b8a6','#7c3aed','#1d4ed8'];
-const TCOL=['#0284c7','#ef4444','#22c55e','#f59e0b'];
-const TPAL=[['#0284c7','Xanh biển'],['#ef4444','Đỏ'],['#22c55e','Xanh lá'],['#f59e0b','Cam'],['#a855f7','Tím'],['#ec4899','Hồng'],['#14b8a6','Ngọc'],['#92400e','Nâu']];
+const TCOL=['#ef4444','#22c55e','#eab308','#3b82f6'];
+const TPAL=[['#ef4444','Đỏ'],['#22c55e','Xanh lá'],['#eab308','Vàng'],['#3b82f6','Xanh dương']];
 const tyCol=(g,s)=>(g&&g.tc&&g.tc[s])||TCOL[s%4];
 function tyColors(pl,tcs){const m={};(tcs||[]).forEach(x=>{const [u,c]=String(x).split('|');if(u&&c)m[u]=c});const used=new Set(Object.values(m)),free=TPAL.map(x=>x[0]).filter(c=>!used.has(c));return pl.map(u=>m[u]||free.shift()||'#64748b')}
 function pickColor(tcs,title,cb){const taken={};(tcs||[]).forEach(x=>{const [u,c]=String(x).split('|');taken[c]=u});const sh=document.createElement('div');sh.className='sheet';
@@ -1561,7 +1561,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 47${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 48${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

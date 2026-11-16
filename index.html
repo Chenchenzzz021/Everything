@@ -1293,7 +1293,7 @@ async function openGame(id){const old=$('.gm');if(old)old.remove();const v=docum
     if(!me){ga.innerHTML=bar+`<div class="dlab">${esc(nameOf(g.pl[s]))} ${g.ph==='roll'?'đang tung xúc xắc…':'đang suy nghĩ…'}</div>`;return}
     if(g.ph==='roll')ga.innerHTML=bar+`<button class="btn tgo" id="tr">🎲 Tung xúc xắc</button>`;
     else if(g.ph==='buy')ga.innerHTML=bar+`<div class="tq">Mua <b>${T.n}</b> giá <b>${tyMoney(T.p)}</b>? Bạn đang có ${tyMoney(g.cash[s])}</div><div class="row" style="gap:8px;width:100%"><button class="btn grow" id="ty1">🏠 Mua</button><button class="btn gh grow" id="ty0">Bỏ qua</button></div>`;
-    else if(g.ph==='up')ga.innerHTML=bar+`<div class="tq">${g.lv[i]===2?'Xây khách sạn':'Xây thêm nhà'} ở <b>${T.n}</b> giá <b>${tyMoney(tyUpFor(g,s,i))}</b>${tySk(g,s)==='build'?' (🔨 -15%)':''}? Tiền thuê sẽ tăng mạnh</div><div class="row" style="gap:8px;width:100%"><button class="btn grow" id="ty1">${g.lv[i]===2?'🏨':'🏗️'} Xây</button><button class="btn gh grow" id="ty0">Bỏ qua</button></div>`;
+    else if(g.ph==='up')ga.innerHTML=bar+`<div class="tq">${g.lv[i]===2?'Xây khách sạn':'Xây thêm nhà'} ở <b>${T.n}</b> giá <b>${tyMoney(tyUpFor(g,s,i))}</b>${tySk(g,s)==='build'?' (🔨 -20%)':''}? Tiền thuê sẽ tăng mạnh</div><div class="row" style="gap:8px;width:100%"><button class="btn grow" id="ty1">${g.lv[i]===2?'🏨':'🏗️'} Xây</button><button class="btn gh grow" id="ty0">Bỏ qua</button></div>`;
     const tr=v.querySelector('#tr');if(tr)tr.onclick=()=>tyRoll();const y1=v.querySelector('#ty1'),y0=v.querySelector('#ty0');if(y1)y1.onclick=()=>tyAct(true);if(y0)y0.onclick=()=>tyAct(false)};
   const tyRoll=async bot=>{if(rolling||busy||g.ph!=='roll'||!(bot===true?BOTS[g.pl[g.turn]]:myTurn(g)))return;rolling=true;const dcs=[...v.querySelectorAll('#tdc,.tdc')];dcs.forEach(d=>d.classList.add('roll'));
     const an=setInterval(()=>dcs.forEach(dc=>dc.innerHTML=diceHtml(1+Math.floor(Math.random()*6))+diceHtml(1+Math.floor(Math.random()*6))),150);await new Promise(r=>setTimeout(r,1400));clearInterval(an);rolling=false;
@@ -1327,7 +1327,7 @@ const TCOL=['#ef4444','#22c55e','#eab308','#3b82f6'];
 const TPAL=[['#ef4444','Đỏ'],['#22c55e','Xanh lá'],['#eab308','Vàng'],['#3b82f6','Xanh dương']];
 const tyCol=(g,s)=>(g&&g.tc&&g.tc[s])||TCOL[s%4];
 function tyColors(pl,tcs){const m={};(tcs||[]).forEach(x=>{const [u,c]=String(x).split('|');if(u&&c)m[u]=c});const used=new Set(Object.values(m)),free=TPAL.map(x=>x[0]).filter(c=>!used.has(c));return pl.map(u=>m[u]||free.shift()||'#64748b')}
-const TSK={go:['🏁','Lộc Xuất phát','Đi qua Xuất phát được thêm 50'],rent:['🛡️','Mặc cả','Giảm 5% tiền thuê khi vào đất người khác'],build:['🔨','Nhà thầu','Xây nhà, khách sạn rẻ hơn 15%'],jam:['🛵','Luồn lách','Không bao giờ bị kẹt xe mất lượt']};
+const TSK={go:['🏁','Lộc Xuất phát','Đi qua Xuất phát được thêm 25'],rent:['🛡️','Mặc cả','Giảm 10% tiền thuê khi vào đất người khác'],build:['🔨','Nhà thầu','Xây nhà, khách sạn rẻ hơn 20%'],jam:['🛵','Luồn lách','Không bao giờ bị kẹt xe mất lượt, dừng ở ô Kẹt xe còn được 50']};
 const tySk=(t,s)=>(t&&t.sk&&t.sk[s])||'';
 function tySkills(pl,tcs){const m={};(tcs||[]).forEach(x=>{const [u,,k]=String(x).split('|');if(u&&k)m[u]=k});const K=Object.keys(TSK);return pl.map(u=>m[u]||(BOTS[u]?K[Math.floor(Math.random()*K.length)]:''))}
 function pickSkill(cb){const sh=document.createElement('div');sh.className='sheet';
@@ -1357,8 +1357,8 @@ const tyActive=t=>t.pl.map((u,i)=>i).filter(i=>!t.out[i]);
 function tyRent(t,i){const T=TB[i],o=t.own[i];if(o<0)return 0;if(T.k==='st'){const n=TB.filter((x,j)=>x.k==='st'&&t.own[j]===o).length;return n===2?80:30}
   const base=Math.round(T.p/8),lv=t.lv[i]||0;if(lv)return base*[1,4,10,18][lv];const full=TB.every((x,j)=>x.g!==T.g||t.own[j]===o);return full?base*2:base}
 const tyUpCost=i=>Math.round(TB[i].p/2);
-const tyUpFor=(t,s,i)=>Math.round(tyUpCost(i)*(tySk(t,s)==='build'?.85:1));
-const tyGoAmt=(t,s,poor)=>(poor?TY_GO*2:TY_GO)+(tySk(t,s)==='go'?50:0);
+const tyUpFor=(t,s,i)=>Math.round(tyUpCost(i)*(tySk(t,s)==='build'?.8:1));
+const tyGoAmt=(t,s,poor)=>(poor?TY_GO*2:TY_GO)+(tySk(t,s)==='go'?25:0);
 const TY_LAST=10;
 function tyPoor(t){if(!t.cash||(t.rd||0)<TY_ROUNDS-TY_LAST)return -1;const A=tyActive(t);if(A.length<2)return -1;let b=-1,bw=1e12;A.forEach(i=>{const w=tyWorth(t,i);if(w<bw){bw=w;b=i}});return b}
 const tyAssets=(t,s)=>tyWorth(t,s)-t.cash[s];
@@ -1376,12 +1376,12 @@ function tyLand(t,noLuck){const s=t.turn,i=t.pos[s],T=TB[i];t.ph='done';
   if(T.k==='c'||T.k==='st'){const o=t.own[i];
     if(o<0){if(t.cash[s]>=T.p){t.ph='buy';t.msg=nameOf(t.pl[s])+' đến '+T.n+' (giá '+tyMoney(T.p)+')'}else t.msg=nameOf(t.pl[s])+' đến '+T.n+' nhưng không đủ tiền mua'}
     else if(o===s){if(T.k==='c'&&(t.lv[i]||0)<3&&t.cash[s]>=tyUpFor(t,s,i)){t.ph='up';t.msg=nameOf(t.pl[s])+' về đất nhà ở '+T.n}else t.msg=nameOf(t.pl[s])+' về đất nhà ở '+T.n}
-    else if(!t.out[o]){const pr=tyPoor(t);let r=tyRent(t,i);if(pr===s)r=Math.ceil(r/2);else if(pr===o)r*=2;const bg=tySk(t,s)==='rent';if(bg)r=Math.round(r*.95);t.msg='💸 '+nameOf(t.pl[s])+' trả '+tyMoney(r)+' tiền thuê cho '+nameOf(t.pl[o]);t.ev='rent:'+i;if(pr===s)t.msg+=' (🔥 giảm nửa)';else if(pr===o)t.msg+=' (🔥 x2)';if(bg)t.msg+=' (🛡️ -5%)';tyPay(t,s,o,r)}}
+    else if(!t.out[o]){const pr=tyPoor(t);let r=tyRent(t,i);if(pr===s)r=Math.ceil(r/2);else if(pr===o)r*=2;const bg=tySk(t,s)==='rent';if(bg)r=Math.round(r*.9);t.msg='💸 '+nameOf(t.pl[s])+' trả '+tyMoney(r)+' tiền thuê cho '+nameOf(t.pl[o]);t.ev='rent:'+i;if(pr===s)t.msg+=' (🔥 giảm nửa)';else if(pr===o)t.msg+=' (🔥 x2)';if(bg)t.msg+=' (🛡️ -10%)';tyPay(t,s,o,r)}}
   else if(T.k==='lk'&&!noLuck){const GD=[0,1,4,7,10],c=tyPoor(t)===s?TLUCK[GD[Math.floor(Math.random()*GD.length)]]:TLUCK[Math.floor(Math.random()*TLUCK.length)];t.msg='🎁 '+nameOf(t.pl[s])+': '+c[0];t.ev='luck';c[1](t)}
   else if(T.k==='tax'){t.msg='🧾 '+nameOf(t.pl[s])+' đóng thuế '+TY_TAX+' vào quỹ Bãi biển';tyPay(t,s,-2,TY_TAX)}
   else if(T.k==='beach'){const p=t.pot;t.msg='🏖️ '+nameOf(t.pl[s])+(p?' nhận quỹ Bãi biển '+tyMoney(p)+'!':' nghỉ ngơi ở Bãi biển');if(p){t.pot=0;tyPay(t,-1,s,p);t.ev='pot'}}
   else if(T.k==='fest'){t.msg='🎉 '+nameOf(t.pl[s])+' đi lễ hội, nhận '+TY_FEST;tyPay(t,-1,s,TY_FEST)}
-  else if(T.k==='jam'){if(tySk(t,s)==='jam')t.msg='🛵 '+nameOf(t.pl[s])+' luồn lách qua kẹt xe, không mất lượt';else{t.skip[s]=1;t.msg='🚧 '+nameOf(t.pl[s])+' bị kẹt xe, mất 1 lượt'}}
+  else if(T.k==='jam'){if(tySk(t,s)==='jam'){t.msg='🛵 '+nameOf(t.pl[s])+' luồn lách qua kẹt xe, không mất lượt, nhận 50';tyPay(t,-1,s,50)}else{t.skip[s]=1;t.msg='🚧 '+nameOf(t.pl[s])+' bị kẹt xe, mất 1 lượt'}}
   else if(T.k==='go'){t.msg=nameOf(t.pl[s])+' dừng ở Xuất phát'}
   if(t.out[s])t.ph='done'}
 function tyNext(t){const A=tyActive(t);if(A.length<=1){t.st='end';t.win=A.length?t.pl[A[0]]:'';t.ph='done';return}
@@ -1577,7 +1577,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 53${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 54${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

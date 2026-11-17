@@ -1474,6 +1474,12 @@ const PIC=v=>({restaurant:'🍜',fast_food:'🍔',food_court:'🍜',cafe:'☕',b
 const hl=(t,q)=>{const f=[...t].map(c=>fold(c)).join(''),i=f.indexOf(fold(q));if(!q||i<0)return esc(t);const ch=[...t];let n=0,st=-1,en=-1;for(let k=0;k<ch.length;k++){const l=fold(ch[k]).length;if(n===i)st=k;n+=l;if(st>=0&&n>=i+fold(q).length){en=k+1;break}}
   if(st<0||en<0)return esc(t);return esc(ch.slice(0,st).join(''))+'<b>'+esc(ch.slice(st,en).join(''))+'</b>'+esc(ch.slice(en).join(''))};
 const SCACHE={};
+// Vietmap (tài khoản dùng thử, có giới hạn lượt mỗi ngày): tìm kiếm + tên địa chỉ; lỗi/hết lượt thì dùng Photon/Nominatim
+const VM_KEY='ea9913a1d3b8a36bf394d727f8ca00fcf393d32e7c9dc347',VM='https://maps.vietmap.vn/api/';
+const vmOn=()=>LS.get('vmoff','')!==new Date().toDateString();
+async function vmGet(path,sig){if(!vmOn())throw new Error('vmoff');const r=await fetch(VM+path+(path.includes('?')?'&':'?')+'apikey='+VM_KEY,{signal:sig});if(r.status===423||r.status===429||r.status===403){LS.set('vmoff',new Date().toDateString());throw new Error('vm '+r.status)}if(!r.ok)throw new Error('vm '+r.status);return r.json()}
+function vmToX(x){const b=x.boundaries||[];return{ref:x.ref_id,lat:x.lat!=null?+x.lat:null,lon:x.lng!=null?+x.lng:null,name:x.name||x.display||'Địa điểm',addr:x.address||'',display_name:x.display||x.name,type:(x.categories||[])[0]||'',cc:'VN',vm:1}}
+async function vmPlace(x){if(x.lat!=null||!x.ref)return x;try{const j=await vmGet('place/v3?refid='+encodeURIComponent(x.ref));if(j&&j.lat!=null){x.lat=+j.lat;x.lon=+j.lng;if(!x.addr)x.addr=[j.ward,j.district,j.city].filter(Boolean).join(', ')}}catch(e){}return x}
 function phToX(f){const p=f.properties,[lng,lat]=f.geometry.coordinates,st=[p.housenumber,p.street].filter(Boolean).join(' ');
   const nm=p.name||st||p.district||p.city||'Địa điểm';const parts=[p.name?st:'',p.locality,p.district,p.city||p.county,p.state!==p.city?p.state:''].filter((x,i,A)=>x&&A.indexOf(x)===i&&x!==nm);
   return{lat,lon:lng,name:nm,addr:parts.slice(0,3).join(', '),display_name:[nm].concat(parts).join(', '),type:p.osm_value,class:p.osm_key,cc:p.countrycode}}
@@ -1485,15 +1491,15 @@ function openSearch(){const v=document.createElement('div');v.className='srch';v
   const me=()=>S.pos||(map?{lat:map.getCenter().lat,lng:map.getCenter().lng}:null);
   const dTxt=o=>{const m=S.pos&&dist(S.pos,o);return m!=null?`<span class="sdist">${fmtD(m)}</span>`:''};
   const recent=()=>LS.get('recent',[]);
-  const pick=x=>{const R=recent().filter(r=>!(Math.abs(r.lat-x.lat)<1e-5&&Math.abs(r.lon-x.lon)<1e-5));R.unshift({lat:x.lat,lon:x.lon,name:x.name,addr:x.addr||'',display_name:x.display_name||x.name,type:x.type});LS.set('recent',R.slice(0,8));close();showFound(x)};
+  const pick=async x=>{if(x.lat==null){x=await vmPlace(x);if(x.lat==null)return toast('Không lấy được vị trí chỗ này, thử lại nhé')}const R=recent().filter(r=>!(Math.abs(r.lat-x.lat)<1e-5&&Math.abs(r.lon-x.lon)<1e-5));R.unshift({lat:x.lat,lon:x.lon,name:x.name,addr:x.addr||'',display_name:x.display_name||x.name,type:x.type});LS.set('recent',R.slice(0,8));close();showFound(x)};
   const render=(t,loading)=>{const ft=fold(t);let h='';
     if(!t){const R=recent();h=(S.places.length?`<div class="shd">Nơi đã lưu</div>`+S.places.slice().sort((a,b)=>(dist(S.pos,a)??1e12)-(dist(S.pos,b)??1e12)).slice(0,6).map(p=>row('p',p.id,(CATS[p.cat]||CATS.other).e,esc(p.name),esc(p.addr||(CATS[p.cat]||CATS.other).n),p)).join(''):'')
         +(R.length?`<div class="shd">Tìm gần đây <button class="sclrr" id="clrr">Xoá</button></div>`+R.map((x,i)=>row('r',i,'🕘',esc(x.name),esc(x.addr||''),{lat:x.lat,lng:x.lon})).join(''):'')
         +(!S.places.length&&!R.length?'<div class="sempty">Gõ tên quán, đường, phường… kết quả hiện ngay khi bạn gõ.</div>':'');}
     else{const mine=S.places.filter(p=>fold(p.name+' '+(p.addr||'')).includes(ft)).slice(0,5);
       if(mine.length)h+=`<div class="shd">Nơi đã lưu</div>`+mine.map(p=>row('p',p.id,(CATS[p.cat]||CATS.other).e,hl(p.name,t),esc(p.addr||(CATS[p.cat]||CATS.other).n),p)).join('');
-      const on=online.filter(x=>!mine.some(p=>p.lat!=null&&dist(p,{lat:x.lat,lng:x.lon})<60));
-      if(on.length)h+=`<div class="shd">Trên bản đồ</div>`+on.map((x,i)=>{const near=S.places.find(p=>p.lat!=null&&dist(p,{lat:x.lat,lng:x.lon})<60);return row('o',online.indexOf(x),near?(visitors(near).length?'🚩':'⭐'):PIC(x.type),hl(x.name,t),esc(x.addr)+(near?' · đã lưu':''),{lat:x.lat,lng:x.lon})}).join('');
+      const on=online.filter(x=>x.lat==null||!mine.some(p=>p.lat!=null&&dist(p,{lat:x.lat,lng:x.lon})<60));
+      if(on.length)h+=`<div class="shd">Trên bản đồ</div>`+on.map((x,i)=>{const near=x.lat!=null&&S.places.find(p=>p.lat!=null&&dist(p,{lat:x.lat,lng:x.lon})<60);return row('o',online.indexOf(x),near?(visitors(near).length?'🚩':'⭐'):x.vm&&!x.type?'📍':PIC(x.type),hl(x.name,t),esc(x.addr)+(near?' · đã lưu':''),x.lat!=null?{lat:x.lat,lng:x.lon}:null)}).join('');
       if(loading)h+=`<div class="sload"><i></i><i></i><i></i></div>`;
       else if(!mine.length&&!on.length)h+='<div class="sempty">Không thấy kết quả. Thử gõ ngắn hơn hoặc thêm tên quận/thành phố.</div>'}
     res.innerHTML=h;
@@ -1503,6 +1509,7 @@ function openSearch(){const v=document.createElement('div');v.className='srch';v
   const fetchOn=async t=>{const my=++seq;const c=me();const key=t+'|'+(c?c.lat.toFixed(2)+','+c.lng.toFixed(2):'');
     if(SCACHE[key]){online=SCACHE[key];return render(t,false)}
     if(ctl)ctl.abort();ctl=new AbortController();
+    const vmP=vmOn()&&t.length>=2?vmGet(`autocomplete/v3?text=${encodeURIComponent(t)}${c?`&focus=${c.lat},${c.lng}`:''}`,ctl.signal).then(a=>(Array.isArray(a)?a:[]).slice(0,8).map(vmToX)).catch(e=>[]):Promise.resolve([]);
     try{const u=`https://photon.komoot.io/api/?q=${encodeURIComponent(t)}&limit=15${c?`&lat=${c.lat}&lon=${c.lng}&location_bias_scale=0.3&zoom=12`:''}`;
       const j=await (await fetch(u,{signal:ctl.signal})).json();let L2=(j.features||[]).map(phToX);
       const ft=fold(t),tw=ft.split(/\s+/).filter(Boolean),sc=x=>{const n=fold(x.name),a=fold(x.addr);let v=n.startsWith(ft)?0:n.includes(ft)?1:tw.every(w=>n.includes(w))?2:tw.every(w=>(n+' '+a).includes(w))?3:6;if(x.cc&&x.cc!=='VN')v+=4;return v};
@@ -1510,12 +1517,13 @@ function openSearch(){const v=document.createElement('div');v.className='srch';v
       if(!L2.length&&t.length>3){const vb=c?`&viewbox=${c.lng-.6},${c.lat+.6},${c.lng+.6},${c.lat-.6}`:'';
         const r=await (await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=8&accept-language=vi&countrycodes=vn${vb}&q=${encodeURIComponent(t)}`,{signal:ctl.signal})).json();
         L2=r.map(x=>{const parts=x.display_name.split(',').map(s=>s.trim());return{lat:+x.lat,lon:+x.lon,name:x.name||parts[0],addr:parts.slice(1,4).join(', '),display_name:x.display_name,type:x.type,class:x.category}})}
+      const V=await vmP;if(V.length){const fn=new Set(V.map(x=>fold(x.name)));L2=V.concat(L2.filter(x=>!fn.has(fold(x.name)))).slice(0,15)}
       SCACHE[key]=L2;if(my!==seq)return;online=L2;render(t,false)}
     catch(e){if(e.name==='AbortError')return;if(my===seq){online=[];render(t,false)}}};
   inp.oninput=()=>{const t=inp.value.trim();q('#sclr').classList.toggle('hide',!inp.value);clearTimeout(tm);if(t===last)return;last=t;
     if(!t){seq++;if(ctl)ctl.abort();online=[];return render('')}
     online=online.filter(x=>fold(x.name+' '+x.addr).includes(fold(t)));render(t,true);
-    tm=setTimeout(()=>fetchOn(t),t.length<3?380:220)};
+    tm=setTimeout(()=>fetchOn(t),t.length<3?500:350)};
   inp.onkeydown=ev=>{if(ev.key==='Enter'){ev.preventDefault();clearTimeout(tm);const t=inp.value.trim();if(t)fetchOn(t);inp.blur()}};
   q('#sclr').onclick=()=>{inp.value='';inp.oninput();inp.focus()};
   render('');setTimeout(()=>inp.focus(),60)}
@@ -1539,7 +1547,8 @@ function initLongPress(){const el=map.getContainer();let t=null,st=null;const st
   el.addEventListener('touchmove',e=>{if(t&&st){const p=e.touches[0];if(Math.hypot(p.clientX-st[0],p.clientY-st[1])>10)stop()}},{passive:true});
   ['touchend','touchcancel'].forEach(k=>el.addEventListener(k,stop,{passive:true}))}
 let revAb=null;
-async function revName(la,ln){try{if(revAb)revAb.abort();revAb=new AbortController();const tm=setTimeout(()=>revAb&&revAb.abort(),5000);
+async function revName(la,ln){try{const a=await vmGet(`reverse/v3?lng=${ln}&lat=${la}`);const x=Array.isArray(a)&&a[0];if(x&&x.name)return{name:x.name,addr:x.address||''}}catch(e){}
+  try{if(revAb)revAb.abort();revAb=new AbortController();const tm=setTimeout(()=>revAb&&revAb.abort(),5000);
   const r=await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=18&accept-language=vi&lat=${la}&lon=${ln}`,{signal:revAb.signal});clearTimeout(tm);const j=await r.json();
   const a=j.address||{},nm=j.name||[a.house_number,a.road].filter(Boolean).join(' ')||a.suburb||a.village||a.city_district||'';
   return{name:nm,addr:[a.road&&nm!==a.road?a.road:'',a.suburb||a.quarter||'',a.city||a.town||a.county||a.state||''].filter(Boolean).join(', ')}}catch(e){return null}}
@@ -1620,7 +1629,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 61${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 62${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

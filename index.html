@@ -292,8 +292,8 @@ ul.ck li{margin:4px 0}
 .kbar{height:8px;background:#e5e7eb;border-radius:9px;overflow:hidden;margin-top:6px}.kbar i{display:block;height:100%;width:100%;background:#22c55e;border-radius:9px;transition:width .25s linear}.kbar i.low{background:#ef4444}
 .kmsg{text-align:center;font-size:15px;font-weight:700;margin-top:4px;color:#1f2937}
 .kzm{display:flex;align-items:center;gap:10px;font-size:13px;color:#475569}.kzm button{width:36px;height:32px;border-radius:10px;border:0;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.15);font-size:15px}
-.gm.ks-on .gst{display:none}.ksc{width:100%;height:max(280px,calc(100dvh - 330px));overflow:auto;border-radius:16px;background:#fffef5;box-shadow:inset 0 0 0 2px #fde68a,0 4px 12px rgba(0,0,0,.12);-webkit-overflow-scrolling:touch}
-.ksb{position:relative;background:repeating-linear-gradient(#fffef5 0 23px,#dbeafe 23px 24px)}
+.gm.ks-on .gst{display:none}.ksc{width:100%;height:max(300px,calc(100dvh - 350px));overflow:hidden;border-radius:16px;background:#fffef5;box-shadow:inset 0 0 0 2px #fde68a,0 4px 12px rgba(0,0,0,.12);-webkit-overflow-scrolling:touch}
+.ksb{position:relative;width:100%;height:100%;font-size:clamp(14px,4.4vw,22px);background:repeating-linear-gradient(#fffef5 0 23px,#dbeafe 23px 24px)}
 .kn{position:absolute;transform:translate(-50%,-50%) rotate(var(--r));background:none;border:.13em solid transparent;padding:0 .2em;font-weight:700;color:#334155;font-family:inherit;line-height:1.5;min-width:1.9em;border-radius:50%;cursor:pointer}
 .kn.ow{border-color:var(--c);color:var(--c);border-radius:52% 46% 50% 48%;background:color-mix(in srgb,var(--c) 10%,transparent)}
 .kn.last{animation:kpop .7s;box-shadow:0 0 0 .25em color-mix(in srgb,var(--c) 35%,transparent);z-index:2}@keyframes kpop{0%{transform:translate(-50%,-50%) rotate(var(--r)) scale(2)}60%{transform:translate(-50%,-50%) rotate(var(--r)) scale(.9)}}
@@ -1100,7 +1100,7 @@ async function openConv(uid,quote){const p=personOf(uid),pid=pairId(uid),base=`$
 window.openConv=openConv;
 
 // ===== Trò chơi: Cờ ca rô, Cờ cá ngựa =====
-const GT={caro:{n:'Cờ ca rô',e:'⭕',d:'2 người · ai xếp được 5 quân liền nhau là thắng',min:2,max:2},ludo:{n:'Cờ cá ngựa',e:'🎲',d:'Luôn đủ 4 người (thiếu thì máy vào) · đưa cả 4 quân về đích trước là thắng',min:2,max:4},ty:{n:'Cờ tỉ phú',e:'🏙️',d:'2–4 người · mua đất, xây nhà, ai giàu nhất thắng',min:2,max:4},ks:{n:'Khoanh số',e:'🔢',d:'2–4 người · cùng tìm số từ 1 đến 300, ai khoanh trước được số đó, nhiều số nhất thắng',min:2,max:4}};
+const GT={caro:{n:'Cờ ca rô',e:'⭕',d:'2 người · ai xếp được 5 quân liền nhau là thắng',min:2,max:2},ludo:{n:'Cờ cá ngựa',e:'🎲',d:'Luôn đủ 4 người (thiếu thì máy vào) · đưa cả 4 quân về đích trước là thắng',min:2,max:4},ty:{n:'Cờ tỉ phú',e:'🏙️',d:'2–4 người · mua đất, xây nhà, ai giàu nhất thắng',min:2,max:4},ks:{n:'Khoanh số',e:'🔢',d:'2–4 người · cùng tìm số từ 1 đến 100, ai khoanh trước được số đó, nhiều số nhất thắng',min:2,max:4}};
 let GM=[];
 const gPath=id=>`${COL}/${S.code}/games${id?'/'+id:''}`;
 const gTitle=g=>GT[g.type]?GT[g.type].n:'Trò chơi';
@@ -1335,10 +1335,8 @@ async function openGame(id){const old=$('.gm');if(old)old.remove();const v=docum
     const ps=g.pl.map((u,s)=>`<div class="kp${s===me?' on':''}" style="--c:${tyCol(g,s)}"><span class="tav">${esc(emOf(u)||'🙂')}</span><b>${W?'':['🥇','🥈','🥉',''][rk.indexOf(s)]+' '}${esc(u===NET.uid?'Bạn':nickOf(u)||personOf(u).name||nameOf(u)||'?')}</b><i>${W?'':cnt[s]}</i></div>`).join('');
     const osc=v.querySelector('#ksc'),sx=osc?osc.scrollLeft:null,sy=osc?osc.scrollTop:null;
     v.querySelector('#gb').innerHTML=`<div class="kwrap">${W?'':`<div class="ksp">${ps}</div>`}${g.st==='play'?`<div class="kst"><div class="kq">🔍 Ai thấy số <b>${Rr.nx}</b> trước?</div>${g.msg?`<div class="kmsg">${esc(g.msg)}</div>`:''}</div>`:g.st==='end'?`<div class="kst"><div class="kmsg">${esc(g.msg||'')}</div></div>`:''}
-      ${W?'':`<div class="kzm"><button id="kzo">➖</button><span>Thu phóng</span><button id="kzi">➕</button></div><div class="ksc" id="ksc"><div class="ksb" style="width:${1000*z}px;height:${KS_H*z}px">${L.map(([x,y,r,f],i)=>{const n=i+1,ow=own[i];return`<button class="kn${ow>=0?' ow':''}${Rr.last===n?' last':''}" data-n="${n}" style="left:${x}%;top:${y}%;font-size:${(f*z).toFixed(1)}px;--r:${r}deg${ow>=0?';--c:'+tyCol(g,ow):''}">${n}</button>`}).join('')}</div></div>`}</div>`;
-    const sc=v.querySelector('#ksc');if(sc){if(sx!=null){sc.scrollLeft=sx;sc.scrollTop=sy}
-      const zz=d=>{const nz=Math.max(.5,Math.min(1.6,Math.round((z+d)*10)/10));if(nz===z)return;const cx=(sc.scrollLeft+sc.clientWidth/2)/z,cy=(sc.scrollTop+sc.clientHeight/2)/z;LS.set('ksz',nz);draw();const s2=v.querySelector('#ksc');s2.scrollLeft=cx*nz-s2.clientWidth/2;s2.scrollTop=cy*nz-s2.clientHeight/2};
-      v.querySelector('#kzo').onclick=()=>zz(-.1);v.querySelector('#kzi').onclick=()=>zz(.1);
+      ${W?'':`<div class="ksc" id="ksc"><div class="ksb">${L.map(([x,y,r,f],i)=>{const n=i+1,ow=own[i];return`<button class="kn${ow>=0?' ow':''}${Rr.last===n?' last':''}" data-n="${n}" style="left:${x}%;top:${y}%;font-size:${f}em;--r:${r}deg${ow>=0?';--c:'+tyCol(g,ow):''}">${n}</button>`}).join('')}</div></div>`}</div>`;
+    const sc=v.querySelector('#ksc');if(sc){
       sc.querySelector('.ksb').onclick=ev=>{const b=ev.target.closest('.kn');if(!b||me<0||busy||g.st!=='play')return;const n=+b.dataset.n;if(n===ksRes(g).nx)ksClaim(me);else if(own[n-1]<0){b.classList.remove('bad');void b.offsetWidth;b.classList.add('bad')}}}
     const ga=v.querySelector('#ga');if(W){waitUI(ga);return}ga.innerHTML='';ksBots()};
   const ksClaim=(s,bot)=>{if(busy||!g||g.st!=='play')return;const n=ksRes(g).nx;if(n>KS_N)return;const k='k'+s,d={[k]:(g[k]?g[k]+';':'')+n+'.'+(Date.now()-(g.t0||0)),msg:'⭕ '+nameOf(g.pl[s])+' khoanh số '+n};
@@ -1363,11 +1361,11 @@ function tyColors(pl,tcs){const m={};(tcs||[]).forEach(x=>{const [u,c]=String(x)
 const TSK={go:['🏁','Lộc Xuất phát','Đi qua Xuất phát được thêm 25'],rent:['🛡️','Mặc cả','Giảm 10% tiền thuê khi vào đất người khác'],build:['🔨','Nhà thầu','Xây nhà, khách sạn rẻ hơn 20%'],jam:['🛵','Luồn lách','Không bao giờ bị kẹt xe mất lượt, dừng ở ô Kẹt xe còn được 50']};
 const tySk=(t,s)=>(t&&t.sk&&t.sk[s])||'';
 // ===== Khoanh số: 500 số rải ngẫu nhiên, lần lượt tìm số kế tiếp =====
-const KS_N=300,KS_H=900,KS_BOT=[4000,10000],KS_SUB='Số bạn khoanh được sẽ có vòng tròn màu này.';
+const KS_N=100,KS_BOT=[4000,10000],KS_SUB='Số bạn khoanh được sẽ có vòng tròn màu này.';
 function ksRng(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 const KSL={};
-function ksLayout(sd){if(KSL[sd])return KSL[sd];const r=ksRng(sd),C=20,RW=15,cells=[...Array(C*RW).keys()];for(let i=cells.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[cells[i],cells[j]]=[cells[j],cells[i]]}
-  return KSL[sd]=cells.slice(0,KS_N).map(c=>{const cx=c%C,cy=Math.floor(c/C);return[((cx+.5+(r()-.5)*.35)/C*100).toFixed(2),((cy+.5+(r()-.5)*.4)/RW*100).toFixed(2),Math.round((r()-.5)*50),15+Math.round(r()*8)]})}
+function ksLayout(sd){if(KSL[sd])return KSL[sd];const r=ksRng(sd),C=10,RW=10,cells=[...Array(C*RW).keys()];for(let i=cells.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[cells[i],cells[j]]=[cells[j],cells[i]]}
+  return KSL[sd]=cells.slice(0,KS_N).map(c=>{const cx=c%C,cy=Math.floor(c/C);return[(5+(cx+.5+(r()-.5)*.18)/C*90).toFixed(2),(4+(cy+.5+(r()-.5)*.35)/RW*92).toFixed(2),Math.round((r()-.5)*44),(.85+r()*.4).toFixed(2)]})}
 function ksInit(pl){const o={sd:1+Math.floor(Math.random()*1e9),t0:Date.now(),turn:0,msg:''};pl.forEach((u,i)=>o['k'+i]='');return o}
 function ksRes(g){const own=Array(KS_N).fill(-1),tm=Array(KS_N).fill(Infinity);(g.pl||[]).forEach((u,s)=>String(g['k'+s]||'').split(';').forEach(x=>{if(!x)return;const [n,t]=x.split('.').map(Number);if(n>=1&&n<=KS_N&&t<tm[n-1]){tm[n-1]=t;own[n-1]=s}}));
   let nx=1;while(nx<=KS_N&&own[nx-1]>=0)nx++;const c=(g.pl||[]).map(()=>0);let last=0,lt=-1;own.forEach((o,i)=>{if(o>=0){c[o]++;if(tm[i]>lt){lt=tm[i];last=i+1}}});return{own,nx,c,last}}
@@ -1619,7 +1617,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 58${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 59${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

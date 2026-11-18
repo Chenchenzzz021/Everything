@@ -57,6 +57,12 @@ service cloud.firestore {
         allow create: if isMember(c) && request.resource.data.by == request.auth.uid && request.resource.data.pl == [request.auth.uid];
         allow update: if isMember(c) && (request.auth.uid in resource.data.pl || request.auth.uid in resource.data.inv);
         allow delete: if isMember(c) && resource.data.by == request.auth.uid;
+        // bình luận trong ván (người chơi và người xem)
+        match /cm/{cid} {
+          allow read: if isMember(c);
+          allow create: if isMember(c) && request.resource.data.by == request.auth.uid && request.resource.data.txt is string && request.resource.data.txt.size() <= 200;
+          allow delete: if isMember(c) && resource.data.by == request.auth.uid;
+        }
       }
       // Vị trí riêng cho từng người xem (khi ẩn với một số người)
       match /lv/{lid} {

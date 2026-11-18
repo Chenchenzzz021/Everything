@@ -208,6 +208,14 @@ ul.ck li{margin:4px 0}
 .btn.tgo{min-width:220px;font-size:18px;animation:dgo 1s infinite}.tq{background:rgba(255,255,255,.92);border-radius:12px;padding:8px 12px;font-size:14px;text-align:center;margin-bottom:6px}
 .gtog{display:flex;align-items:center;gap:10px;background:#f3f9ff;border-radius:12px;padding:10px 12px;margin-top:10px;font-size:14px}.gtog input{width:20px;height:20px;accent-color:var(--pk)}
 
+.gcmf{position:fixed;right:14px;bottom:calc(150px + env(safe-area-inset-bottom));z-index:1900;width:52px;height:52px;border-radius:50%;border:3px solid #fff;background:var(--pk);color:#fff;font-size:24px;box-shadow:0 6px 16px rgba(0,0,0,.3)}
+.gcmf i{position:absolute;top:-6px;right:-6px;background:#ef4444;color:#fff;font-style:normal;font-size:12px;font-weight:700;border-radius:999px;min-width:20px;padding:1px 5px;border:2px solid #fff}
+.gcmfly{position:fixed;left:10px;right:76px;bottom:calc(150px + env(safe-area-inset-bottom));z-index:1890;display:flex;flex-direction:column;align-items:flex-start;gap:6px;pointer-events:none}
+.gcmb{display:flex;align-items:center;gap:6px;background:rgba(15,23,42,.82);color:#fff;border-radius:16px;padding:5px 10px 5px 5px;font-size:14px;max-width:100%;animation:gcmb 6s forwards}.gcmb span{overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+@keyframes gcmb{0%{opacity:0;transform:translateY(12px)}8%{opacity:1;transform:none}85%{opacity:1}100%{opacity:0}}
+.gcms{position:fixed;left:0;right:0;bottom:0;z-index:1950;background:#fff;color:#1f2937;border-radius:20px 20px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.25);display:flex;flex-direction:column;max-height:55dvh;padding-bottom:env(safe-area-inset-bottom)}
+.gcmh{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #e2e8f0}.gcml{overflow-y:auto;padding:8px 12px;flex:1;min-height:120px;display:flex;flex-direction:column;gap:8px}
+.gcm{display:flex;gap:8px;align-items:flex-start;font-size:14px}.gcm.me b{color:var(--pk)}.gcmi{display:flex;gap:8px;padding:8px 12px;border-top:1px solid #e2e8f0}.gcmi input{flex:1;min-width:0;border:2px solid #e2e8f0;border-radius:999px;padding:10px 14px;font:inherit;font-size:16px}.gcmi .btn{min-height:44px;padding:0 16px}
 .gwat{font-style:normal;font-size:12px;background:#fef3c7;color:#92400e;border-radius:999px;padding:2px 8px;margin-left:4px;white-space:nowrap}
 .gcard{border-radius:20px;padding:14px 12px;text-align:left;display:flex;flex-direction:column;gap:4px;color:#fff;box-shadow:0 6px 16px rgba(0,0,0,.12);min-height:150px}
 .gcard.g-caro{background:linear-gradient(150deg,#7dd3fc,#0284c7)}.gcard.g-ludo{background:linear-gradient(150deg,#7dd3fc,#3b82f6)}
@@ -1149,6 +1157,25 @@ async function loadGames(){if(!S.code)return;let L=[];try{L=await API.listSub(gP
   const seen=LS.get('ginvseen',{}),nw=GM.filter(g=>gInvited(g)&&!seen[g.id]);if(nw.length&&!$('.gm')){nw.forEach(g=>seen[g.id]=1);LS.set('ginvseen',seen);toast('🎮 '+nameOf(g0(nw).by)+' mời bạn chơi '+gTitle(g0(nw)),4000)}
   if(S.tab==='game')drawGames()}
 const g0=a=>a[0];let GW=[];
+// bình luận trong ván online (người chơi và người xem đều thấy)
+function gcmInit(v,id){const P=gPath(id)+'/cm';let L=[],seen=-1,open=false;
+  const fab=document.createElement('button');fab.className='gcmf';fab.innerHTML='💬<i class="hide"></i>';document.body.appendChild(fab);
+  const fly=document.createElement('div');fly.className='gcmfly';document.body.appendChild(fly);
+  const sh=document.createElement('div');sh.className='gcms hide';sh.innerHTML=`<div class="gcmh"><b>💬 Bình luận</b><button class="ib" id="gcx">✕</button></div><div class="gcml" id="gcl"></div><div class="gcmi"><input id="gci" maxlength="200" placeholder="Viết bình luận…" autocomplete="off"><button class="btn" id="gcs">Gửi</button></div>`;document.body.appendChild(sh);
+  const list=()=>{const b=sh.querySelector('#gcl'),end=b.scrollHeight-b.scrollTop-b.clientHeight<60;b.innerHTML=L.length?L.map(c=>`<div class="gcm${c.by===NET.uid?' me':''}">${avHtml(personOf(c.by),26)}<div><b>${esc(c.by===NET.uid?'Bạn':nameOf(c.by))}</b> <span class="vs">${ago(c.t)}</span><div>${esc(c.txt)}</div></div></div>`).join(''):'<div class="vs" style="text-align:center;padding:16px">Chưa có bình luận. Cổ vũ mọi người nhé! 📣</div>';if(end||open)b.scrollTop=b.scrollHeight};
+  const badge=()=>{const n=open?0:L.filter(c=>c.t>seen&&c.by!==NET.uid).length,i=fab.querySelector('i');i.textContent=n>9?'9+':n;i.classList.toggle('hide',!n)};
+  const bubble=c=>{const d=document.createElement('div');d.className='gcmb';d.innerHTML=`${avHtml(personOf(c.by),22)}<span><b>${esc(nameOf(c.by))}:</b> ${esc(c.txt)}</span>`;fly.appendChild(d);while(fly.children.length>3)fly.firstChild.remove();setTimeout(()=>d.remove(),6000)};
+  const load=async full=>{try{if(!full&&L.length){const t1=await API.listSub(P,'t',1);if(!t1.length||t1[0].id===L[L.length-1].id)return}
+      const n=(await API.listSub(P,'t',40)).sort((a,b)=>a.t-b.t),old=new Set(L.map(c=>c.id));
+      if(seen<0)seen=n.length?n[n.length-1].t:0;else if(!open)n.filter(c=>!old.has(c.id)&&c.by!==NET.uid).forEach(bubble);
+      L=n;list();badge()}catch(e){}};
+  const setOpen=o=>{open=o;sh.classList.toggle('hide',!o);if(o){seen=Date.now();list();setTimeout(()=>sh.querySelector('#gci').focus(),150)}badge()};
+  fab.onclick=()=>setOpen(!open);sh.querySelector('#gcx').onclick=()=>setOpen(false);
+  const send=async()=>{const inp=sh.querySelector('#gci'),txt=inp.value.trim();if(!txt)return;inp.value='';const c={by:NET.uid,t:Date.now(),txt},cid=c.t.toString(36)+Math.random().toString(36).slice(2,5);L.push(Object.assign({id:cid},c));list();
+    try{await API.put(P+'/'+cid,c)}catch(e){toast(/PERMISSION|permission/.test(e.message||'')?'Máy chủ chưa cho phép bình luận, cần cập nhật luật bảo mật':errMsg(e),4000);L=L.filter(x=>x.id!==cid);list()}};
+  sh.querySelector('#gcs').onclick=send;sh.querySelector('#gci').onkeydown=e=>{if(e.key==='Enter')send()};
+  load(true);const iv=setInterval(()=>{if(!v.isConnected){clearInterval(iv);fab.remove();fly.remove();sh.remove();return}if(document.visibilityState==='visible')load()},6000);
+  const mo=new MutationObserver(()=>{if(!v.isConnected){clearInterval(iv);fab.remove();fly.remove();sh.remove();mo.disconnect()}});mo.observe(document.body,{childList:true})}
 function drawGames(){const e=$('#game');if(!e)return;const inv=GM.filter(gInvited),act=GM.filter(g=>g.st!=='end'&&(g.pl||[]).includes(NET.uid)),done=[];
   const who=g=>(g.pl||[]).map(id=>`<span title="${esc(nameOf(id))}">${emOf(id)||'🙂'}</span>`).join(' ');
   const row=(g,btn)=>`<div class="grow2"><div class="gi">${GT[g.type].e}</div><div class="grow" style="min-width:0"><b>${gTitle(g)}</b><div class="mut" style="font-size:13px">${who(g)} · ${g.st==='wait'?'đang chờ người vào':g.st==='end'?(g.win?'🏆 '+esc(nameOf(g.win))+' thắng':'đã kết thúc'):g.type==='ks'?'đang chơi':myTurn(g)?'<b style="color:var(--pk)">đến lượt bạn</b>':'lượt của '+esc(nameOf(g.pl[g.turn||0]))} · ${ago(g.upd)}</div></div>${btn}</div>`;
@@ -1396,7 +1423,7 @@ async function openGame(id){const old=$('.gm');if(old)old.remove();const v=docum
   const doMove=(k,bot)=>{if(busy||!g.rolled||!(bot===true?BOTS[g.pl[g.turn]]:myTurn(g)))return;const who=g.pl[g.turn];const m=ludoMoves(g,g.d).find(x=>x.k===k);if(!m)return;const {P,kicked}=ludoApply(g,k,m.t),s=g.turn;
     const done=[0,1,2,3].every(j=>P[s*4+j]===56);const o={pos:P,rolled:false,msg:kicked?'💥 '+actor()+' đá '+kicked+' quân về chuồng!':m.t===56?'🏁 '+actor()+' đưa 1 quân về đích':''};
     if(done){o.st='end';o.win=who}else o.turn=nextTurn(g.d,g.d===6||kicked>0);save(o)};
-  v.innerHTML='<div class="empty">Đang tải…</div>';await load();timer=setInterval(()=>{if(!v.isConnected)return clearInterval(timer);if(document.visibilityState==='visible')if((++pk)%(g&&g.type==='ks'?2:3))return;load()},800)}
+  v.innerHTML='<div class="empty">Đang tải…</div>';await load();if(!isLocal(id))gcmInit(v,id);timer=setInterval(()=>{if(!v.isConnected)return clearInterval(timer);if(document.visibilityState==='visible')if((++pk)%(g&&g.type==='ks'?2:3))return;load()},800)}
 // ===== Cờ tỉ phú: bàn 24 ô các tỉnh thành Việt Nam =====
 const TGC=['#92400e','#a3a3a3','#38bdf8','#ec4899','#f97316','#ef4444','#eab308','#84cc16','#22c55e','#14b8a6','#7c3aed','#1d4ed8'];
 const TCOL=['#ef4444','#22c55e','#eab308','#3b82f6'];
@@ -1691,7 +1718,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 73${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 74${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

@@ -1727,7 +1727,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 75${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 76${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};
@@ -1818,7 +1818,7 @@ const TD=[
       ['',83,74,24,'axe','',['hs','bd','n1'],'Thùng gỗ đóng đinh chặt, cần thứ gì đó để phá ván',{h:25}],
       ['🗃️',36,51.5,7,'#','',['br','saw'],'Hộp gỗ có khoá số 3 chữ số']]},
  {n:'Tàu cướp biển',img:'td-n13.jpg',bg:'#7c2d12',calm:1,cb:[['rod','mag','mr']],d:[],
-  it:[['an','⚓','Mỏ neo nhỏ',93,63,5,'h',.9],['pr','🦜','Con vẹt',86,25,6,'e'],['rod','🎣','Cần câu',8,58,8,'t',1,-10],
+  it:[['an','⚓','Mỏ neo nhỏ',93,63,5,'h',.9],['pr','🦜','Con vẹt',86,25,8,'e'],['rod','🎣','Cần câu',8,58,8,'t',1,-10],
       ['fish','🐟','Cá khô',25,62,5.5,'y'],['pk','⛏️','Cuốc chim',15,88,6,'y'],['mag','🧲','Nam châm',17,74,5.5,'y'],['bt','🍾','Thư trong chai',29,77,6,'x',1,30],
       ['mr','🧲','Cần câu nam châm',0,0,6,'z'],['ky','🔑','Chìa khoá rương',69,58,5,'y'],['wh','☸️','Bánh lái nhỏ',79,59,5.5,'x'],
       ['bag','💰','Túi vàng',71,66,6,'x'],['sw','🗡️','Thanh kiếm',80,64,6,'x',1,-30],['gm','💎','Viên ngọc',76,71,5,'x'],['fl','🏴‍☠️','Lá cờ cướp biển',75,60,6,'x']],
@@ -1843,7 +1843,7 @@ const TD=[
       ['wb','🪣','Xô nước',13,31,6,'y'],['be','🐝','Ong mật',57,38,5,'x'],['qn','📝','Giấy ghi thứ tự',45,52,4.5,'Q'],
       ['cc','🌵','Cây xương rồng',70,73,6,'x'],['rg','💍','Nhẫn vàng',78,73,4.5,'x'],['gl','🧤','Đôi găng tay',80,84,6,'x']],
   sp:[['',20,78,13,'sc','',['bk','sb'],'Bao hạt giống buộc dây chặt quá',{h:15}],['',12,25,9,'bk','',['wb'],'Vòi nước đây rồi, nhưng lấy gì để hứng nước?',{h:8}],
-      ['',50,43,13,'wb','🌷',['be','qn'],'Nụ hoa khô héo, chưa chịu nở',{h:24,os:12}],['',84,88,28,'','',['gl'],'',{h:18}]]},
+      ['',50,43,13,'wb','🌷',['be','qn'],'Nụ hoa khô héo, chưa chịu nở',{h:24,os:18}],['',84,88,28,'','',['gl'],'',{h:18}]]},
  {n:'Hậu trường rạp xiếc',img:'td-n16.jpg',bg:'#7f1d1d',calm:1,d:[],
   it:[['jk','🃏','Lá bài hề',36,86,4.5,'h',.9,-15],['tg','🎯','Bia phi tiêu',64,63,6,'e'],['hm','🔨','Cái búa',47,93,6,'t',1,-30],
       ['lad','🪜','Cái thang',17,77,8,'y'],['cn','🤡','Mặt nạ hề',8,77,6,'x'],['lan','🏮','Đèn lồng',12,31,6,'y'],
@@ -1852,10 +1852,10 @@ const TD=[
   sp:[['',11,80,22,'hm','',['lad','cn'],'Thùng gỗ đóng đinh kín',{h:16}],['',12,19,11,'lad','',['lan'],'Đèn lồng treo cao quá, không với tới',{h:18}],
       ['dark',80,44,36,'lan','',['ht','ky'],'Góc này tối om, chẳng thấy gì'],
       ['',89,54,14,'ky','',['dr','bl'],'Rương bị khoá',{h:12}],['',40,51,12,'','',['ban'],'',{h:10}],
-      ['🐒',28,33,9,'ban','🙈',['tk','wd'],'Chú khỉ ôm khư khư mấy món đồ. Hình như nó thích ăn gì đó',{os:6}]]},
+      ['🐒',28,32,11,'ban','🙈',['tk','wd'],'Chú khỉ ôm khư khư mấy món đồ. Hình như nó thích ăn gì đó',{os:6}]]},
  {n:'Đền cổ trong rừng',img:'td-n17.jpg',bg:'#1a2e05',calm:1,code:4,
   sq:{s:[['🌙',30,17,5],['☀️',63,17,5],['⭐',12,28,5],['🌊',68,31,5]],rv:['gm','cw'],h:'Các ký hiệu khắc trên tường tắt ngấm, sai thứ tự rồi'},d:[],
-  it:[['lz','🦎','Con thằn lằn',93,62,4,'h',.85,-30],['pr','🦜','Con vẹt rừng',88,8,6,'e'],
+  it:[['lz','🦎','Con thằn lằn',93,62,4,'h',.85,-30],['pr','🦜','Con vẹt rừng',88,9,7.5,'e'],
       ['axe','🪓','Cái rìu',23,36,5.5,'y',1,-20],['lamp','🪔','Đèn dầu',45,46,5.5,'y'],['st','🗿','Tượng đá nhỏ',56,48,6,'x'],
       ['pk','⛏️','Cuốc chim',84,35,6,'y'],['n1','📝','Mảnh giấy mật mã 1',79,28,4.5,'C',1,0,0],['n2','📝','Mảnh giấy mật mã 2',77,84,4.5,'C',1,0,1],['bt','🪲','Bọ hung vàng',87,86,5,'x'],
       ['mk','👺','Mặt nạ cổ',46,60,6,'x'],['bl','🔔','Chuông đồng',56,60,5.5,'x'],['qn','📝','Giấy ghi ký hiệu',51,65,4.5,'Q'],
@@ -1893,10 +1893,15 @@ const TD=[
       ['',58,66,10,'#','',['vs','ob','gm'],'Hộp báu nhỏ có khoá 4 số. Mật mã chia làm 2 mảnh',{h:7}],
       ['🐉',50,40,26,'fl','🐉💤',['egg','sw','cw'],'Rồng đang thức canh kho báu. Thử ru nó ngủ xem',{os:14}]]}
 ];
-const TDI={'✂️':'dc-keo','🔑':'dc-chia','🪜':'dc-thang','⛏️':'dc-cuoc','🔦':'dc-den','🧹':'dc-choi','🎣':'dc-cancau','🍖':'dc-thit','🔨':'dc-bua','🧽':'dc-mutbot','🪛':'dc-tuavit','🪣':'dc-xo','🪺':'cg-tochim','🧸':'d-gaubong','🧦':'d-tat','📕':'d-sach','⏰':'d-dongho','🧩':'d-manhghep','🪀':'d-yoyo','🥄':'d-thia','🍳':'d-chao','🧂':'d-muoi','🥚':'d-trung','🥕':'d-carot','🍪':'d-banhquy','🌻':'d-huongduong','🐞':'d-boruoa','🐌':'d-ocsen','🦋':'d-buom','2:🪺':'d-tochim','2:💍':'d-nhan','📻':'d-dai','🎩':'d-mu','🧶':'d-len','🕯️':'d-nen','🗝️':'d-chiacokhoa','🪆':'d-bupbe','🐚':'d-vocso','🦀':'d-cua','🕶️':'d-kinh','🩴':'d-dep','🐠':'d-ca','💎':'d-kimcuong','🦴':'d-xuong','6:🏺':'d-binhgom','🍄':'d-nam','💰':'d-tuivang','📿':'d-chuoihat','6:👑':'d-vuongmien1','🍉':'d-duahau','🐓':'d-ga','🌽':'d-ngo','🥭':'d-xoai','🍍':'d-dua','🪙':'d-dongxu','8:📜':'d-cuongiay','🪶':'d-longvu','📘':'d-sachxanh','🧭':'d-labam','⌛':'d-dongho-cat','🔭':'d-kinhtv','🗡️':'d-kiem','🛡️':'d-khien','🏆':'d-cup','9:💍':'d-nhando','9:📜':'d-bando','9:👑':'d-vuongmien2','🌍':'d-diacau','✏️':'d-butchi','🧮':'d-bantinh','📐':'d-thuoc','📎':'d-kep','🔬':'d-kinhhv'};
-const TDS={'🎁':'cg-hopqua','🔒':'cg-khoa','🪺':'cg-tochim','🪨':'cg-da','🕸️':'cg-mangnhen','🕳️':'cg-honuoc','🐕':'cg-cho','🏺':'cg-hu','🖼️':'cg-tranh','🔩':'cg-thonggio','🔥':'cg-lua'};
-const TDO={'🎁':1,'🔒':1,'🪨':1,'🐕':1,'🏺':1,'🖼️':1,'🔩':1,'🔥':1};
-const tdIm=(e,M,li)=>{const f=M[li+':'+e]||M[e];return f?`<img class="tdim" src="assets/${f}.png" alt="${e}">`:e};
+const TDI={'✂️':'dc-keo','🔑':'dc-chia','🪜':'dc-thang','⛏️':'dc-cuoc','🔦':'dc-den','🧹':'dc-choi','🎣':'dc-cancau','🍖':'dc-thit','🔨':'dc-bua','🧽':'dc-mutbot','🪛':'dc-tuavit','🪣':'dc-xo','🪺':'cg-tochim','🧸':'d-gaubong','🧦':'d-tat','📕':'d-sach','⏰':'d-dongho','🧩':'d-manhghep','🪀':'d-yoyo','🥄':'d-thia','🍳':'d-chao','🧂':'d-muoi','🥚':'d-trung','🥕':'d-carot','🍪':'d-banhquy','🌻':'d-huongduong','🐞':'d-boruoa','🐌':'d-ocsen','🦋':'d-buom','2:🪺':'d-tochim','2:💍':'d-nhan','📻':'d-dai','🎩':'d-mu','🧶':'d-len','🕯️':'d-nen','🗝️':'d-chiacokhoa','🪆':'d-bupbe','🐚':'d-vocso','🦀':'d-cua','🕶️':'d-kinh','🩴':'d-dep','🐠':'d-ca','💎':'d-kimcuong','🦴':'d-xuong','6:🏺':'d-binhgom','🍄':'d-nam','💰':'d-tuivang','📿':'d-chuoihat','6:👑':'d-vuongmien1','🍉':'d-duahau','🐓':'d-ga','🌽':'d-ngo','🥭':'d-xoai','🍍':'d-dua','🪙':'d-dongxu','8:📜':'d-cuongiay','🪶':'d-longvu','📘':'d-sachxanh','🧭':'d-labam','⌛':'d-dongho-cat','🔭':'d-kinhtv','🗡️':'d-kiem','🛡️':'d-khien','🏆':'d-cup','9:💍':'d-nhando','9:📜':'d-bando','9:👑':'d-vuongmien2','🌍':'d-diacau','✏️':'d-butchi','🧮':'d-bantinh','📐':'d-thuoc','📎':'d-kep','🔬':'d-kinhhv',
+ '🔍':'n-kinhlup','🗜️':'n-kim','🛢️':'n-binhdau','🪓':'n-riu','🐟':'n-cakho','🧲':'n-namcham','🔧':'n-cole','🏮':'n-denlong','🍌':'n-chuoi','🪔':'n-dendau','☂️':'n-o','🪢':'n-day','🦐':'n-tom','🎷':'n-ken','📝':'n-giay','🌷':'n-hoano',
+ '📷':'d-mayanh','🎺':'d-ken','🎻':'d-violin','💌':'d-thu','⌚':'d-dhquyt','🎐':'d-chuonggio','🎎':'d-bupbenhat','⚓':'d-neo','🦜':'d-vet','🍾':'d-chai','☸️':'d-banhlai','🏴‍☠️':'d-co','📏':'d-thuocgo','🧰':'d-hopdonghe','⚙️':'d-banhrang','🎠':'d-ngugo','🐦':'d-chimgo','🐻':'d-gaugo','🪚':'d-cua2','🦎':'d-thanlan','🗿':'d-tuongda','🪲':'d-bohung','👺':'d-matna',
+ '🧪':'d-ongnghiem','⚗️':'d-binhcc','🌡️':'d-nhietke','🔋':'d-pin','🤖':'d-robot','🧫':'d-dia','🧬':'d-adn','🥽':'d-kinhbh','🍓':'d-dau','🐝':'d-ong','🌵':'d-xuongrong','🧤':'d-gangtay','🃏':'d-labai','🎯':'d-bia','🤡':'d-matnahe','🥁':'d-trong','🎟️':'d-ve','🪄':'d-duaphep','📰':'d-bao','🧣':'d-khan','☕':'d-tachtra','🥖':'d-banhmi','🔮':'d-quacau','🐢':'d-rua','🔱':'d-dinhba','🦪':'d-trai',
+ '15:🔔':'d-chuongvang','16:🔔':'d-chuongdong','19:🥚':'d-trungrong','16:👑':'d-vuongmien1','18:👑':'d-vuongmien2','19:👑':'d-vuongmien1','14:💍':'d-nhan','19:💍':'d-nhando','10:🏺':'d-binhgom','18:🏺':'d-binhgom','19:🏺':'d-binhgom',
+ '12:#mr':'n-cancaunc','18:#mr':'n-daync','14:#bk':'n-xorong'};
+const TDS={'🎁':'cg-hopqua','🔒':'cg-khoa','🪺':'cg-tochim','🪨':'cg-da','🕸️':'cg-mangnhen','🕳️':'cg-honuoc','🐕':'cg-cho','🏺':'cg-hu','🖼️':'cg-tranh','🔩':'cg-thonggio','🔥':'cg-lua','⛓️':'cg-xich','🗃️':'cg-hopso','🐈':'cg-meo','🐒':'cg-khi','🐙':'cg-bachtuoc','🐉':'cg-rong'};
+const TDO={'🐈':1,'🐒':1,'🐙':1,'🐉':1,'🎁':1,'🔒':1,'🪨':1,'🐕':1,'🏺':1,'🖼️':1,'🔩':1,'🔥':1};
+const tdIm=(e,M,li,id)=>{const f=(id&&M[li+':#'+id])||M[li+':'+e]||M[e];return f?`<img class="tdim" src="assets/${f}.png" alt="${e}">`:e};
 const tdStar=n=>[0,1,2].map(i=>`<img class="tdsr${i<n?'':' off'}" src="assets/gd-sao.png" alt="${i<n?'⭐':'☆'}">`).join('');
 const TDF=[['số bánh xe của chiếc thuyền','số chân của con rắn'],['số vòi của con voi','số mặt trời trên bầu trời'],['số cánh của con chim','số chân của con gà'],['số cạnh của hình tam giác','số bánh của chiếc xe ba bánh'],['số chân của con mèo','số mùa trong một năm'],['số ngón tay trên một bàn tay','số cánh của ngôi sao ⭐'],['số chân của con kiến','số mặt của con xúc xắc'],['số ngày trong một tuần','số màu của cầu vồng'],['số chân của con nhện','số tay của con bạch tuộc'],['số lớn nhất có một chữ số','kết quả của 3 nhân 3']];
 const tdShuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
@@ -1920,18 +1925,18 @@ function openTd(){const old=$('.tdv');if(old)old.remove();const v=document.creat
       <div class="tdbag"><img class="tdbi" src="assets/gd-balo.png" alt="🎒"><div id="tdbag"></div><small id="tdsel">Túi đồ trống</small><img class="tdcat" id="tdcat" src="assets/td-meo-buon.png" alt="😿"></div>
       <div class="tdtg" id="tdtg"></div>`;
     const st=v.querySelector('#tdst'),fit=()=>{st.style.fontSize=st.clientWidth/100+'px'};fit();new ResizeObserver(fit).observe(st);
-    const drawIt=()=>{v.querySelector('#tdit').innerHTML=Object.values(IT).filter(t=>t.show&&!t.got).map(t=>`<span class="tdi${t.k==='h'?' hd':''}${t.nw?' nw':''}" data-i="${t.id}" style="${pos(t.x,t.y)};font-size:${t.s}em;--r:${t.r}deg;opacity:${t.o}">${tdIm(t.e,TDI,li)}</span>`).join('');
+    const drawIt=()=>{v.querySelector('#tdit').innerHTML=Object.values(IT).filter(t=>t.show&&!t.got).map(t=>`<span class="tdi${t.k==='h'?' hd':''}${t.nw?' nw':''}" data-i="${t.id}" style="${pos(t.x,t.y)};font-size:${t.s}em;--r:${t.r}deg;opacity:${t.o}">${tdIm(t.e,TDI,li,t.id)}</span>`).join('');
       v.querySelectorAll('[data-i]').forEach(e=>e.onclick=ev=>{ev.stopPropagation();take(IT[e.dataset.i],e)})};
     const hs=s=>{const w=s.s,h=s.o.h||s.s;return`${pos(s.x,s.y)};width:${w}em;height:${h}em;${calm?`background-image:url(assets/${L.img});background-size:100.71em 125em;background-position:${(-.354-(s.x-w/2)).toFixed(2)}em ${(-(s.y*1.25-h/2)).toFixed(2)}em`:''}`};
-    const drawSp=()=>{v.querySelector('#tdsp').innerHTML=SP.map(s=>s.e==='dark'?`<div class="tdk${s.op?' op':''}" data-s="${s.j}" style="${pos(s.x,s.y)};width:${s.s}%;"></div>`:s.e===''?`<div class="tdh${s.op?' op':''}" data-s="${s.j}" style="${hs(s)}"></div>${s.op&&s.oe?`<span class="tdp op" style="${pos(s.x,s.y)};font-size:${s.o.os||6}em">${s.oe}</span>`:''}`:(s.op&&!s.oe&&!TDO[s.e])?'':`<span class="tdp${s.op?' op':''}${s.e==='🖼️'&&!s.op&&!TDS[s.e]?' dusty':''}" data-s="${s.j}" style="${pos(s.x,s.y)};font-size:${s.op&&!TDO[s.e]?(s.o.os||s.s*.7):s.s}em">${s.op?(TDO[s.e]?`<img class="tdim" src="assets/${TDS[s.e]}-mo.png" alt="">`:s.oe):tdIm(s.e,TDS)}</span>`).join('')
+    const drawSp=()=>{v.querySelector('#tdsp').innerHTML=SP.map(s=>s.e==='dark'?`<div class="tdk${s.op?' op':''}" data-s="${s.j}" style="${pos(s.x,s.y)};width:${s.s}%;"></div>`:s.e===''?`<div class="tdh${s.op?' op':''}" data-s="${s.j}" style="${hs(s)}"></div>${s.op&&s.oe?`<span class="tdp op" style="${pos(s.x,s.y)};font-size:${s.o.os||6}em">${tdIm(s.oe,TDI,li)}</span>`:''}`:(s.op&&!s.oe&&!TDO[s.e])?'':`<span class="tdp${s.op?' op':''}${s.e==='🖼️'&&!s.op&&!TDS[s.e]?' dusty':''}" data-s="${s.j}" style="${pos(s.x,s.y)};font-size:${s.op&&!TDO[s.e]?(s.o.os||s.s*.7):s.s}em">${s.op?(TDO[s.e]?`<img class="tdim" src="assets/${TDS[s.e]}-mo.png" alt="">`:s.oe):tdIm(s.e,TDS)}</span>`).join('')
         +(L.sq?L.sq.s.map((q,i)=>`<span class="tdq${sqDone?' op':''}${!sqDone&&ord.slice(0,sqs).includes(i)?' on':''}" data-q="${i}" style="${pos(q[1],q[2])};font-size:${q[3]||6}em">${q[0]}</span>`).join(''):'');
       v.querySelectorAll('[data-s]').forEach(e=>e.onclick=ev=>{ev.stopPropagation();useSp(SP[+e.dataset.s])});
       v.querySelectorAll('[data-q]').forEach(e=>e.onclick=ev=>{ev.stopPropagation();tapQ(+e.dataset.q)})};
-    const drawTg=()=>{v.querySelector('#tdtg').innerHTML=tg.map(t=>`<div class="${t.got?'ok':''}"><span>${tdIm(t.e,TDI,li)}</span><small>${esc(t.n)}</small></div>`).join('');
+    const drawTg=()=>{v.querySelector('#tdtg').innerHTML=tg.map(t=>`<div class="${t.got?'ok':''}"><span>${tdIm(t.e,TDI,li,t.id)}</span><small>${esc(t.n)}</small></div>`).join('');
       const need=SP.filter(s=>!s.op).map(s=>s.tool);(L.cb||[]).forEach(c=>{if(!IT[c[2]].made&&need.includes(c[2]))need.push(c[0],c[1])});
       if(need.includes('#'))cN.forEach(t=>need.push(t.id));if(L.sq&&!sqDone)qN.forEach(t=>need.push(t.id));
       bag=bag.filter(id=>need.includes(id));if(sel&&!bag.includes(sel))sel='';
-      v.querySelector('#tdbag').innerHTML=bag.map(id=>`<button class="${sel===id?'on':''}${isN(IT[id])?' nt':''}" data-b="${id}">${tdIm(IT[id].e,TDI,li)}</button>`).join('');
+      v.querySelector('#tdbag').innerHTML=bag.map(id=>`<button class="${sel===id?'on':''}${isN(IT[id])?' nt':''}" data-b="${id}">${tdIm(IT[id].e,TDI,li,id)}</button>`).join('');
       v.querySelector('#tdsel').textContent=sel?'Đang cầm '+IT[sel].n.toLowerCase()+(L.cb?', chạm chỗ cần dùng hoặc chạm dụng cụ khác để ghép':', chạm vào chỗ cần dùng'):bag.length?'Chạm vào dụng cụ để cầm lên':'Túi đồ trống';
       v.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{const id=b.dataset.b;if(isN(IT[id]))return note(IT[id]);
         const c=sel&&sel!==id&&(L.cb||[]).find(c=>(c[0]===sel&&c[1]===id)||(c[1]===sel&&c[0]===id));

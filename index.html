@@ -655,7 +655,7 @@ function renderSetup(step){
 function errMsg(e){const m=String(e&&e.message||e);
   const AE={EMAIL_EXISTS:'Tên đăng nhập này đã có người dùng',INVALID_LOGIN_CREDENTIALS:'Sai tên đăng nhập hoặc mật khẩu',EMAIL_NOT_FOUND:'Sai tên đăng nhập hoặc mật khẩu',INVALID_PASSWORD:'Sai tên đăng nhập hoặc mật khẩu',
     WEAK_PASSWORD:'Mật khẩu ít nhất 6 ký tự',OPERATION_NOT_ALLOWED:'Firebase chưa bật đăng nhập Email/Password',TOO_MANY_ATTEMPTS_TRY_LATER:'Thử sai nhiều quá, đợi một lúc nhé',NOAUTH:'Bạn cần đăng nhập lại',SESSION_EXPIRED:'Phiên đăng nhập hết hạn, hãy đăng nhập lại',CREDENTIAL_TOO_OLD_LOGIN_AGAIN:'Hãy đăng nhập lại rồi thử'};
-  for(const k in AE)if(m.startsWith(k))return AE[k];if(/PERMISSION|permission/.test(m))return'Máy chủ chưa cho phép. Cần dán luật bảo mật Firestore (xem hướng dẫn).';if(/offline|Failed to fetch|network|timeout|aborted/i.test(m))return'Không có mạng, thử lại sau nhé';return m}
+  for(const k in AE)if(m.startsWith(k))return AE[k];if(/Quota exceeded|RESOURCE_EXHAUSTED/i.test(m))return'Máy chủ miễn phí đã dùng hết lượt của hôm nay, sẽ tự mở lại lúc 15:00 (giờ VN)';if(/PERMISSION|permission/.test(m))return'Máy chủ chưa cho phép. Cần dán luật bảo mật Firestore (xem hướng dẫn).';if(/offline|Failed to fetch|network|timeout|aborted/i.test(m))return'Không có mạng, thử lại sau nhé';return m}
 async function shareInvite(){const u=inviteLink(),t='Vào nhóm “'+gName()+'” trên Everything nhé 💞 Mã: '+fmtCode(S.code);
   if(navigator.share){try{await navigator.share({title:'Everything',text:t,url:u});return}catch(e){if(e&&e.name==='AbortError')return}}copyInvite()}
 async function copyInvite(){try{await navigator.clipboard.writeText(inviteLink());toast('Đã sao chép link')}catch(e){prompt('Sao chép link này:',inviteLink())}}
@@ -704,7 +704,7 @@ function renderMain(){
   map.on('contextmenu',e=>{if(!S.pick)dropFlag(e.latlng.lat,e.latlng.lng)});initLongPress();
   drawShare();drawPeople();drawPlacesOnMap();
   initBat();startGeo();refresh();loadPlaces();
-  clearInterval(S.iv);S.iv=setInterval(()=>{if(document.visibilityState==='visible')refresh()},15e3);
+  clearInterval(S.iv);S.iv=setInterval(()=>{if(document.visibilityState==='visible')refresh()},30e3);
   clearInterval(S.iv2);S.iv2=setInterval(()=>{drawPeople()},30e3);
 }
 const SWT=['map','pl','chat','game'];
@@ -851,9 +851,9 @@ async function refresh(){if(!S.code)return;try{const uid=await API.uid();const [
     if(!c||!(c.members||[]).includes(uid)){return kicked()}
     try{const LV=await API.listLv(S.code);for(const x of LV){const l=locs.find(y=>y.id===x.o);if(l&&(x.t||0)>=(l.t||0))LVK.forEach(k=>{if(x[k]!==undefined)l[k]=x[k]})}}catch(e){}
     S.couple=c;S.locs=locs;S.me=locs.find(l=>l.id===uid)||S.me;
-    loadPhotos();loadChats();loadGames();
+    const rn=(S.rn=(S.rn||0)+1);if(rn%4===1)loadPhotos();if(rn%2===1||S.tab==='chat')loadChats();if(rn%2===1||S.tab==='game')loadGames();
     const P=myPing();if(P.t&&P.t>(LS.get('pingdone',0))&&S.sharing){LS.set('pingdone',P.t);locateOnce()}
-  }catch(e){if(/SESSION_EXPIRED|NOAUTH|USER_NOT_FOUND|TOKEN_EXPIRED|USER_DISABLED/.test(e.message))return forceOut();if(e.status===403){S.err='máy chủ chưa cho phép';drawShare()}}
+  }catch(e){if(/SESSION_EXPIRED|NOAUTH|USER_NOT_FOUND|TOKEN_EXPIRED|USER_DISABLED/.test(e.message))return forceOut();if(e.status===403){S.err='máy chủ chưa cho phép';drawShare()}if(e.status===429||/Quota exceeded/i.test(e.message)){toast(errMsg(e),6000)}}
   ensureEm();drawPeople();drawMarkers();drawPing();if(S.tab==='map'&&!(map&&map._popup&&map.hasLayer(map._popup)))drawPlacesOnMap()}
 function kicked(){toast('Bạn không còn ở trong nhóm này',4000);API.saveProfile({code:''}).catch(()=>{});leaveLocal()}
 function logout(){if(!confirm('Đăng xuất khỏi máy này? Đăng nhập lại bằng tên đăng nhập và mật khẩu là vào lại nhóm.'))return;doLogout()}
@@ -1053,7 +1053,7 @@ async function openViewer(uid,start){await loadPhotos();const L=phOf(uid),p=pers
         v.querySelectorAll('[data-e]').forEach(b=>b.onclick=async()=>{const e=b.dataset.e;try{if(e===my)await API.del(P+'/re/'+NET.uid);else{burst(v.querySelector('.vimg'),e,9);await API.put(P+'/re/'+NET.uid,{e,t:Date.now()})}loadSocial()}catch(er){toast(errMsg(er))}});
         C.sort((a,b)=>a.t-b.t);v.querySelector('#vcm').innerHTML=C.map(c=>`<div class="cm">${avHtml(personOf(c.by),26)}<div class="grow"><b>${esc(nameOf(c.by))}</b> <span class="vs">${ago(c.t)}</span><div>${esc(c.txt)}</div></div>${c.by===NET.uid?`<button class="cmx" data-c="${c.id}">✕</button>`:''}</div>`).join('');
         v.querySelectorAll('[data-c]').forEach(b=>b.onclick=async()=>{try{await API.del(P+'/cmts/'+b.dataset.c);loadSocial()}catch(er){toast(errMsg(er))}})};
-    loadSocial();clearInterval(v._pl);v._pl=setInterval(()=>{if(!v.isConnected)return clearInterval(v._pl);if(document.visibilityState==='visible')loadSocial()},5000);
+    loadSocial();clearInterval(v._pl);v._pl=setInterval(()=>{if(!v.isConnected)return clearInterval(v._pl);if(document.visibilityState==='visible')loadSocial()},15000);
     const sendC=async()=>{const t=v.querySelector('#vci').value.trim();if(!t)return;v.querySelector('#vci').value='';try{await API.put(P+'/cmts/'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),{by:NET.uid,t:Date.now(),txt:t});loadSocial()}catch(e){toast(errMsg(e))}};
     v.querySelector('#vcs').onclick=sendC;v.querySelector('#vci').onkeydown=e=>{if(e.key==='Enter')sendC()};
     if(!mine)v.querySelector('#vdm').onclick=()=>{openConv(uid,{ph:x.id,phby:uid})};
@@ -1096,13 +1096,13 @@ async function openConv(uid,quote){const p=personOf(uid),pid=pairId(uid),base=`$
     box.innerHTML=M.length?M.slice().reverse().map(m=>`<div class="bub ${m.by===NET.uid?'me':''}">${m.ph?`<div class="bph" data-ph="${m.ph}"></div>`:''}${esc(m.txt)}<span>${new Date(m.t).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})}</span></div>`).join(''):'<div class="vs2" style="text-align:center;padding:20px">Chưa có tin nhắn. Gửi lời chào nhé 👋</div>';
     box.querySelectorAll('[data-ph]').forEach(d=>phImg(d.dataset.ph).then(src=>{if(src)d.style.backgroundImage=`url('${src}')`;else d.textContent='(ảnh đã bị xoá hoặc ẩn)'}).catch(()=>{d.textContent='(ảnh đã bị xoá hoặc ẩn)'}));
     if(atEnd||!draw.done){box.scrollTop=box.scrollHeight;draw.done=1}};
-  const load=async()=>{try{const n=await API.listSub(base+'/msgs','t',80);const ch=n.length!==M.length||(n[0]&&M[0]&&n[0].id!==M[0].id);M=n;if(ch||!draw.done)draw();
+  const load=async()=>{try{if(draw.done&&M.length){const t1=await API.listSub(base+'/msgs','t',1);if(!t1.length||t1[0].id===M[0].id)return}const n=await API.listSub(base+'/msgs','t',80);const ch=n.length!==M.length||(n[0]&&M[0]&&n[0].id!==M[0].id);M=n;if(ch||!draw.done)draw();
       if(M[0]&&M[0].by!==NET.uid)API.put(base,{m:[NET.uid,uid].sort(),['r_'+NET.uid]:Date.now()},true).catch(()=>{})}catch(e){q('#cms').innerHTML=`<div class="vs2" style="padding:20px;text-align:center">${esc(errMsg(e))}</div>`}};
   const send=async()=>{const t=q('#ci').value.trim();if(!t&&!quote)return;q('#ci').value='';const o={by:NET.uid,t:Date.now(),txt:t};if(quote){o.ph=quote.ph}
     const id=o.t.toString(36)+Math.random().toString(36).slice(2,5);M.unshift(Object.assign({id},o));draw();q('#cms').scrollTop=1e9;quote=null;showQ();
     try{await API.put(base+'/msgs/'+id,o);await API.put(base,{m:[NET.uid,uid].sort(),lt:o.t,ltx:(o.ph?'📸 ':'')+(t||'Trả lời ảnh').slice(0,80),lb:NET.uid,['r_'+NET.uid]:o.t},true)}catch(e){toast(errMsg(e))}};
   q('#cs').onclick=send;q('#ci').onkeydown=e=>{if(e.key==='Enter')send()};
-  await load();timer=setInterval(()=>{if(!v.isConnected)return clearInterval(timer);if(document.visibilityState==='visible')load()},4000);setTimeout(()=>q('#ci').focus(),200)}
+  await load();timer=setInterval(()=>{if(!v.isConnected)return clearInterval(timer);if(document.visibilityState==='visible')load()},5000);setTimeout(()=>q('#ci').focus(),200)}
 window.openConv=openConv;
 
 // ===== Trò chơi: Cờ ca rô, Cờ cá ngựa =====
@@ -1365,7 +1365,7 @@ async function openGame(id){const old=$('.gm');if(old)old.remove();const v=docum
   const doMove=(k,bot)=>{if(busy||!g.rolled||!(bot===true?BOTS[g.pl[g.turn]]:myTurn(g)))return;const who=g.pl[g.turn];const m=ludoMoves(g,g.d).find(x=>x.k===k);if(!m)return;const {P,kicked}=ludoApply(g,k,m.t),s=g.turn;
     const done=[0,1,2,3].every(j=>P[s*4+j]===56);const o={pos:P,rolled:false,msg:kicked?'💥 '+actor()+' đá '+kicked+' quân về chuồng!':m.t===56?'🏁 '+actor()+' đưa 1 quân về đích':''};
     if(done){o.st='end';o.win=who}else o.turn=nextTurn(g.d,g.d===6||kicked>0);save(o)};
-  v.innerHTML='<div class="empty">Đang tải…</div>';await load();timer=setInterval(()=>{if(!v.isConnected)return clearInterval(timer);if(document.visibilityState==='visible')if(g&&g.type!=='ks'&&(++pk%2))return;load()},800)}
+  v.innerHTML='<div class="empty">Đang tải…</div>';await load();timer=setInterval(()=>{if(!v.isConnected)return clearInterval(timer);if(document.visibilityState==='visible')if((++pk)%(g&&g.type==='ks'?2:3))return;load()},800)}
 // ===== Cờ tỉ phú: bàn 24 ô các tỉnh thành Việt Nam =====
 const TGC=['#92400e','#a3a3a3','#38bdf8','#ec4899','#f97316','#ef4444','#eab308','#84cc16','#22c55e','#14b8a6','#7c3aed','#1d4ed8'];
 const TCOL=['#ef4444','#22c55e','#eab308','#3b82f6'];
@@ -1660,7 +1660,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 66${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 67${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

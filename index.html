@@ -200,7 +200,7 @@ ul.ck li{margin:4px 0}
 .tcen{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:radial-gradient(circle,rgba(255,255,255,.75),rgba(255,255,255,.25));border-radius:12px;margin:3px;padding:6px;text-align:center}
 .tlogo{font-size:clamp(14px,4.4vw,22px);color:#92400e;text-shadow:0 2px 0 #fff}.tlogo b{letter-spacing:1px}
 .tdice{display:flex;gap:8px}.tdice .pips{width:clamp(34px,10vw,52px);height:clamp(34px,10vw,52px);background:#fff;border-radius:10px;box-shadow:0 3px 0 #d1d5db,0 5px 8px rgba(0,0,0,.15);padding:6px}.tdice.roll .pips{animation:droll .35s infinite}.tdice .pips{box-sizing:border-box;gap:2px;padding:5px}.tdice .pips i{width:72%;height:72%}
-.tinfo{display:flex;gap:10px;font-size:clamp(11px,3.2vw,14px);color:#374151;flex-wrap:wrap;justify-content:center}.tinfo b{color:#0369a1}
+.tinfo{display:flex;gap:10px;font-size:clamp(11px,3.2vw,14px);color:#374151;flex-wrap:wrap;justify-content:center}.tinfo b{color:#0369a1}.tinfo{gap:5px 6px}.tinfo>span{background:rgba(255,255,255,.95);border-radius:999px;padding:3px 11px;font-weight:700;color:#1e293b;box-shadow:0 1px 4px rgba(15,23,42,.18);white-space:nowrap}.tlogo{text-shadow:0 2px 0 #fff,0 0 8px #fff,0 0 14px #fff}
 .tmsg{font-size:clamp(13px,3.9vw,17px);font-weight:700;line-height:1.3;background:#fff;border-radius:12px;padding:6px 12px;max-width:100%;color:#1f2937;box-shadow:0 1px 3px rgba(0,0,0,.1)}
 .ttk{position:absolute;width:4.6%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 50% 42%,#fff 0 46%,var(--c) 50%);border:2px solid #fff;display:grid;place-items:center;font-size:clamp(9px,2.8vw,16px);box-shadow:0 3px 0 color-mix(in srgb,var(--c) 60%,#000),0 4px 6px rgba(0,0,0,.3);z-index:4;transition:left .35s,top .35s;pointer-events:none}
 .ttk.hop{transition:left .14s ease-out,top .14s ease-out}.ttk.jp{animation:jp2 .15s ease-out}@keyframes jp2{50%{transform:translate(-50%,-80%) scale(1.15)}}
@@ -324,7 +324,7 @@ ul.ck li{margin:4px 0}
 .tt.thot{z-index:1;animation:thot 1.4s ease-in-out infinite;box-shadow:inset 0 0 0 2px #fde047,0 0 0 2px #facc15,0 0 14px 5px rgba(250,204,21,.9)}
 .tt.thot::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.75) 50%,transparent 70%);background-size:250% 100%;animation:tshine 2.2s linear infinite;pointer-events:none;z-index:1}
 @keyframes thot{50%{filter:brightness(1.25) saturate(1.2);box-shadow:inset 0 0 0 2px #fff7ae,0 0 0 3px #fde047,0 0 22px 9px rgba(250,204,21,1)}}@keyframes tshine{from{background-position:150% 0}to{background-position:-100% 0}}
-.tcen{background-image:linear-gradient(rgba(255,255,255,.3),rgba(255,255,255,.3)),url(assets/ty-giua.jpg);background-size:cover;background-position:center}
+.tcen{background-image:radial-gradient(circle,rgba(255,255,255,.82) 35%,rgba(255,255,255,.55)),url(assets/ty-giua.jpg);background-size:cover;background-position:center}
 .gm.ludo-on{background:url(assets/ludo-bg.jpg) center/cover no-repeat,var(--bgimg,url(assets/nen-xanh.jpg)) center/cover no-repeat,var(--bg)}
 .qa2{display:flex;gap:6px}.qa2 button{flex:1;text-align:center!important;padding:8px 4px!important;background:#eef2ff!important;color:#4f46e5!important}
 .qa{display:flex;flex-direction:column;gap:6px;margin-top:8px}
@@ -1764,7 +1764,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 80${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 81${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

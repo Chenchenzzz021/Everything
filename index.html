@@ -436,7 +436,8 @@ nav button b{position:relative}
 .tdp{z-index:3;cursor:pointer;filter:drop-shadow(0 .2em .2em rgba(0,0,0,.3))}.tdp.dusty{filter:grayscale(1) brightness(.55) sepia(.6) blur(.5px)}
 .tdk{z-index:3;aspect-ratio:1;border-radius:50%;background:radial-gradient(#000 45%,rgba(0,0,0,.85) 62%,transparent 72%);cursor:pointer;transition:opacity .8s}
 .tdk.op,.tdp.op{pointer-events:none;z-index:2}.tdk.op{opacity:0}
-.tdcat{font-size:36px;line-height:1;pointer-events:none;filter:drop-shadow(0 .05em .1em rgba(0,0,0,.4))}
+.tdim{height:1.15em;width:auto;display:block;pointer-events:none;-webkit-user-drag:none}.tdtg span .tdim{height:30px;margin:auto}.tdbag button .tdim{height:34px;margin:auto}.tdbi{height:46px}.tdb img{height:30px;display:block;margin:auto}.tdsr{height:18px;vertical-align:middle}.tdsr.off{filter:grayscale(1) brightness(.7);opacity:.45}.tdws .tdsr{height:46px}
+.tdcat{height:84px;margin:-34px -4px -8px 0;pointer-events:none;object-fit:contain;filter:drop-shadow(0 3px 4px rgba(0,0,0,.35));filter:drop-shadow(0 .05em .1em rgba(0,0,0,.4))}
 .tdfx{position:absolute;z-index:6;transform:translate(-50%,-50%);font-size:8em;pointer-events:none;animation:tdfx 1.2s ease-out forwards;white-space:nowrap;font-weight:800;color:#fff;text-shadow:0 2px 4px #000}
 @keyframes tdfx{to{transform:translate(-50%,-160%);opacity:0}}
 .tdmiss{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;border:3px solid rgba(255,255,255,.8);border-radius:50%;pointer-events:none;z-index:7;animation:tdms .5s ease-out forwards}@keyframes tdms{to{transform:scale(2);opacity:0}}
@@ -448,8 +449,8 @@ nav button b{position:relative}
 .tdtg{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:6px;width:100%;max-width:520px}
 .tdtg div{background:#334155;border-radius:12px;padding:4px;text-align:center;display:flex;flex-direction:column;align-items:center}.tdtg span{font-size:26px;filter:brightness(0) invert(.75);opacity:.6}.tdtg small{font-size:11px;opacity:.75;line-height:1.1}
 .tdtg div.ok{background:#16a34a}.tdtg div.ok span{filter:none;opacity:1}.tdtg div.ok small{opacity:1}
-.tdwin{position:fixed;inset:0;z-index:1900;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:20px}.tdwin>div{background:#fff;color:#1f2937;border-radius:24px;padding:20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;max-width:340px;width:100%;animation:tdnw .6s}
-.tdwc{font-size:72px;line-height:1}.tdwin b{font-size:22px}.tdws{font-size:34px;color:#f59e0b}
+.tdwin{position:fixed;inset:0;z-index:1900;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:20px}.tdwin>div{background:#fff;color:#1f2937;border-radius:24px;padding:20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;max-width:340px;width:100%;animation:tdpop .5s}@keyframes tdpop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.05)}}
+.tdwc{height:150px;margin-top:-70px;filter:drop-shadow(0 6px 8px rgba(0,0,0,.25))}.tdmc{height:110px;margin:-4px 0 -6px}.tdcat.jmp{animation:tdjmp .7s}@keyframes tdjmp{40%{transform:translateY(-14px) scale(1.08)}}.tdwin b{font-size:22px}.tdws{font-size:34px;color:#f59e0b}
 </style>
 </head>
 <body>
@@ -1689,7 +1690,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 69${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 71${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};
@@ -1771,33 +1772,38 @@ const TD=[
       ['bk','🪣','Cái xô nước',8,90,9,'t'],['br','🧹','Cái chổi',94,34,10,'t',.9,-15],['ky','🔑','Chìa khoá',50,12,6,'y'],['sr','📜','Bản đồ cổ',50,58,8,'x'],['cw','👑','Vương miện',30,86,8,'x']],
   sp:[['🕸️',50,12,15,'br','',['ky'],'Mạng nhện chằng chịt'],['🔥',50,60,16,'bk','💨',['sr'],'Lò sưởi đang cháy, nóng quá'],['🔒',30,86,9,'ky','🔓',['cw'],'Rương bị khoá']]}
 ];
+const TDI={'✂️':'dc-keo','🔑':'dc-chia','🪜':'dc-thang','⛏️':'dc-cuoc','🔦':'dc-den','🧹':'dc-choi','🎣':'dc-cancau','🍖':'dc-thit','🔨':'dc-bua','🧽':'dc-mutbot','🪛':'dc-tuavit','🪣':'dc-xo','🪺':'cg-tochim','🧸':'d-gaubong','🧦':'d-tat','📕':'d-sach','⏰':'d-dongho','🧩':'d-manhghep','🪀':'d-yoyo','🥄':'d-thia','🍳':'d-chao','🧂':'d-muoi','🥚':'d-trung','🥕':'d-carot','🍪':'d-banhquy','🌻':'d-huongduong','🐞':'d-boruoa','🐌':'d-ocsen','🦋':'d-buom','2:🪺':'d-tochim','2:💍':'d-nhan','📻':'d-dai','🎩':'d-mu','🧶':'d-len','🕯️':'d-nen','🗝️':'d-chiacokhoa','🪆':'d-bupbe','🐚':'d-vocso','🦀':'d-cua','🕶️':'d-kinh','🩴':'d-dep','🐠':'d-ca','💎':'d-kimcuong','🦴':'d-xuong','6:🏺':'d-binhgom','🍄':'d-nam','💰':'d-tuivang','📿':'d-chuoihat','6:👑':'d-vuongmien1','🍉':'d-duahau','🐓':'d-ga','🌽':'d-ngo','🥭':'d-xoai','🍍':'d-dua','🪙':'d-dongxu','8:📜':'d-cuongiay','🪶':'d-longvu','📘':'d-sachxanh','🧭':'d-labam','⌛':'d-dongho-cat','🔭':'d-kinhtv','🗡️':'d-kiem','🛡️':'d-khien','🏆':'d-cup','9:💍':'d-nhando','9:📜':'d-bando','9:👑':'d-vuongmien2'};
+const TDS={'🎁':'cg-hopqua','🔒':'cg-khoa','🪺':'cg-tochim','🪨':'cg-da','🕸️':'cg-mangnhen','🕳️':'cg-honuoc','🐕':'cg-cho','🏺':'cg-hu','🖼️':'cg-tranh','🔩':'cg-thonggio','🔥':'cg-lua'};
+const TDO={'🎁':1,'🔒':1,'🪨':1,'🐕':1,'🏺':1,'🖼️':1,'🔩':1,'🔥':1};
+const tdIm=(e,M,li)=>{const f=M[li+':'+e]||M[e];return f?`<img class="tdim" src="assets/${f}.png" alt="${e}">`:e};
+const tdStar=n=>[0,1,2].map(i=>`<img class="tdsr${i<n?'':' off'}" src="assets/gd-sao.png" alt="${i<n?'⭐':'☆'}">`).join('');
 const tdSave=o=>LS.set('td',Object.assign(LS.get('td',{u:0,s:{}}),o));
 function openTd(){const old=$('.tdv');if(old)old.remove();const v=document.createElement('div');v.className='tdv';document.body.appendChild(v);
   const menu=()=>{const P=LS.get('td',{u:0,s:{}});
     v.innerHTML=`<div class="tdtop"><button class="tdb" id="tdx">✕</button><b>🔍 Tìm đồ giải đố</b><span></span></div>
-      <div class="tdintro">Tìm đủ đồ trong mỗi màn để qua màn. Đồ khó tìm thì nhỏ và mờ. Có đồ bị giấu đi: nhặt dụng cụ cho vào túi 🎒, chọn dụng cụ rồi chạm đúng chỗ mới lấy ra được.</div>
-      <div class="tdlv">${TD.map((L,i)=>{const lk=i>P.u,st=P.s[i]||0;return`<button data-l="${i}" ${lk?'disabled':''}><i>${lk?'🔒':i+1}</i><b>${L.n}</b><span>${lk?'Chưa mở':st?'⭐'.repeat(st)+'☆'.repeat(3-st):'Chưa chơi'}</span></button>`}).join('')}</div>`;
+      <img class="tdmc" src="assets/td-meo-ngac.png" alt=""><div class="tdintro">Tìm đủ đồ trong mỗi màn để qua màn. Đồ khó tìm thì nhỏ và mờ. Có đồ bị giấu đi: nhặt dụng cụ cho vào túi 🎒, chọn dụng cụ rồi chạm đúng chỗ mới lấy ra được.</div>
+      <div class="tdlv">${TD.map((L,i)=>{const lk=i>P.u,st=P.s[i]||0;return`<button data-l="${i}" ${lk?'disabled':''}><i>${lk?'🔒':i+1}</i><b>${L.n}</b><span>${lk?'Chưa mở':st?tdStar(st):'Chưa chơi'}</span></button>`}).join('')}</div>`;
     v.querySelector('#tdx').onclick=()=>v.remove();v.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>play(+b.dataset.l))};
   const play=li=>{const L=TD[li],IT={},SP=L.sp.map((s,j)=>({j,e:s[0],x:s[1],y:s[2],s:s[3],tool:s[4],oe:s[5],rv:s[6],h:s[7],op:false}));
     L.it.forEach(a=>IT[a[0]]={id:a[0],e:a[1],n:a[2],x:a[3],y:a[4],s:a[5],k:a[6],o:a[7]==null?1:a[7],r:a[8]||0,got:false,show:a[6]!=='x'&&a[6]!=='y'});
     const tg=Object.values(IT).filter(t=>t.k==='e'||t.k==='h'||t.k==='x');let bag=[],sel='',hints=3,used=0;const t0=Date.now();
     const pos=(x,y)=>`left:${x}%;top:${y}%`;
-    v.innerHTML=`<div class="tdtop"><button class="tdb" id="tdm">☰</button><b>Màn ${li+1} · ${esc(L.n)}</b><button class="tdb" id="tdh">💡<small id="tdhn">3</small></button></div>
-      <div class="tdst" id="tdst" style="background:${L.img?`url(assets/${L.img}) center/cover no-repeat,`:''}${L.bg}">${L.d.map(d=>d[0][0]==='#'?`<div class="tdr" style="${pos(d[1],d[2])};width:${d[3]}%;height:${d[4]}%;background:${d[0]};border-radius:${d[5]}px"></div>`:`<span class="tdd" style="${pos(d[1],d[2])};font-size:${d[3]}em;--r:${d[4]||0}deg;opacity:${d[5]==null?1:d[5]}">${d[0]}</span>`).join('')}
+    v.innerHTML=`<div class="tdtop"><button class="tdb" id="tdm">☰</button><b>Màn ${li+1} · ${esc(L.n)}</b><button class="tdb" id="tdh"><img src="assets/gd-bongden.png" alt="💡"><small id="tdhn">3</small></button></div>
+      <div class="tdst" id="tdst" style="background:${L.img?`url(assets/${L.img}) center/cover no-repeat,`:''}${L.bg}">${L.d.map(d=>d[0][0]==='#'?`<div class="tdr" style="${pos(d[1],d[2])};width:${d[3]}%;height:${d[4]}%;background:${d[0]};border-radius:${d[5]}px"></div>`:`<span class="tdd" style="${pos(d[1],d[2])};font-size:${d[3]}em;--r:${d[4]||0}deg;opacity:${d[5]==null?1:d[5]}">${d[0]==='🕸️'||d[0]==='🪨'?tdIm(d[0],TDS):d[0]}</span>`).join('')}
         <div id="tdit"></div><div id="tdsp"></div></div>
-      <div class="tdbag"><span>🎒</span><div id="tdbag"></div><small id="tdsel">Túi đồ trống</small><div class="tdcat" id="tdcat">😿</div></div>
+      <div class="tdbag"><img class="tdbi" src="assets/gd-balo.png" alt="🎒"><div id="tdbag"></div><small id="tdsel">Túi đồ trống</small><img class="tdcat" id="tdcat" src="assets/td-meo-buon.png" alt="😿"></div>
       <div class="tdtg" id="tdtg"></div>`;
     const st=v.querySelector('#tdst'),fit=()=>{st.style.fontSize=st.clientWidth/100+'px'};fit();new ResizeObserver(fit).observe(st);
-    const drawIt=()=>{v.querySelector('#tdit').innerHTML=Object.values(IT).filter(t=>t.show&&!t.got).map(t=>`<span class="tdi${t.k==='h'?' hd':''}${t.nw?' nw':''}" data-i="${t.id}" style="${pos(t.x,t.y)};font-size:${t.s}em;--r:${t.r}deg;opacity:${t.o}">${t.e}</span>`).join('');
+    const drawIt=()=>{v.querySelector('#tdit').innerHTML=Object.values(IT).filter(t=>t.show&&!t.got).map(t=>`<span class="tdi${t.k==='h'?' hd':''}${t.nw?' nw':''}" data-i="${t.id}" style="${pos(t.x,t.y)};font-size:${t.s}em;--r:${t.r}deg;opacity:${t.o}">${tdIm(t.e,TDI,li)}</span>`).join('');
       v.querySelectorAll('[data-i]').forEach(e=>e.onclick=ev=>{ev.stopPropagation();take(IT[e.dataset.i],e)})};
-    const drawSp=()=>{v.querySelector('#tdsp').innerHTML=SP.map(s=>s.e==='dark'?`<div class="tdk${s.op?' op':''}" data-s="${s.j}" style="${pos(s.x,s.y)};width:${s.s}%;"></div>`:(s.op&&!s.oe)?'':`<span class="tdp${s.op?' op':''}${s.e==='🖼️'&&!s.op?' dusty':''}" data-s="${s.j}" style="${pos(s.x,s.y)};font-size:${s.op?s.s*.7:s.s}em">${s.op?s.oe:s.e}</span>`).join('');
+    const drawSp=()=>{v.querySelector('#tdsp').innerHTML=SP.map(s=>s.e==='dark'?`<div class="tdk${s.op?' op':''}" data-s="${s.j}" style="${pos(s.x,s.y)};width:${s.s}%;"></div>`:(s.op&&!s.oe&&!TDO[s.e])?'':`<span class="tdp${s.op?' op':''}${s.e==='🖼️'&&!s.op&&!TDS[s.e]?' dusty':''}" data-s="${s.j}" style="${pos(s.x,s.y)};font-size:${s.op&&!TDO[s.e]?s.s*.7:s.s}em">${s.op?(TDO[s.e]?`<img class="tdim" src="assets/${TDS[s.e]}-mo.png" alt="">`:s.oe):tdIm(s.e,TDS)}</span>`).join('');
       v.querySelectorAll('[data-s]').forEach(e=>e.onclick=ev=>{ev.stopPropagation();useSp(SP[+e.dataset.s])})};
-    const drawTg=()=>{v.querySelector('#tdtg').innerHTML=tg.map(t=>`<div class="${t.got?'ok':''}"><span>${t.e}</span><small>${esc(t.n)}</small></div>`).join('');
+    const drawTg=()=>{v.querySelector('#tdtg').innerHTML=tg.map(t=>`<div class="${t.got?'ok':''}"><span>${tdIm(t.e,TDI,li)}</span><small>${esc(t.n)}</small></div>`).join('');
       const need=SP.filter(s=>!s.op).map(s=>s.tool);bag=bag.filter(id=>need.includes(id));if(sel&&!bag.includes(sel))sel='';
-      v.querySelector('#tdbag').innerHTML=bag.map(id=>`<button class="${sel===id?'on':''}" data-b="${id}">${IT[id].e}</button>`).join('');
+      v.querySelector('#tdbag').innerHTML=bag.map(id=>`<button class="${sel===id?'on':''}" data-b="${id}">${tdIm(IT[id].e,TDI,li)}</button>`).join('');
       v.querySelector('#tdsel').textContent=sel?'Đang cầm '+IT[sel].n.toLowerCase()+', chạm vào chỗ cần dùng':bag.length?'Chạm vào dụng cụ để cầm lên':'Túi đồ trống';
       v.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{sel=sel===b.dataset.b?'':b.dataset.b;drawTg()});
-      const n=tg.filter(t=>t.got).length;v.querySelector('#tdcat').textContent=n===tg.length?'😸':n*2>=tg.length?'🙀':'😿'};
+      const n=tg.filter(t=>t.got).length;const cs='assets/td-meo-'+(n===tg.length?'vui':n*2>=tg.length?'ngac':'buon')+'.png',ci=v.querySelector('#tdcat');if(!ci.src.endsWith(cs)){ci.src=cs;ci.classList.remove('jmp');void ci.offsetWidth;ci.classList.add('jmp')}};
     const pop=(x,y,t)=>{const d=document.createElement('div');d.className='tdfx';d.textContent=t;d.style.left=x+'%';d.style.top=y+'%';st.appendChild(d);setTimeout(()=>d.remove(),1200)};
     const take=(t,el)=>{if(t.got)return;t.got=true;el.classList.add('got');
       if(t.k==='t'||t.k==='y'){bag.push(t.id);pop(t.x,t.y,'🎒 +'+t.e);toast('Nhặt được '+t.n.toLowerCase()+', đã cho vào túi 🎒',2200)}else pop(t.x,t.y,'✨');
@@ -1812,7 +1818,7 @@ function openTd(){const old=$('.tdv');if(old)old.remove();const v=document.creat
       if(!el)return;hints--;used++;v.querySelector('#tdhn').textContent=hints;el.classList.remove('hint');void el.offsetWidth;el.classList.add('hint');setTimeout(()=>el.classList.remove('hint'),3000)};
     const win=()=>{const stars=used===0?3:used<3?2:1,P=LS.get('td',{u:0,s:{}});P.s[li]=Math.max(P.s[li]||0,stars);P.u=Math.max(P.u,Math.min(li+1,TD.length-1));LS.set('td',P);
       const sec=Math.round((Date.now()-t0)/1000),o=document.createElement('div');o.className='tdwin';
-      o.innerHTML=`<div><div class="tdwc">😸</div><b>${li===TD.length-1?'Bạn đã phá đảo cả 10 màn! 🏆':'Qua màn '+(li+1)+'!'}</b><div class="tdws">${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div><small>Thời gian ${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}${used?' · dùng '+used+' gợi ý':' · không cần gợi ý'}</small>
+      o.innerHTML=`<div><img class="tdwc" src="assets/td-meo-vui.png" alt="😸"><b>${li===TD.length-1?'Bạn đã phá đảo cả 10 màn! 🏆':'Qua màn '+(li+1)+'!'}</b><div class="tdws">${tdStar(stars)}</div><small>Thời gian ${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}${used?' · dùng '+used+' gợi ý':' · không cần gợi ý'}</small>
         <div class="row" style="gap:8px;width:100%;margin-top:12px"><button class="btn gh grow" id="tdw0">☰ Chọn màn</button>${li<TD.length-1?'<button class="btn grow" id="tdw1">Màn tiếp ▶️</button>':''}</div></div>`;
       v.appendChild(o);o.querySelector('#tdw0').onclick=menu;const n=o.querySelector('#tdw1');if(n)n.onclick=()=>play(li+1)};
     v.querySelector('#tdm').onclick=menu;v.querySelector('#tdh').onclick=hint;drawIt();drawSp();drawTg()};

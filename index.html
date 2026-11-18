@@ -463,7 +463,7 @@ nav button b{position:relative}
 .tdmod p{margin:0;font-size:15px;line-height:1.5;white-space:pre-line}.tdmod h4{margin:0;font-size:18px;text-align:center}.tdmod.shk>div{animation:tdshk .35s}
 .tdkp{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.tdkp button{height:50px;border-radius:12px;border:3px solid #1f2937;background:#fff;font-size:22px;font-weight:800;box-shadow:0 3px 0 #1f2937;color:#1f2937}.tdkp button.ok{background:#22c55e;color:#fff}
 .tdcd{font-size:30px;letter-spacing:12px;text-align:center;background:#1f2937;color:#4ade80;border-radius:12px;padding:6px;font-family:monospace;min-height:50px}
-.tdbg{position:absolute;inset:0;background-size:cover;background-position:center;pointer-events:none;z-index:0}.calm .tdbg{filter:saturate(.45) brightness(.62) blur(1.4px)}
+.tdbg{position:absolute;inset:0;background-size:cover;background-position:center;pointer-events:none;z-index:0}.calm .tdbg{filter:saturate(.45) brightness(.62) blur(1.4px)}.calm2 .tdbg{filter:saturate(.75) brightness(.74) blur(.6px)}.tdcn{filter:drop-shadow(0 0 .12em #fff)}
 .tdh{position:absolute;transform:translate(-50%,-50%);z-index:2;cursor:pointer;background-repeat:no-repeat;-webkit-mask-image:radial-gradient(closest-side,#000 70%,transparent);mask-image:radial-gradient(closest-side,#000 70%,transparent);transition:opacity .8s}.tdh.op{opacity:0;pointer-events:none}
 .calm .tdi{filter:drop-shadow(0 0 .12em #fff) drop-shadow(0 .15em .15em rgba(0,0,0,.45))}
 .tdq{z-index:3;cursor:pointer;filter:drop-shadow(0 0 .15em #fff);transition:transform .2s}.tdq.on{transform:translate(-50%,-50%) scale(1.35);filter:drop-shadow(0 0 .3em #fde047) drop-shadow(0 0 .6em #facc15)}.tdq.op{pointer-events:none;opacity:.35}
@@ -1727,7 +1727,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 76${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 77${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};
@@ -1752,13 +1752,13 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
     try{await API.delLoc(S.code);const c=await API.getCouple(S.code);if(c)await API.patchCouple(S.code,{members:(c.members||[]).filter(x=>x!==NET.uid)})}catch(er){toast(errMsg(er));return}
     API.saveProfile({code:''}).catch(()=>{});toast('Đã rời nhóm');leaveLocal()}}
 
-// ===== Trò 5: Tìm đồ giải đố (chơi 1 người, 20 màn; từ màn 11 là giải đố chuỗi) =====
+// ===== Trò 5: Tìm đồ giải đố (chơi 1 người, 30 màn; từ màn 11 là giải đố chuỗi) =====
 // Toạ độ x,y theo % khung (khung dọc 4:5), cỡ s theo % chiều ngang.
 // d: trang trí ['emoji',x,y,s,xoay,mờ] hoặc ['#màu',x,y,rộng,cao,bo góc] (khối màu)
 // it: [id,emoji,tên,x,y,s,loại,mờ,xoay]  loại: e dễ tìm · h khó tìm · t dụng cụ · x đồ bị ẩn · y dụng cụ bị ẩn
 // sp: [emoji|'dark'|'' (vùng sáng trên tranh),x,y,s,dụng cụ cần ('' chạm là mở, '#' két mật mã),emoji sau khi mở,[đồ hiện ra],gợi ý,{h:cao,os:cỡ emoji khi mở}]
 // loại thêm: c/C mảnh giấy mật mã (C bị ẩn, cột 10 = thứ tự mảnh) · q/Q giấy thứ tự ký hiệu · z dụng cụ ghép
-// L.calm làm mờ tranh, chỉ chỗ chạm được sáng lên · L.code số chữ số mật mã · L.sq={s:[[emoji,x,y,cỡ]],rv,h} · L.cb=[[a,b,kết quả]]
+// L.calm làm mờ tranh (2 = mờ nhẹ), L.cnt=[[emoji,tên,[[x,y]],min,max,cỡ]] rải đồ để đếm làm số đầu của mật mã, sp opt.after=j chỉ hiện sau khi chỗ j mở, L.cb ghép 2-3 món (món cuối là kết quả), chỉ chỗ chạm được sáng lên · L.code số chữ số mật mã · L.sq={s:[[emoji,x,y,cỡ]],rv,h} · L.cb=[[a,b,kết quả]]
 const TD=[
  {n:'Phòng ngủ của Bé Na',img:'td-n01.jpg',bg:'linear-gradient(#fde68a 0 60%,#d97706 60%)',
   d:[],
@@ -1891,16 +1891,165 @@ const TD=[
   sp:[['',15,20,26,'axe','',['n1','cn'],'Dây leo dày đặc, phải chặt mới qua được',{h:36}],['',14,55,9,'','',['lan'],'',{h:14}],
       ['dark',82,30,26,'lan','',['pl','n2'],'Góc hang tối om'],['',87,63,26,'pl','',['fl','rg'],'Rương báu quấn xích to',{h:24}],
       ['',58,66,10,'#','',['vs','ob','gm'],'Hộp báu nhỏ có khoá 4 số. Mật mã chia làm 2 mảnh',{h:7}],
-      ['🐉',50,40,26,'fl','🐉💤',['egg','sw','cw'],'Rồng đang thức canh kho báu. Thử ru nó ngủ xem',{os:14}]]}
+      ['🐉',50,40,26,'fl','🐉💤',['egg','sw','cw'],'Rồng đang thức canh kho báu. Thử ru nó ngủ xem',{os:14}]]},
+{n:'Tháp đồng hồ',img:'td-n21.jpg',bg:'#3b2a1a',calm:2,code:3,
+  cnt:[['🦇','con dơi 🦇 đang treo trong tháp',[[30,9],[79,5],[6,60],[33,30],[73,27],[94,92],[45,91],[8,90],[57,4]],2,8,4.5]],d:[],
+  it:[['tl','🔭','Ống nhòm',38,86,6,'h',.9,-20],['hg','⌛','Đồng hồ cát',78,86,6,'e'],
+      ['sd','🌾','Túi hạt',11,52,6,'y'],['bd','🐦','Chim cúc cu gỗ',18,50,5.5,'x'],
+      ['wk','🔩','Chìa lên dây cót',19,29,5.5,'y'],['ft','🪶','Lông cú',26,28,5,'x',1,30],
+      ['gr','⚙️','Bánh răng đồng',80,62,6,'x'],
+      ['n1','📝','Mảnh giấy mật mã',50,40,5,'C'],['wt','⌚','Đồng hồ đeo tay',43,53,5.5,'x'],
+      ['mb','🎶','Hộp nhạc',16,73,6,'x'],['hm','🔨','Búa nhỏ',28,78,6,'y',1,-30],
+      ['hat','🧢','Mũ len',56,24,6,'x'],['ln','🏮','Đèn bão',70,24,6,'x']],
+  sp:[['',11,43,16,'','',['sd','bd'],'',{h:19}],
+      ['🦉',16,21,11,'sd','',['wk','ft'],'Cú mèo ngậm chìa khoá, không chịu nhả. Hình như nó đói'],
+      ['',87,42,25,'wk','',['gr'],'Bánh răng đứng im, dây cót hết rồi',{h:78}],
+      ['',50,47,49,'','',['n1','wt'],'',{h:51,after:2}],
+      ['',22,78,22,'#','',['mb','hm'],'Két sắt 3 số',{h:22}],
+      ['',63,14,24,'hm','',['hat','ln'],'Quả chuông to quá, thử gõ xem',{h:25}]]},
+ {n:'Tiệm bánh',img:'td-n22.jpg',bg:'#fdf4e3',calm:2,code:3,
+  cnt:[['🍪','chiếc bánh quy 🍪 rơi trên sàn',[[20,82],[35,90],[48,78],[60,92],[75,84],[88,93],[12,95],[42,96],[67,79]],2,9,4]],d:[],
+  it:[['gv','🧤','Găng tay lò',47,68,6,'h',.9,-15],['rp','🥖','Cây cán bột',91,19,7,'e',1,-20],
+      ['cro','🥐','Bánh sừng bò',52,62,6,'x'],['chz','🧀','Miếng phô mai',62,62,6,'y'],
+      ['ky','🔑','Chìa khoá tủ',35,73,5,'y'],['dn','🍩','Bánh donut',23,74,6,'x'],
+      ['dry','💨','Máy sấy tóc',61,38,6,'y'],['jam','🫙','Lọ mứt dâu',70,38,5.5,'x'],
+      ['n1','📝','Mảnh giấy mật mã',85,50,5,'C'],['cup','🧁','Bánh cupcake',94,57,6,'x'],
+      ['cake','🎂','Bánh kem dâu',7,46,7,'x'],['wh','🥄','Cây đánh trứng',14,51,6,'x',1,20]],
+  sp:[['',57,58,19,'','',['cro','chz'],'',{h:5}],
+      ['🐭',28,63,12,'chz','',['ky','dn'],'Chú chuột đứng chắn cửa hang, khoanh tay không cho qua. Hình như nó thèm gì đó'],
+      ['',65,33,17,'ky','',['dry','jam'],'Tủ gia vị bị khoá',{h:18}],
+      ['',90,52,20,'','',[],'',{h:52}],
+      ['🧊',90,52,14,'dry','',['n1','cup'],'Khối băng đông cứng, có gì đó kẹt bên trong. Làm sao cho tan nhỉ',{after:3}],
+      ['',10,44,15,'#','',['cake','wh'],'Lò nướng có khoá số 3 chữ số',{h:29}]]},
+ {n:'Trạm cáp treo núi tuyết',img:'td-n23.jpg',bg:'#dbeafe',calm:2,
+  sq:{s:[['🔴',13,43,5],['🟠',21,46,4],['🔵',18,51,5],['🟡',13,57,5]],rv:['coc','gg'],h:'Bảng điều khiển kêu tít tít, sai thứ tự rồi'},d:[],
+  it:[['sf','❄️','Bông tuyết pha lê',90,14,5,'h',.9],['hel','⛑️','Mũ bảo hiểm',25,90,6,'e'],
+      ['pk','⛏️','Cuốc chim',57,95,6,'t',1,-30],['tch','🔥','Bó đuốc',64,72,6,'y'],['sl','🛷','Xe trượt tuyết',81,74,7,'x'],
+      ['card','💳','Thẻ từ',44,62,5.5,'y'],['sm','☃️','Người tuyết nhỏ',37,68,6,'x'],
+      ['qn','📝','Giấy ghi thứ tự',68,34,5,'Q'],['ski','🎿','Đôi ván trượt',78,35,7,'x'],
+      ['coc','☕','Ca cacao nóng',12,66,6,'x'],['gg','🥽','Kính trượt tuyết',22,66,6,'x'],['mt','🧤','Găng tay len',70,88,6,'x']],
+  sp:[['',73,69,36,'pk','',['tch','sl'],'Đống tuyết đông cứng, tay không đào nổi',{h:30}],
+      ['',43,57,14,'tch','',[],'Cửa bị khối băng chặn kín',{h:39}],
+      ['',43,57,14,'','',['card','sm'],'',{h:39,after:1}],
+      ['',73,33,27,'card','',['qn','ski'],'Cửa cabin cáp treo cần quẹt thẻ',{h:18}],
+      ['',70,88,30,'','',['mt'],'',{h:10}]]},
+ {n:'Cắm trại trong rừng đêm',img:'td-n24.jpg',bg:'#0f1e33',calm:2,d:[],
+  it:[['sb','🛏️','Túi ngủ',63,91,6,'e'],['kn','🔪','Dao xếp',12,93,4.5,'h',.9,20],
+      ['ex','🧯','Bình cứu hoả',19,55,6,'y'],['gt','🎸','Cây đàn ghi-ta',30,55,7,'x',1,-20],
+      ['pk','⛏️','Cuốc chim',6,77,6,'y'],
+      ['hon','🍯','Hũ mật ong',46,71,6,'y'],['kt','🫖','Ấm nước',57,71,6,'x'],
+      ['ky','🔑','Chìa khoá',66,66,5,'y'],['fl','🔦','Đèn pin',78,58,6,'y'],['ms','🍡','Kẹo dẻo nướng',86,62,6,'x',1,20],['cp','🧭','La bàn',92,58,5.5,'x'],
+      ['ff','🫙','Lọ đom đóm',88,41,6,'x'],['ow','🪶','Lông chim',5,21,5,'x']],
+  sp:[['',25,50,38,'','',['ex','gt'],'',{h:26}],
+      ['',5,73,9,'','',['pk'],'',{h:15}],
+      ['',52,68,22,'ex','',[],'Lửa trại đang cháy, nóng quá',{h:20}],
+      ['',52,70,18,'pk','',['hon','kt'],'Đống tro nguội rồi, hình như có gì vùi bên dưới',{h:12,after:2}],
+      ['🐻',69,56,17,'hon','',['ky'],'Bác gấu ôm khư khư cái thùng, mặt cau có. Hình như bác thèm đồ ngọt'],
+      ['',84,61,24,'ky','',['fl','ms','cp'],'Thùng đồ bị khoá',{h:20}],
+      ['dark',88,39,18,'fl','',['ff'],'Trong hang tối om'],
+      ['',5,19,7,'fl','',['ow'],'Hốc cây tối quá, chẳng thấy gì',{h:12}]]},
+ {n:'Bảo tàng khủng long',img:'td-n25.jpg',bg:'#f1f5f9',calm:2,code:3,cb:[['f1','f2','f3','fos']],
+  cnt:[['🐾','dấu chân 🐾 trên sàn',[[30,70],[40,78],[52,72],[62,82],[35,92],[55,94],[70,90],[22,64],[75,70]],2,9,4]],d:[],
+  it:[['cam','📷','Máy ảnh',64,58,5,'h',.9],['br','🖌️','Bàn chải',47,88,6,'t',1,-20],
+      ['f1','🦴','Mảnh xương nhỏ',16,74,5.5,'y'],['am','🐚','Hoá thạch ốc',23,80,5.5,'x'],
+      ['f2','🦴','Mảnh xương sườn',18,33,5.5,'y',1,30],['n1','📝','Mảnh giấy mật mã',58,34,5,'C'],
+      ['f3','💀','Mảnh hộp sọ',90,84,6,'y'],['ah','🏹','Mũi tên đá',96,84,5,'x'],['coin','🪙','Đồng xu cổ',86,93,5,'x'],
+      ['fos','🦕','Bộ xương hoá thạch',0,0,6,'z'],
+      ['ky','🔑','Chìa khoá tủ',40,55,5,'y'],['dino','🦖','Khủng long đồ chơi',52,55,6,'x'],
+      ['hel','⛑️','Mũ thám hiểm',85,44,6,'x'],['gem','💎','Đá tinh thể',90,56,5.5,'x'],['th','🦷','Răng khủng long',86,64,5,'x']],
+  sp:[['',14,76,32,'br','',['f1','am'],'Khối đá phủ đầy cát bụi, có gì đó bên dưới',{h:30}],
+      ['',18,29,11,'','',['f2'],'',{h:14}],['',58,30,10,'','',['n1'],'',{h:13}],
+      ['',93,90,14,'#','',['f3','ah','coin'],'Két sắt 3 số',{h:21}],
+      ['',45,48,50,'fos','',['ky','dino'],'Bộ xương khủng long còn thiếu mấy khúc xương',{h:28}],
+      ['',88,50,24,'ky','',['hel','gem','th'],'Tủ kính bị khoá',{h:57}]]},
+ {n:'Nhà kho nông trại',img:'td-n26.jpg',bg:'#7f1d1d',calm:2,code:3,
+  cnt:[['🥚','quả trứng 🥚 trong ổ gà',[[63,29],[67,29],[71,29],[75,29],[79,29],[83,29],[69,26.5],[77,26.5]],2,8,3]],d:[],
+  it:[['rs','🐓','Gà trống',28,86,8,'e'],['hs','🧲','Móng ngựa',45,92,5,'h',.9,20],
+      ['cb','🦯','Xà beng',14,66,6,'y',1,30],['corn','🌽','Bắp ngô',22,72,6,'x'],
+      ['mt','🍖','Miếng thịt',30,36,6,'y'],['mk','🥛','Bình sữa',38,36,5.5,'x'],
+      ['pl','🗜️','Cái kìm',89,48,6,'y'],['bell','🔔','Chuông bò',95,52,5,'x'],
+      ['n1','📝','Mảnh giấy mật mã',72,70,5,'C'],['pm','🎃','Quả bí ngô',80,74,7,'x'],['ap','🍎','Giỏ táo',89,80,6,'x'],
+      ['hat','👒','Mũ rơm',43,58,6,'x'],['wh','🛞','Bánh xe gỗ',57,58,6,'x'],['dk','🐤','Vịt cao su',50,64,5,'x']],
+  sp:[['',14,70,28,'','',['cb','corn'],'',{h:29}],
+      ['',33,33,24,'cb','',['mt','mk'],'Mấy tấm ván đóng đinh chặt che cái lỗ',{h:19}],
+      ['🐕',85,56,12,'mt','',[],'Chú chó canh chuồng, sủa ầm ĩ không cho lại gần'],
+      ['',92,46,15,'','',['pl','bell'],'',{h:15,after:2}],
+      ['',71,61,8,'pl','',['n1','pm','ap'],'Cổng chuồng buộc dây thừng chặt',{h:9}],
+      ['🗃️',50,56,8,'#','',['hat','wh','dk'],'Hộp gỗ khoá số 3 chữ số']]},
+ {n:'Phòng nhạc',img:'td-n27.jpg',bg:'#fde68a',calm:2,code:3,
+  sq:{s:[['🔴',15,37,3],['🟠',18,37,3],['🟡',21,37,3],['🟢',24,37,3],['🔵',27,37,3]],rv:['ky','mic'],h:'Đàn kêu lạc điệu, sai thứ tự rồi'},
+  cnt:[['🎵','nốt nhạc 🎵 bay trên tường',[[32,20],[40,12],[52,22],[62,14],[10,15],[20,8],[45,30],[36,40],[55,38]],2,9,4]],d:[],
+  it:[['vl','🎻','Đàn vi-ô-lông',53,88,7,'h',.9,-20],['hm','🎹','Kèn harmonica',76,90,6,'e'],
+      ['tg','🥢','Kẹp gắp',36,78,6,'y'],['cd','💿','Đĩa nhạc',47,76,6,'x'],
+      ['qn','🎼','Bản nhạc',22,45,5.5,'Q'],['ky','🔑','Chìa khoá',24,29,5,'y'],['mic','🎤','Micro',14,29,6,'x'],
+      ['uk','🪕','Đàn ukulele',89,68,7,'x'],['bt','🪄','Que chỉ huy',93,58,6,'x'],
+      ['n1','📝','Mảnh giấy mật mã',64,60,5,'C'],
+      ['mtr','⏱️','Máy đếm nhịp',78,56,6,'x'],['fl','🎋','Sáo trúc',86,52,6,'x'],['mrc','🪇','Đôi maracas',85,62,6,'x']],
+  sp:[['',41,77,45,'','',['tg','cd'],'',{h:16}],
+      ['',20,44,16,'tg','',['qn'],'Có tờ giấy kẹt sâu trong khe đàn, tay không lấy ra được',{h:10}],
+      ['',95,64,10,'ky','',['uk','bt'],'Hộp đàn bị khoá',{h:25}],
+      ['',63,65,30,'','',['n1'],'',{h:22}],
+      ['',84,58,26,'#','',['mtr','fl','mrc'],'Tủ gỗ khoá số 3 chữ số',{h:30}]]},
+ {n:'Trạm vũ trụ',img:'td-n28.jpg',bg:'#e2e8f0',calm:2,cb:[['p1','p2','p3','map']],
+  sq:{s:[['🔴',8,41.5,4],['🔵',8,46.7,4],['🟡',8,51.8,4]],rv:['p3','hel'],h:'Bảng điều khiển báo lỗi, sai thứ tự rồi'},d:[],
+  it:[['ufo','🛸','Đĩa bay đồ chơi',60,90,6,'h',.9,15],
+      ['bat','🔋','Cục pin',27,70,5,'y'],['fd','🧴','Đồ ăn phi hành gia',21,62,5,'x'],
+      ['card','💳','Thẻ từ',50,84,5.5,'y'],['rk','🚀','Tên lửa đồ chơi',38,87,6,'x'],
+      ['ex','🧯','Bình cứu hoả',70,62,6,'y'],['qn','📝','Giấy ghi thứ tự',78,62,5,'Q'],
+      ['p1','📃','Mảnh bản đồ sao 1',90,76,5.5,'y'],['p2','📃','Mảnh bản đồ sao 2',34,36,5.5,'y'],['met','☄️','Thiên thạch',48,44,6,'x'],
+      ['p3','📃','Mảnh bản đồ sao 3',16,45,5.5,'y'],['hel','⛑️','Mũ phi hành gia',16,54,6,'x'],
+      ['map','🗺️','Bản đồ sao',0,0,6,'z'],
+      ['pl','🪐','Hành tinh có vành',32,40,6,'x'],['ast','👨‍🚀','Phi hành gia đồ chơi',42,47,6,'x'],['sat','🛰️','Vệ tinh',51,35,6,'x']],
+  sp:[['',26,65,13,'','',['bat','fd'],'',{h:15}],
+      ['🐶',45,77,15,'bat','',['card','rk'],'Chó rô bốt mắt đỏ kêu bíp bíp, không cho ai qua. Hình như nó hết pin'],
+      ['',85.5,52.7,5,'card','',[],'Cửa khoang cần quẹt thẻ',{h:9}],
+      ['',74,53,17,'','',['ex','qn'],'',{h:76,after:2}],
+      ['',93,69,7,'ex','',['p1'],'Lỗ thông gió đang bốc khói',{h:9}],
+      ['',41,40,36,'','',['p2','met'],'',{h:35}],
+      ['',41,40,36,'map','',['pl','ast','sat'],'Ngoài cửa sổ toàn sao là sao. Giá có bản đồ sao để dò đường',{h:35,after:5}]]},
+ {n:'Lăng mộ kim tự tháp',img:'td-n29.jpg',bg:'#78350f',calm:2,
+  sq:{s:[['☀️',50,41,5],['🌙',63,41,5],['🦅',50,52,5],['🪷',63,52,5]],rv:['pyr','sun'],h:'Cửa đá rung lên rồi im bặt, sai thứ tự rồi'},d:[],
+  it:[['fan','🪶','Quạt lông',92,90,6,'e',1,-20],['cs','🐈','Tượng mèo đen',27,47,5,'h',.9],
+      ['yn','🧶','Cuộn len',8,68,6,'y'],['bt','🪲','Bọ hung vàng',13,72,5,'x'],
+      ['tch','🔥','Bó đuốc',30,82,6,'y'],['cj','🏺','Bình canopic',41,83,6,'x'],
+      ['fl','🪈','Cây sáo',16,48,6,'y'],['pp','📜','Cuộn giấy cói',8,48,6,'x'],
+      ['qn','📝','Giấy ghi ký hiệu',70,62,5,'Q'],
+      ['msk','🎭','Mặt nạ pharaoh',76,70,6,'x'],['key','🗝️','Chìa khoá ankh',87,70,5.5,'x'],
+      ['pyr','🔺','Kim tự tháp vàng',52,63,6,'x'],['sun','🌞','Đĩa mặt trời',62,63,6,'x']],
+  sp:[['',7,67,15,'','',['yn','bt'],'',{h:11}],
+      ['🐈‍⬛',36,71,13,'yn','',['tch','cj'],'Mèo xác ướp nhìn chằm chằm đầy nghi ngờ. Hình như nó muốn chơi gì đó'],
+      ['',17,41,9,'tch','🔥',['fl','pp'],'Giá đuốc trên tường còn trống',{h:12,os:6}],
+      ['🐍',73,57,11,'fl','',['qn'],'Rắn hổ mang dựng cổ canh quan tài. Thử ru nó ngủ xem'],
+      ['',81,70,39,'','',['msk','key'],'',{h:21,after:3}]]},
+ {n:'Lâu đài phù thuỷ',img:'td-n30.jpg',bg:'#1e1b4b',calm:2,code:4,cb:[['s1','s2','s3','star']],
+  cnt:[['🕯️','ngọn nến 🕯️ đang cháy trong phòng',[[30,62],[56,62],[38,76],[62,78],[48,88],[76,70],[20,82],[85,82],[60,30],[40,30]],2,9,4]],
+  sq:{s:[['🍄',33,40,5],['🪶',55,40,5],['💧',33,57,5],['⭐',55,57,5]],rv:['pt','s2'],h:'Vạc thuốc sủi bọt đen ngòm, sai thứ tự rồi'},d:[],
+  it:[['jk','🎃','Bí ngô cười',66,90,7,'e'],['owl','🦉','Cú bông',8,88,6,'h',.9],
+      ['n1','📝','Mảnh giấy mật mã 1',22,31,5,'C',1,0,0],['brm','🧹','Chổi bay',30,30,7,'x',1,-30],
+      ['qn','📝','Công thức thuốc',85,58,5,'Q'],['mir','🪞','Gương thần',95,58,6,'x'],
+      ['n2','📝','Mảnh giấy mật mã 2',21,46,5,'C',1,0,1],['s1','⭐','Mảnh sao 1',28,47,5,'y'],
+      ['pt','🧪','Lọ thuốc phép',40,53,5.5,'y'],['s2','⭐','Mảnh sao 2',48,53,5,'y'],
+      ['s3','⭐','Mảnh sao 3',8,63,5,'y'],['wd','🪄','Đũa phép',14,73,6,'x'],['hat','🎩','Mũ phù thuỷ',3,73,6,'x'],['bat','🦇','Dơi bông',20,70,6,'x'],
+      ['sd','✨','Túi bụi sao',88,27,5.5,'x'],
+      ['star','🌟','Ngôi sao phép',0,0,6,'z'],
+      ['sk','🗝️','Chìa khoá sao',58,47,6,'x'],['bk','📖','Sách phép',70,47,6,'x']],
+  sp:[['',23,27,12,'','',['n1','brm'],'',{h:10}],
+      ['',91,63,12,'','',['qn','mir'],'',{h:14}],
+      ['',23,42,12,'','',['n2','s1'],'',{h:12}],
+      ['',8,69,15,'#','',['s3','wd','hat','bat'],'Rương gỗ khoá 4 số',{h:10}],
+      ['',88,23,13,'pt','',['sd'],'Cửa sổ trăng bị phù phép đóng chặt. Có thuốc giải không nhỉ',{h:16}],
+      ['',73,43,7,'star','',['sk','bk'],'Ổ khoá hình ngôi sao trên cửa phép',{h:9}]]}
 ];
 const TDI={'✂️':'dc-keo','🔑':'dc-chia','🪜':'dc-thang','⛏️':'dc-cuoc','🔦':'dc-den','🧹':'dc-choi','🎣':'dc-cancau','🍖':'dc-thit','🔨':'dc-bua','🧽':'dc-mutbot','🪛':'dc-tuavit','🪣':'dc-xo','🪺':'cg-tochim','🧸':'d-gaubong','🧦':'d-tat','📕':'d-sach','⏰':'d-dongho','🧩':'d-manhghep','🪀':'d-yoyo','🥄':'d-thia','🍳':'d-chao','🧂':'d-muoi','🥚':'d-trung','🥕':'d-carot','🍪':'d-banhquy','🌻':'d-huongduong','🐞':'d-boruoa','🐌':'d-ocsen','🦋':'d-buom','2:🪺':'d-tochim','2:💍':'d-nhan','📻':'d-dai','🎩':'d-mu','🧶':'d-len','🕯️':'d-nen','🗝️':'d-chiacokhoa','🪆':'d-bupbe','🐚':'d-vocso','🦀':'d-cua','🕶️':'d-kinh','🩴':'d-dep','🐠':'d-ca','💎':'d-kimcuong','🦴':'d-xuong','6:🏺':'d-binhgom','🍄':'d-nam','💰':'d-tuivang','📿':'d-chuoihat','6:👑':'d-vuongmien1','🍉':'d-duahau','🐓':'d-ga','🌽':'d-ngo','🥭':'d-xoai','🍍':'d-dua','🪙':'d-dongxu','8:📜':'d-cuongiay','🪶':'d-longvu','📘':'d-sachxanh','🧭':'d-labam','⌛':'d-dongho-cat','🔭':'d-kinhtv','🗡️':'d-kiem','🛡️':'d-khien','🏆':'d-cup','9:💍':'d-nhando','9:📜':'d-bando','9:👑':'d-vuongmien2','🌍':'d-diacau','✏️':'d-butchi','🧮':'d-bantinh','📐':'d-thuoc','📎':'d-kep','🔬':'d-kinhhv',
  '🔍':'n-kinhlup','🗜️':'n-kim','🛢️':'n-binhdau','🪓':'n-riu','🐟':'n-cakho','🧲':'n-namcham','🔧':'n-cole','🏮':'n-denlong','🍌':'n-chuoi','🪔':'n-dendau','☂️':'n-o','🪢':'n-day','🦐':'n-tom','🎷':'n-ken','📝':'n-giay','🌷':'n-hoano',
  '📷':'d-mayanh','🎺':'d-ken','🎻':'d-violin','💌':'d-thu','⌚':'d-dhquyt','🎐':'d-chuonggio','🎎':'d-bupbenhat','⚓':'d-neo','🦜':'d-vet','🍾':'d-chai','☸️':'d-banhlai','🏴‍☠️':'d-co','📏':'d-thuocgo','🧰':'d-hopdonghe','⚙️':'d-banhrang','🎠':'d-ngugo','🐦':'d-chimgo','🐻':'d-gaugo','🪚':'d-cua2','🦎':'d-thanlan','🗿':'d-tuongda','🪲':'d-bohung','👺':'d-matna',
  '🧪':'d-ongnghiem','⚗️':'d-binhcc','🌡️':'d-nhietke','🔋':'d-pin','🤖':'d-robot','🧫':'d-dia','🧬':'d-adn','🥽':'d-kinhbh','🍓':'d-dau','🐝':'d-ong','🌵':'d-xuongrong','🧤':'d-gangtay','🃏':'d-labai','🎯':'d-bia','🤡':'d-matnahe','🥁':'d-trong','🎟️':'d-ve','🪄':'d-duaphep','📰':'d-bao','🧣':'d-khan','☕':'d-tachtra','🥖':'d-banhmi','🔮':'d-quacau','🐢':'d-rua','🔱':'d-dinhba','🦪':'d-trai',
  '15:🔔':'d-chuongvang','16:🔔':'d-chuongdong','19:🥚':'d-trungrong','16:👑':'d-vuongmien1','18:👑':'d-vuongmien2','19:👑':'d-vuongmien1','14:💍':'d-nhan','19:💍':'d-nhando','10:🏺':'d-binhgom','18:🏺':'d-binhgom','19:🏺':'d-binhgom',
- '12:#mr':'n-cancaunc','18:#mr':'n-daync','14:#bk':'n-xorong'};
-const TDS={'🎁':'cg-hopqua','🔒':'cg-khoa','🪺':'cg-tochim','🪨':'cg-da','🕸️':'cg-mangnhen','🕳️':'cg-honuoc','🐕':'cg-cho','🏺':'cg-hu','🖼️':'cg-tranh','🔩':'cg-thonggio','🔥':'cg-lua','⛓️':'cg-xich','🗃️':'cg-hopso','🐈':'cg-meo','🐒':'cg-khi','🐙':'cg-bachtuoc','🐉':'cg-rong'};
-const TDO={'🐈':1,'🐒':1,'🐙':1,'🐉':1,'🎁':1,'🔒':1,'🪨':1,'🐕':1,'🏺':1,'🖼️':1,'🔩':1,'🔥':1};
+ '12:#mr':'n-cancaunc','18:#mr':'n-daync','14:#bk':'n-xorong',
+ '🌾':'n-tuihat','🔩':'n-chiacot','🧀':'n-phomai','💨':'n-maysay','🔥':'n-duoc','🧯':'n-binhcuuhoa','🍯':'n-mato','🦯':'n-xabeng','🖌️':'n-banchai','🥢':'n-kep','💳':'n-thetu','🪈':'n-sao','🎼':'n-bannhac',
+ '20:#bd':'d2-chimcucu','20:#ft':'d2-longcu','20:#wt':'d2-dongho','20:#mb':'d2-hopnhac','20:#hat':'d2-mulen','20:#ln':'d2-denbao','20:#tl':'d2-ongnhom','21:#gv':'d2-gangtaylo','21:#rp':'d2-canbot','21:#cro':'d2-sungbo','21:#dn':'d2-donut','21:#jam':'d2-mut','21:#cup':'d2-cupcake','21:#cake':'d2-banhkem','21:#wh':'d2-danhtrung','22:#sf':'d2-bongtuyet','22:#hel':'d2-mubaohiem','22:#sl':'d2-xetruot','22:#sm':'d2-nguoituyet','22:#ski':'d2-vantruot','22:#coc':'d2-cacao','22:#gg':'d2-kinhtruot','22:#mt':'d2-gangtaylen','23:#sb':'d2-tuingu','23:#kn':'d2-daoxep','23:#gt':'d2-ghita','23:#kt':'d2-amnuoc','23:#ms':'d2-keodeo','23:#ff':'d2-domdom','24:#am':'d2-ocda','24:#ah':'d2-muiten','24:#dino':'d2-khunglong','24:#hel':'d2-muthamhiem','24:#gem':'d2-tinhthe','24:#th':'d2-rangkl','24:#f1':'n-hoathach1','24:#f2':'n-hoathach2','24:#f3':'n-hoathach3','24:#fos':'n-hoathach','25:#hs':'d2-mongngua','25:#mk':'d2-sua','25:#bell':'d2-chuongbo','25:#pm':'d2-bingo','25:#ap':'d2-gioitao','25:#hat':'d2-murom','25:#wh':'d2-banhxe','25:#dk':'d2-vit','26:#hm':'d2-kenharmonica','26:#cd':'d2-dia','26:#mic':'d2-micro','26:#uk':'d2-ukulele','26:#bt':'d2-quechihuy','26:#mtr':'d2-maydemnhip','26:#fl':'d2-saotruc','26:#mrc':'d2-maracas','27:#ufo':'d2-diabay','27:#fd':'d2-doan','27:#rk':'d2-tenlua','27:#met':'d2-thienthach','27:#hel':'d2-mubay','27:#pl':'d2-thosao','27:#ast':'d2-phihanhgia','27:#sat':'d2-vetinh','27:#p1':'n-bando1','27:#p2':'n-bando2','27:#p3':'n-bando3','27:#map':'n-bando','28:#fan':'d2-quatlong','28:#cs':'d2-tuongmeo','28:#cj':'d2-binhcanopic','28:#pp':'d2-giaycoi','28:#msk':'d2-matnapharaoh','28:#key':'d2-ankh','28:#pyr':'d2-kimtuthap','28:#sun':'d2-damattroi','29:#jk':'d2-bingocuoi','29:#owl':'d2-cubong','29:#brm':'d2-choibay','29:#mir':'d2-guong','29:#hat':'d2-muphuthuy','29:#bat':'d2-doibong','29:#sd':'d2-tuibui','29:#sk':'d2-chiasao','29:#bk':'d2-sachphep','29:#pt':'d2-lothuoc','29:#star':'d2-saophep'};
+const TDS={'🎁':'cg-hopqua','🔒':'cg-khoa','🪺':'cg-tochim','🪨':'cg-da','🕸️':'cg-mangnhen','🕳️':'cg-honuoc','🐕':'cg-cho','🏺':'cg-hu','🖼️':'cg-tranh','🔩':'cg-thonggio','🔥':'cg-lua','⛓️':'cg-xich','🗃️':'cg-hopso','🐈':'cg-meo','🐒':'cg-khi','🐙':'cg-bachtuoc','🐉':'cg-rong','🧊':'cg-bang','🦉':'cg-cu','🐭':'cg-chuot','🐻':'cg-gau','🐶':'cg-chorb','🐈‍⬛':'cg-meoxu','🐍':'cg-ran'};
+const TDO={'🧊':1,'🦉':1,'🐭':1,'🐻':1,'🐶':1,'🐈‍⬛':1,'🐍':1,'🐈':1,'🐒':1,'🐙':1,'🐉':1,'🎁':1,'🔒':1,'🪨':1,'🐕':1,'🏺':1,'🖼️':1,'🔩':1,'🔥':1};
 const tdIm=(e,M,li,id)=>{const f=(id&&M[li+':#'+id])||M[li+':'+e]||M[e];return f?`<img class="tdim" src="assets/${f}.png" alt="${e}">`:e};
 const tdStar=n=>[0,1,2].map(i=>`<img class="tdsr${i<n?'':' off'}" src="assets/gd-sao.png" alt="${i<n?'⭐':'☆'}">`).join('');
 const TDF=[['số bánh xe của chiếc thuyền','số chân của con rắn'],['số vòi của con voi','số mặt trời trên bầu trời'],['số cánh của con chim','số chân của con gà'],['số cạnh của hình tam giác','số bánh của chiếc xe ba bánh'],['số chân của con mèo','số mùa trong một năm'],['số ngón tay trên một bàn tay','số cánh của ngôi sao ⭐'],['số chân của con kiến','số mặt của con xúc xắc'],['số ngày trong một tuần','số màu của cầu vồng'],['số chân của con nhện','số tay của con bạch tuộc'],['số lớn nhất có một chữ số','kết quả của 3 nhân 3']];
@@ -1916,11 +2065,13 @@ function openTd(){const old=$('.tdv');if(old)old.remove();const v=document.creat
     L.it.forEach(a=>IT[a[0]]={id:a[0],e:a[1],n:a[2],x:a[3],y:a[4],s:a[5],k:a[6],o:a[7]==null?1:a[7],r:a[8]||0,pt:a[9]||0,got:false,show:!'xyCQz'.includes(a[6])});
     const tg=Object.values(IT).filter(t=>t.k==='e'||t.k==='h'||t.k==='x');let bag=[],sel='',hints=hard?2:3,used=0;const t0=Date.now();
     const isN=t=>'cCqQ'.includes(t.k),isT=t=>'tyz'.includes(t.k)||isN(t),cN=Object.values(IT).filter(t=>t.k==='c'||t.k==='C'),qN=Object.values(IT).filter(t=>t.k==='q'||t.k==='Q');
-    const nC=L.code||0,code=[],cq=[];for(let i=0;i<nC;i++){const d=Math.floor(Math.random()*10),f=TDF[d];code.push(d);cq.push(f[Math.floor(Math.random()*f.length)])}
+    const cnts=(L.cnt||[]).map(c=>{const n=c[3]+Math.floor(Math.random()*(c[4]-c[3]+1));return{e:c[0],l:c[1],ps:tdShuf(c[2].slice()).slice(0,n),n,s:c[5]||4}});
+    const vis=s=>s.o.after==null||SP[s.o.after].op;
+    const nC=L.code||0,code=[],cq=[];cnts.forEach(c=>{code.push(c.n);cq.push('số '+c.l)});for(let i=cnts.length;i<nC;i++){const d=Math.floor(Math.random()*10),f=TDF[d];code.push(d);cq.push(f[Math.floor(Math.random()*f.length)])}
     const ord=L.sq?tdShuf(L.sq.s.map((_,i)=>i)):[];let sqs=0,sqDone=false;
     const pos=(x,y)=>`left:${x}%;top:${y}%`;
     v.innerHTML=`<div class="tdtop"><button class="tdb" id="tdm">☰</button><b>Màn ${li+1} · ${esc(L.n)}</b><button class="tdb" id="tdh"><img src="assets/gd-bongden.png" alt="💡"><small id="tdhn">${hints}</small></button></div>
-      <div class="tdst${calm?' calm':''}" id="tdst" style="background:${L.img&&!calm?`url(assets/${L.img}) center/cover no-repeat,`:''}${L.bg}">${calm?`<div class="tdbg" style="background-image:url(assets/${L.img})"></div>`:''}${L.d.map(d=>d[0][0]==='#'?`<div class="tdr" style="${pos(d[1],d[2])};width:${d[3]}%;height:${d[4]}%;background:${d[0]};border-radius:${d[5]}px"></div>`:`<span class="tdd" style="${pos(d[1],d[2])};font-size:${d[3]}em;--r:${d[4]||0}deg;opacity:${d[5]==null?1:d[5]}">${d[0]==='🕸️'||d[0]==='🪨'?tdIm(d[0],TDS):d[0]}</span>`).join('')}
+      <div class="tdst${calm?' calm':''}${L.calm===2?' calm2':''}" id="tdst" style="background:${L.img&&!calm?`url(assets/${L.img}) center/cover no-repeat,`:''}${L.bg}">${calm?`<div class="tdbg" style="background-image:url(assets/${L.img})"></div>`:''}${cnts.length?`<div>${cnts.map(c=>c.ps.map(p=>`<span class="tdd tdcn" style="${pos(p[0],p[1])};font-size:${c.s}em">${tdIm(c.e,TDI,li)}</span>`).join('')).join('')}</div>`:''}${L.d.map(d=>d[0][0]==='#'?`<div class="tdr" style="${pos(d[1],d[2])};width:${d[3]}%;height:${d[4]}%;background:${d[0]};border-radius:${d[5]}px"></div>`:`<span class="tdd" style="${pos(d[1],d[2])};font-size:${d[3]}em;--r:${d[4]||0}deg;opacity:${d[5]==null?1:d[5]}">${d[0]==='🕸️'||d[0]==='🪨'?tdIm(d[0],TDS):d[0]}</span>`).join('')}
         <div id="tdit"></div><div id="tdsp"></div></div>
       <div class="tdbag"><img class="tdbi" src="assets/gd-balo.png" alt="🎒"><div id="tdbag"></div><small id="tdsel">Túi đồ trống</small><img class="tdcat" id="tdcat" src="assets/td-meo-buon.png" alt="😿"></div>
       <div class="tdtg" id="tdtg"></div>`;
@@ -1928,19 +2079,20 @@ function openTd(){const old=$('.tdv');if(old)old.remove();const v=document.creat
     const drawIt=()=>{v.querySelector('#tdit').innerHTML=Object.values(IT).filter(t=>t.show&&!t.got).map(t=>`<span class="tdi${t.k==='h'?' hd':''}${t.nw?' nw':''}" data-i="${t.id}" style="${pos(t.x,t.y)};font-size:${t.s}em;--r:${t.r}deg;opacity:${t.o}">${tdIm(t.e,TDI,li,t.id)}</span>`).join('');
       v.querySelectorAll('[data-i]').forEach(e=>e.onclick=ev=>{ev.stopPropagation();take(IT[e.dataset.i],e)})};
     const hs=s=>{const w=s.s,h=s.o.h||s.s;return`${pos(s.x,s.y)};width:${w}em;height:${h}em;${calm?`background-image:url(assets/${L.img});background-size:100.71em 125em;background-position:${(-.354-(s.x-w/2)).toFixed(2)}em ${(-(s.y*1.25-h/2)).toFixed(2)}em`:''}`};
-    const drawSp=()=>{v.querySelector('#tdsp').innerHTML=SP.map(s=>s.e==='dark'?`<div class="tdk${s.op?' op':''}" data-s="${s.j}" style="${pos(s.x,s.y)};width:${s.s}%;"></div>`:s.e===''?`<div class="tdh${s.op?' op':''}" data-s="${s.j}" style="${hs(s)}"></div>${s.op&&s.oe?`<span class="tdp op" style="${pos(s.x,s.y)};font-size:${s.o.os||6}em">${tdIm(s.oe,TDI,li)}</span>`:''}`:(s.op&&!s.oe&&!TDO[s.e])?'':`<span class="tdp${s.op?' op':''}${s.e==='🖼️'&&!s.op&&!TDS[s.e]?' dusty':''}" data-s="${s.j}" style="${pos(s.x,s.y)};font-size:${s.op&&!TDO[s.e]?(s.o.os||s.s*.7):s.s}em">${s.op?(TDO[s.e]?`<img class="tdim" src="assets/${TDS[s.e]}-mo.png" alt="">`:s.oe):tdIm(s.e,TDS)}</span>`).join('')
+    const drawSp=()=>{v.querySelector('#tdsp').innerHTML=SP.map(s=>!vis(s)?'':s.e==='dark'?`<div class="tdk${s.op?' op':''}" data-s="${s.j}" style="${pos(s.x,s.y)};width:${s.s}%;"></div>`:s.e===''?`<div class="tdh${s.op?' op':''}" data-s="${s.j}" style="${hs(s)}"></div>${s.op&&s.oe?`<span class="tdp op" style="${pos(s.x,s.y)};font-size:${s.o.os||6}em">${tdIm(s.oe,TDI,li)}</span>`:''}`:(s.op&&!s.oe&&!TDO[s.e])?'':`<span class="tdp${s.op?' op':''}${s.e==='🖼️'&&!s.op&&!TDS[s.e]?' dusty':''}" data-s="${s.j}" style="${pos(s.x,s.y)};font-size:${s.op&&!TDO[s.e]?(s.o.os||s.s*.7):s.s}em">${s.op?(TDO[s.e]?`<img class="tdim" src="assets/${TDS[s.e]}-mo.png" alt="">`:s.oe):tdIm(s.e,TDS)}</span>`).join('')
         +(L.sq?L.sq.s.map((q,i)=>`<span class="tdq${sqDone?' op':''}${!sqDone&&ord.slice(0,sqs).includes(i)?' on':''}" data-q="${i}" style="${pos(q[1],q[2])};font-size:${q[3]||6}em">${q[0]}</span>`).join(''):'');
       v.querySelectorAll('[data-s]').forEach(e=>e.onclick=ev=>{ev.stopPropagation();useSp(SP[+e.dataset.s])});
       v.querySelectorAll('[data-q]').forEach(e=>e.onclick=ev=>{ev.stopPropagation();tapQ(+e.dataset.q)})};
     const drawTg=()=>{v.querySelector('#tdtg').innerHTML=tg.map(t=>`<div class="${t.got?'ok':''}"><span>${tdIm(t.e,TDI,li,t.id)}</span><small>${esc(t.n)}</small></div>`).join('');
-      const need=SP.filter(s=>!s.op).map(s=>s.tool);(L.cb||[]).forEach(c=>{if(!IT[c[2]].made&&need.includes(c[2]))need.push(c[0],c[1])});
+      const need=SP.filter(s=>!s.op).map(s=>s.tool);(L.cb||[]).forEach(c=>{const r=c[c.length-1];if(!IT[r].made&&need.includes(r))need.push(...c.slice(0,-1))});
       if(need.includes('#'))cN.forEach(t=>need.push(t.id));if(L.sq&&!sqDone)qN.forEach(t=>need.push(t.id));
       bag=bag.filter(id=>need.includes(id));if(sel&&!bag.includes(sel))sel='';
       v.querySelector('#tdbag').innerHTML=bag.map(id=>`<button class="${sel===id?'on':''}${isN(IT[id])?' nt':''}" data-b="${id}">${tdIm(IT[id].e,TDI,li,id)}</button>`).join('');
       v.querySelector('#tdsel').textContent=sel?'Đang cầm '+IT[sel].n.toLowerCase()+(L.cb?', chạm chỗ cần dùng hoặc chạm dụng cụ khác để ghép':', chạm vào chỗ cần dùng'):bag.length?'Chạm vào dụng cụ để cầm lên':'Túi đồ trống';
       v.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{const id=b.dataset.b;if(isN(IT[id]))return note(IT[id]);
-        const c=sel&&sel!==id&&(L.cb||[]).find(c=>(c[0]===sel&&c[1]===id)||(c[1]===sel&&c[0]===id));
-        if(c){bag=bag.filter(x=>x!==c[0]&&x!==c[1]);IT[c[2]].made=1;IT[c[2]].got=true;bag.push(c[2]);sel=c[2];toast('✨ Ghép thành '+IT[c[2]].n.toLowerCase(),2400);return drawTg()}
+        const c=sel&&sel!==id&&(L.cb||[]).find(c=>{const g=c.slice(0,-1);return g.includes(sel)&&g.includes(id)});
+        if(c){const g=c.slice(0,-1),r=c[c.length-1];if(!g.every(x=>bag.includes(x))){toast('Còn thiếu '+(g.length-g.filter(x=>bag.includes(x)).length)+' mảnh nữa mới ghép được',2400);sel=id;return drawTg()}
+          bag=bag.filter(x=>!g.includes(x));IT[r].made=1;IT[r].got=true;bag.push(r);sel=r;toast('✨ Ghép thành '+IT[r].n.toLowerCase(),2400);return drawTg()}
         sel=sel===id?'':id;drawTg()});
       const n=tg.filter(t=>t.got).length;const cs='assets/td-meo-'+(n===tg.length?'vui':n*2>=tg.length?'ngac':'buon')+'.png',ci=v.querySelector('#tdcat');if(!ci.src.endsWith(cs)){ci.src=cs;ci.classList.remove('jmp');void ci.offsetWidth;ci.classList.add('jmp')}};
     const pop=(x,y,t)=>{const d=document.createElement('div');d.className='tdfx';d.textContent=t;d.style.left=x+'%';d.style.top=y+'%';st.appendChild(d);setTimeout(()=>d.remove(),1200)};
@@ -1966,13 +2118,13 @@ function openTd(){const old=$('.tdv');if(old)old.remove();const v=document.creat
       openSp(s)};
     st.onclick=ev=>{const r=st.getBoundingClientRect(),d=document.createElement('div');d.className='tdmiss';d.style.left=(ev.clientX-r.left)+'px';d.style.top=(ev.clientY-r.top)+'px';st.appendChild(d);setTimeout(()=>d.remove(),500)};
     const hint=()=>{if(!hints)return toast('Hết lượt gợi ý màn này rồi',2000);const q=x=>v.querySelector(x),gotAll=a=>a.length&&a.every(t=>t.got);let el=null;
-      let h=SP.find(s=>!s.op&&s.tool&&s.tool!=='#'&&bag.includes(s.tool));if(h)el=q(`[data-s="${h.j}"]`);
-      if(!el){h=SP.find(s=>!s.op&&s.tool==='#');if(h&&gotAll(cN))el=q(`[data-s="${h.j}"]`)}
+      let h=SP.find(s=>vis(s)&&!s.op&&s.tool&&s.tool!=='#'&&bag.includes(s.tool));if(h)el=q(`[data-s="${h.j}"]`);
+      if(!el){h=SP.find(s=>vis(s)&&!s.op&&s.tool==='#');if(h&&gotAll(cN))el=q(`[data-s="${h.j}"]`)}
       if(!el&&L.sq&&!sqDone&&gotAll(qN))el=q(`[data-q="${ord[sqs]}"]`);
-      if(!el){const c=(L.cb||[]).find(c=>bag.includes(c[0])&&bag.includes(c[1]));if(c)el=q(`[data-b="${c[0]}"]`)}
+      if(!el){const c=(L.cb||[]).find(c=>c.slice(0,-1).every(x=>bag.includes(x)));if(c)el=q(`[data-b="${c[0]}"]`)}
       if(!el){const t=Object.values(IT).find(t=>t.show&&!t.got&&isT(t))||Object.values(IT).find(t=>t.show&&!t.got&&!isT(t));el=t&&q(`[data-i="${t.id}"]`)}
-      if(!el){h=SP.find(s=>!s.op&&!s.tool);el=h&&q(`[data-s="${h.j}"]`)}
-      if(!el){h=SP.find(s=>!s.op);el=h&&q(`[data-s="${h.j}"]`)}
+      if(!el){h=SP.find(s=>vis(s)&&!s.op&&!s.tool);el=h&&q(`[data-s="${h.j}"]`)}
+      if(!el){h=SP.find(s=>vis(s)&&!s.op);el=h&&q(`[data-s="${h.j}"]`)}
       if(!el)return;hints--;used++;v.querySelector('#tdhn').textContent=hints;el.classList.remove('hint');void el.offsetWidth;el.classList.add('hint');setTimeout(()=>el.classList.remove('hint'),3000)};
     const win=()=>{const sec=Math.round((Date.now()-t0)/1000),stars=hard?(used===0&&sec<180?3:used<=1?2:1):(used===0?3:used<3?2:1),P=LS.get('td',{u:0,s:{}});P.s[li]=Math.max(P.s[li]||0,stars);P.u=Math.max(P.u,Math.min(li+1,TD.length-1));LS.set('td',P);
       const o=document.createElement('div');o.className='tdwin';

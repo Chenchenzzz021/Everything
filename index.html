@@ -204,7 +204,7 @@ ul.ck li{margin:4px 0}
 .tmsg{font-size:clamp(13px,3.9vw,17px);font-weight:700;line-height:1.3;background:#fff;border-radius:12px;padding:6px 12px;max-width:100%;color:#1f2937;box-shadow:0 1px 3px rgba(0,0,0,.1)}
 .ttk{position:absolute;width:4.6%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 50% 42%,#fff 0 46%,var(--c) 50%);border:2px solid #fff;display:grid;place-items:center;font-size:clamp(9px,2.8vw,16px);box-shadow:0 3px 0 color-mix(in srgb,var(--c) 60%,#000),0 4px 6px rgba(0,0,0,.3);z-index:4;transition:left .35s,top .35s;pointer-events:none}
 .ttk.hop{transition:left .14s ease-out,top .14s ease-out}.ttk.jp{animation:jp2 .15s ease-out}@keyframes jp2{50%{transform:translate(-50%,-80%) scale(1.15)}}
-.tsunb{position:absolute;right:1px;top:0;font-size:11px;line-height:1;z-index:2;animation:tsun 2s ease-in-out infinite}@keyframes tsun{50%{transform:scale(1.3) rotate(20deg)}}.tt.tsun{box-shadow:inset 0 0 0 2px #f59e0b,0 0 8px #fbbf24}
+.tsunb{position:absolute;right:1px;top:0;font-size:11px;line-height:1;z-index:2;animation:tsun 2s ease-in-out infinite}@keyframes tsun{50%{transform:scale(1.3) rotate(20deg)}}.tt.tsun{box-shadow:inset 0 0 0 2px #f59e0b,0 0 8px #fbbf24}.tt.tcold{box-shadow:inset 0 0 0 2px #3b82f6,0 0 8px #60a5fa;filter:saturate(.6)}
 .tsetb{position:absolute;left:1px;top:0;font-size:10px;line-height:1;z-index:2;color:#f59e0b;text-shadow:0 0 2px #fff,0 0 3px #92400e;font-style:normal}
 .tytzb{display:flex;gap:4px;justify-content:center;flex-wrap:wrap;width:100%;margin-top:4px}.tytzb button{font-size:20px;width:min(38px,11vw);height:38px;border-radius:12px;border:2px solid #e2e8f0;background:#fff;box-shadow:0 2px 0 #cbd5e1;padding:0}.tytzb button:active{transform:scale(.9)}
 .tytz{position:absolute;z-index:30;font-size:clamp(36px,11vw,58px);pointer-events:none;animation:tytz 2.8s ease-out forwards;text-align:center;line-height:1;transform:translate(-50%,0)}.tytz small{display:block;font-size:12px;background:rgba(15,23,42,.75);color:#fff;border-radius:999px;padding:2px 8px;font-weight:700;margin-top:2px;white-space:nowrap}
@@ -1349,10 +1349,10 @@ async function openGame(id){const old=$('.gm');if(old)old.remove();const v=docum
   const tyChip=()=>'';
   const drawTy=was=>{tyUse(g);const W=g.st==='wait',n=g.pl.length,own=g.own||TB.map(()=>-1),lv=g.lv||TB.map(()=>0);let h='';
     TB.forEach((T,i)=>{const [r,c]=tyRC(i),o=own[i],L=lv[i]||0,cn=i%(TK-1)===0;
-      h+=`<div class="tt${cn?' tc':''}${o>=0?' ow':''}${o>=0&&L===3?' thot':''}${tyHot(g,i)?' tsun':''}${T.k==='c'?' tcity':''}" data-t="${i}" style="grid-row:${r+1};grid-column:${c+1};--g:${T.g!=null?TGC[T.g]:'#cbd5e1'};--o:${o>=0?tyCol(g,o):'transparent'}">${T.k==='c'?'<i class="tg"></i>':''}${tyHot(g,i)?'<i class="tsunb">☀️</i>':''}${T.k==='c'&&o>=0&&tyFull(g,i)?'<i class="tsetb">★</i>':''}${T.e?`${TIMG[T.k==='st'?T.n:T.k]?`<img class="ti" src="assets/${TIMG[T.k==='st'?T.n:T.k]}.png" alt="" onerror="this.remove()">`:''}<span class="te">${T.e}</span>`:''}${o>=0&&L?`<i class="tlv${L===3?' hot':''}">${L===3?'<img class="th" src="assets/ty-khachsan.png" alt="🏨" onerror="this.outerHTML=\'🏨\'">':'<img class="th" src="assets/ty-nha.png" alt="🏠" onerror="this.outerHTML=\'🏠\'">'+L}</i>`:''}<b>${T.n}</b>${T.p?(o>=0?`<small class="trent"><i class="tmi">💰</i>${tyMoney(tyRent(g,i))}</small>`:`<small>${tyMoney(T.p)}</small>`):''}</div>`});
+      h+=`<div class="tt${cn?' tc':''}${o>=0?' ow':''}${o>=0&&L===3?' thot':''}${tyHot(g,i)?' tsun':''}${tyCold(g,i)?' tcold':''}${T.k==='c'?' tcity':''}" data-t="${i}" style="grid-row:${r+1};grid-column:${c+1};--g:${T.g!=null?TGC[T.g]:'#cbd5e1'};--o:${o>=0?tyCol(g,o):'transparent'}">${T.k==='c'?'<i class="tg"></i>':''}${tyHot(g,i)?'<i class="tsunb">☀️</i>':tyCold(g,i)?'<i class="tsunb">🌧️</i>':''}${T.k==='c'&&o>=0&&tyFull(g,i)?'<i class="tsetb">★</i>':''}${T.e?`${TIMG[T.k==='st'?T.n:T.k]?`<img class="ti" src="assets/${TIMG[T.k==='st'?T.n:T.k]}.png" alt="" onerror="this.remove()">`:''}<span class="te">${T.e}</span>`:''}${o>=0&&L?`<i class="tlv${L===3?' hot':''}">${L===3?'<img class="th" src="assets/ty-khachsan.png" alt="🏨" onerror="this.outerHTML=\'🏨\'">':'<img class="th" src="assets/ty-nha.png" alt="🏠" onerror="this.outerHTML=\'🏠\'">'+L}</i>`:''}<b>${T.n}</b>${T.p?(o>=0?`<small class="trent"><i class="tmi">💰</i>${tyMoney(tyRent(g,i))}</small>`:`<small>${tyMoney(T.p)}</small>`):''}</div>`});
     const pot=g.pot||0;
     h+=`<div class="tcen" style="grid-row:2/span ${TK-2};grid-column:2/span ${TK-2}"><div class="tlogo">🏙️ <b>CỜ TỈ PHÚ</b></div><div class="tdice" id="tdc">${diceHtml(g.d1||5)}${diceHtml(g.d2||2)}</div>
-      <div class="tinfo"><span>🏖️ Quỹ: <b>${tyMoney(pot)}</b></span><span>🔁 Vòng <b>${Math.min((g.rd||0)+1,TY_ROUNDS)}/${TY_ROUNDS}</b></span>${(g.rd||0)>=TY_ROUNDS-TY_LAST?'<span class="tpoor">🔥 Giờ lật kèo</span>':''}${g.hotr>0?`<span>☀️ Mùa du lịch x3 còn <b>${g.hotr}</b> vòng</span>`:''}</div>${g.msg&&!W?`<div class="tmsg">${esc(g.msg)}</div>`:''}</div>`;
+      <div class="tinfo"><span>🏖️ Quỹ: <b>${tyMoney(pot)}</b></span><span>🔁 Vòng <b>${Math.min((g.rd||0)+1,TY_ROUNDS)}/${TY_ROUNDS}</b></span>${(g.rd||0)>=TY_ROUNDS-TY_LAST?'<span class="tpoor">🔥 Giờ lật kèo</span>':''}${g.hotr>0?`<span>☀️ Mùa du lịch x3 còn <b>${g.hotr}</b> vòng</span>`:''}${g.coldr>0?`<span>🌧️ Mưa lũ miễn thuê còn <b>${g.coldr}</b> vòng</span>`:''}</div>${g.msg&&!W?`<div class="tmsg">${esc(g.msg)}</div>`:''}</div>`;
     let tk='';const P=g.pos||g.pl.map(()=>0),WP=was&&was.type==='ty'&&was.pos&&was.pos.length===P.length?was.pos:null,anim=[];
     if(!W)g.pl.forEach((u,s)=>{if((g.out||[])[s])return;const [r,c]=tyRC(P[s]),dx=(s&1?.2:-.2),dy=(s>>1?.2:-.2),L=(c+.5+dx)/TK*100,T=(r+.5+dy)/TK*100;let L0=L,T0=T;
       if(WP&&WP[s]!==P[s]){const [r0,c0]=tyRC(WP[s]);L0=(c0+.5+dx)/TK*100;T0=(r0+.5+dy)/TK*100;const st=[];if(g.mv==='walk'){let q=WP[s];while((q=(q+1)%TN)!==P[s]&&st.length<13)st.push(q)}anim.push([s,L,T,st,dx,dy])}
@@ -1385,7 +1385,8 @@ async function openGame(id){const old=$('.gm');if(old)old.remove();const v=docum
         else if(ek==='set'&&te){te.classList.add('tbuy');TB.forEach((x,j)=>{if(x.g===TB[ti].g)tyFx(tb,j,'🎯')});banner('🎯 ĐỦ BỘ! TIỀN THUÊ X2','#f59e0b',3000)}
         else if(ek==='luck')banner('🎁 MAY MẮN!','#a855f7',3000);else if(ek==='fly'){if(te)tyFx(tb,ti,'✈️');banner('✈️ BAY TỚI '+TB[ti].n.toUpperCase()+'!','#0ea5e9',3000)}else if(ek==='bus')banner('🚌 VỀ THẲNG XUẤT PHÁT!','#16a34a',3000);else if(ek==='pot')banner('🏖️ ĂN QUỸ BÃI BIỂN!','#0ea5e9',3000);
         if(/phá sản/.test(g.msg||''))banner('💥 PHÁ SẢN!','#ef4444',3000);
-        if(g.wev&&g.wev!==was.wev&&g.st==='play'){const [wk,wg]=g.wev.split(':'),gg=+wg;setTimeout(()=>{TB.forEach((x,j)=>{if(x.g===gg)tyFx(tb,j,wk==='storm'?'🌀':'☀️')});banner(wk==='storm'?'🌀 BÃO ĐỔ BỘ '+tyGName(g,gg).toUpperCase()+'!':'☀️ MÙA DU LỊCH '+tyGName(g,gg).toUpperCase()+' · THUÊ X3!',wk==='storm'?'#475569':'#f59e0b',3000)},ek?3200:0)}
+        if(g.wev&&g.wev!==was.wev&&g.st==='play'){const [wk,wg]=g.wev.split(':'),gg=+wg;const W={storm:['🌀','🌀 BÃO ĐỔ BỘ ','!','#475569'],hot:['☀️','☀️ MÙA DU LỊCH ',' · THUÊ X3!','#f59e0b'],flood:['🌧️','🌧️ MƯA LŨ ',' · MIỄN THUÊ!','#2563eb'],build:['🏗️','🏗️ QUY HOẠCH ',' · NHÀ +1 TẦNG!','#16a34a'],lixi:['🧧','🧧 LÌ XÌ! MỖI NGƯỜI +100','','#dc2626'],tax:['🏛️','🏛️ THU THUẾ ĐỘT XUẤT 10%','','#7c3aed']}[wk];
+          if(W)setTimeout(()=>{if(gg>=0)TB.forEach((x,j)=>{if(x.g===gg)tyFx(tb,j,W[0])});else g.pl.forEach((u,k)=>{if(!(g.out||[])[k])tyFx(tb,g.pos[k],W[0])});banner(W[1]+(gg>=0?tyGName(g,gg).toUpperCase()+W[2]:''),W[3],3000)},ek?3200:0)}
         if((was.rd||0)<TY_ROUNDS-TY_LAST&&(g.rd||0)>=TY_ROUNDS-TY_LAST&&g.st==='play')setTimeout(()=>banner('🔥 10 VÒNG CUỐI · GIỜ LẬT KÈO!','#f97316',3000),3200)},delay)}
     const ga=v.querySelector('#ga');if(W){waitUI(ga);return}if(g.st!=='play'){ga.innerHTML='';return}
     const me=myTurn(g),s=g.turn,i=P[s],T=TB[i];
@@ -1495,12 +1496,22 @@ function tyRent(t,i){const T=TB[i],o=t.own[i];if(o<0)return 0;if(T.k==='st'){con
 const tyFull=(t,i)=>{const T=TB[i],o=t.own[i];return T.k==='c'&&o>=0&&TB.every((x,j)=>x.g!==T.g||t.own[j]===o)};
 const tyHot=(t,i)=>TB[i].g!=null&&TB[i].g===t.hot&&t.hotr>0;
 const tyGName=(t,gg)=>TB.filter(x=>x.k==='c'&&x.g===gg).map(x=>x.n).join(', ');
-// sự kiện ngẫu nhiên: đầu mỗi vòng chia hết cho 4 (từ vòng 4) có bão hoặc mùa du lịch
-function tyWorld(t){if(t.hotr>0){t.hotr--;if(!t.hotr)t.hot=-1}if(t.rd<4||t.rd%4!==0||t.rd>=TY_ROUNDS)return;
-  const gs=[...new Set(TB.filter(x=>x.k==='c').map(x=>x.g))],pick=a=>a[Math.floor(Math.random()*a.length)];
-  if(!(t.hotr>0)&&Math.random()<.5){const gg=pick(gs);t.hot=gg;t.hotr=3;t.wev='hot:'+gg+':'+t.rd;t.msg=(t.msg?t.msg+' · ':'')+'☀️ Mùa du lịch ở '+tyGName(t,gg)+': tiền thuê x3 trong 3 vòng!'}
-  else{const wh=gs.filter(gg=>TB.some((x,i)=>x.g===gg&&t.lv[i]>0)),gg=pick(wh.length?wh:gs);let n=0;TB.forEach((x,i)=>{if(x.g===gg&&t.lv[i]>0){t.lv[i]--;n++}});
-    t.wev='storm:'+gg+':'+t.rd;t.msg=(t.msg?t.msg+' · ':'')+'🌀 Bão đổ bộ '+tyGName(t,gg)+(n?': '+n+' căn nhà bị hạ một tầng!':', may là chưa ai xây nhà')}}
+const tyCold=(t,i)=>TB[i].g!=null&&TB[i].g===t.cold&&t.coldr>0;
+// sự kiện ngẫu nhiên: mỗi ván có tần suất t.wp riêng (0 = ván yên bình), cách nhau ít nhất 3 vòng
+const TY_WP=[0,.05,.1,.16];
+function tyWorld(t){if(t.hotr>0){t.hotr--;if(!t.hotr)t.hot=-1}if(t.coldr>0){t.coldr--;if(!t.coldr)t.cold=-1}
+  if(t.rd<3||t.rd>=TY_ROUNDS-1||t.rd-(t.wlr||0)<3||Math.random()>=(t.wp??.1))return;
+  const gs=[...new Set(TB.filter(x=>x.k==='c').map(x=>x.g))],pick=a=>a[Math.floor(Math.random()*a.length)],add=m=>t.msg=(t.msg?t.msg+' · ':'')+m,alive=t.pl.map((u,k)=>k).filter(k=>!t.out[k]);
+  const ks=['storm','lixi','tax','build'];if(!(t.hotr>0))ks.push('hot');if(!(t.coldr>0))ks.push('flood');const k=pick(ks);let gg=-1;t.wlr=t.rd;
+  if(k==='hot'){gg=pick(gs.filter(x=>x!==t.cold));t.hot=gg;t.hotr=3;add('☀️ Mùa du lịch ở '+tyGName(t,gg)+': tiền thuê x3 trong 3 vòng!')}
+  else if(k==='flood'){gg=pick(gs.filter(x=>x!==t.hot));t.cold=gg;t.coldr=2;add('🌧️ Mưa lũ ở '+tyGName(t,gg)+': miễn tiền thuê trong 2 vòng!')}
+  else if(k==='storm'){const wh=gs.filter(x=>TB.some((y,i)=>y.g===x&&t.lv[i]>0));gg=pick(wh.length?wh:gs);let n=0;TB.forEach((x,i)=>{if(x.g===gg&&t.lv[i]>0){t.lv[i]--;n++}});
+    add('🌀 Bão đổ bộ '+tyGName(t,gg)+(n?': '+n+' căn nhà bị hạ một tầng!':', may là chưa ai xây nhà'))}
+  else if(k==='build'){const wh=gs.filter(x=>TB.some((y,i)=>y.g===x&&y.k==='c'&&t.own[i]>=0&&(t.lv[i]||0)<3));gg=pick(wh.length?wh:gs);let n=0;TB.forEach((x,i)=>{if(x.g===gg&&x.k==='c'&&t.own[i]>=0&&(t.lv[i]||0)<3){t.lv[i]=(t.lv[i]||0)+1;n++}});
+    add('🏗️ Nhà nước quy hoạch '+tyGName(t,gg)+(n?': '+n+' căn nhà được nâng một tầng miễn phí!':', tiếc là đất còn trống'))}
+  else if(k==='lixi'){alive.forEach(k=>tyPay(t,-1,k,100));add('🧧 Lì xì bất ngờ: mỗi người được '+tyMoney(100)+'!')}
+  else{let s=0;alive.forEach(k=>{const n=Math.floor(Math.max(0,t.cash[k])*.1/10)*10;if(n>0){tyPay(t,k,-2,n);s+=n}});add('🏛️ Thu thuế đột xuất: mỗi người nộp 10% tiền mặt vào quỹ'+(s?' (tổng '+tyMoney(s)+')':''))}
+  t.wev=k+':'+gg+':'+t.rd}
 const tyUpCost=i=>Math.round(TB[i].p/2);
 const tyUpFor=(t,s,i)=>Math.round(tyUpCost(i)*(tySk(t,s)==='build'?.8:1));
 const tyGoAmt=(t,s,poor)=>(poor?TY_GO*2:TY_GO)+(tySk(t,s)==='go'?25:0);
@@ -1508,7 +1519,7 @@ const TY_LAST=10;
 function tyPoor(t){if(!t.cash||(t.rd||0)<TY_ROUNDS-TY_LAST)return -1;const A=tyActive(t);if(A.length<2)return -1;let b=-1,bw=1e12;A.forEach(i=>{const w=tyWorth(t,i);if(w<bw){bw=w;b=i}});return b}
 const tyAssets=(t,s)=>tyWorth(t,s)-t.cash[s];
 function tyWorth(t,s){let w=t.cash[s];TB.forEach((T,i)=>{if(t.own[i]===s)w+=T.p+(t.lv[i]||0)*tyUpCost(i)});return w}
-function tyInit(pl){const a=PROV.map((x,i)=>i);for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}const cities=a.slice(0,TY_NC).sort((x,y)=>x-y);tyUse({cities});return{cities,pl,pos:pl.map(()=>0),cash:pl.map(()=>TY_START),own:TB.map(()=>-1),lv:TB.map(()=>0),skip:pl.map(()=>0),out:pl.map(()=>0),d1:0,d2:0,ph:'roll',turn:0,rd:0,pot:0,dbl:0,msg:'',ev:'',hot:-1,hotr:0,wev:''}}
+function tyInit(pl){const a=PROV.map((x,i)=>i);for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}const cities=a.slice(0,TY_NC).sort((x,y)=>x-y);tyUse({cities});return{cities,pl,pos:pl.map(()=>0),cash:pl.map(()=>TY_START),own:TB.map(()=>-1),lv:TB.map(()=>0),skip:pl.map(()=>0),out:pl.map(()=>0),d1:0,d2:0,ph:'roll',turn:0,rd:0,pot:0,dbl:0,msg:'',ev:'',hot:-1,hotr:0,wev:'',cold:-1,coldr:0,wlr:0,wp:TY_WP[Math.floor(Math.random()*TY_WP.length)]}}
 const TLUCK=[['💸 Trúng xổ số, nhận 150',t=>tyPay(t,-1,t.turn,150)],['🛍️ Bán đồ cũ được 80',t=>tyPay(t,-1,t.turn,80)],['💡 Đóng tiền điện 100',t=>tyPay(t,t.turn,-2,100)],['📸 Bị phạt nguội 50',t=>tyPay(t,t.turn,-2,50)],
   ['🏁 Về thẳng Xuất phát',t=>{t.pos[t.turn]=0;tyPay(t,-1,t.turn,tyGoAmt(t,t.turn,false));t.mv='jump'}],['↩️ Đi lùi 3 ô',t=>{t.pos[t.turn]=(t.pos[t.turn]+TN-3)%TN;t.mv='jump';tyLand(t,true)}],['🚧 Bị kẹt xe, mất 1 lượt',t=>{t.pos[t.turn]=TN/4;t.mv='jump';if(tySk(t,t.turn)==='jam')t.note=(t.note?t.note+' · ':'')+'🛵 luồn lách thoát luôn';else t.skip[t.turn]=1}],
   ['🎂 Sinh nhật! Mỗi người tặng bạn 30',t=>tyActive(t).forEach(o=>{if(o!==t.turn)tyPay(t,o,t.turn,30)})],['🍻 Bạn khao cả nhóm, trả mỗi người 30',t=>tyActive(t).forEach(o=>{if(o!==t.turn)tyPay(t,t.turn,o,30)})],
@@ -1530,6 +1541,7 @@ function tyLand(t,noLuck){const s=t.turn,i=t.pos[s],T=TB[i];t.ph='done';
   if(T.k==='c'||T.k==='st'){const o=t.own[i];
     if(o<0){if(t.cash[s]>=T.p){t.ph='buy';t.msg=nameOf(t.pl[s])+' đến '+T.n+' (giá '+tyMoney(T.p)+')'}else t.msg=nameOf(t.pl[s])+' đến '+T.n+' nhưng không đủ tiền mua'}
     else if(o===s){if(T.k==='c'&&(t.lv[i]||0)<3&&t.cash[s]>=tyUpFor(t,s,i)){t.ph='up';t.msg=nameOf(t.pl[s])+' về đất nhà ở '+T.n}else t.msg=nameOf(t.pl[s])+' về đất nhà ở '+T.n}
+    else if(!t.out[o]&&tyCold(t,i)){t.msg='🌧️ '+T.n+' đang mưa lũ, '+nameOf(t.pl[s])+' được miễn tiền thuê';t.ev='cold:'+i}
     else if(!t.out[o]){const pr=tyPoor(t);let r=tyRent(t,i);if(pr===s)r=Math.ceil(r/2);else if(pr===o)r*=2;const bg=tySk(t,s)==='rent';if(bg)r=Math.round(r*.9);t.msg='💸 '+nameOf(t.pl[s])+' trả '+tyMoney(r)+' tiền thuê cho '+nameOf(t.pl[o]);t.ev='rent:'+i;if(tyFull(t,i))t.msg+=' (🎯 đủ bộ x2)';if(tyHot(t,i))t.msg+=' (☀️ mùa du lịch x3)';if(pr===s)t.msg+=' (🔥 giảm nửa)';else if(pr===o)t.msg+=' (🔥 x2)';if(bg)t.msg+=' (🛡️ -10%)';tyPay(t,s,o,r)}
     if(T.k==='st'&&t.ph==='done')tyTrav(t)}
   else if(T.k==='lk'&&!noLuck){const GD=[0,1,4,7,10],c=tyPoor(t)===s?TLUCK[GD[Math.floor(Math.random()*GD.length)]]:TLUCK[Math.floor(Math.random()*TLUCK.length)];t.msg='🎁 '+nameOf(t.pl[s])+': '+c[0];t.ev='luck';c[1](t)}
@@ -1562,7 +1574,7 @@ function tyDecide(g,yes){tyUse(g);const t=JSON.parse(JSON.stringify(g));t.fx=[];
   else if(t.ph==='up'&&yes&&t.cash[s]>=tyUpFor(t,s,i)){t.lv[i]=(t.lv[i]||0)+1;tyPay(t,s,-1,tyUpFor(t,s,i));t.ev='up:'+i;t.msg=(t.lv[i]===3?'🏨 ':'🏠 ')+nameOf(t.pl[s])+(t.lv[i]===3?' xây khách sạn ở ':' xây thêm nhà ở ')+T.n}
   else t.msg=nameOf(t.pl[s])+' bỏ qua';if(T.k==='st'&&tyTrav(t))return t;tyNext(t);return t}
 function tyBotYes(t){tyUse(t);const s=t.turn,i=t.pos[s],c=t.ph==='buy'?TB[i].p:tyUpFor(t,s,i);return t.cash[s]-c>=(t.ph==='buy'?80:150)}
-const TYK=['hot','hotr','wev','fl','dto','sk','cities','pl','pos','cash','own','lv','skip','out','d1','d2','ph','turn','rd','pot','dbl','msg','ev','fx','mv','st','win'];
+const TYK=['hot','hotr','wev','cold','coldr','wlr','wp','fl','dto','sk','cities','pl','pos','cash','own','lv','skip','out','d1','d2','ph','turn','rd','pot','dbl','msg','ev','fx','mv','st','win'];
 const tyDiff=t=>{const o={};TYK.forEach(k=>{if(t[k]!==undefined)o[k]=t[k]});o.fx=(t.fx||[]).map(x=>x[0]+':'+x[1]);return o};
 function tyFx(tb,i,e){const [r,c]=tyRC(i),d=document.createElement('div');d.className='tyfx';d.textContent=e;d.style.left=(c+.5)/TK*100+'%';d.style.top=(r+.5)/TK*100+'%';tb.appendChild(d);setTimeout(()=>d.remove(),2400)}
 function diceHtml(n){const P={1:[5],2:[1,9],3:[1,5,9],4:[1,3,7,9],5:[1,3,5,7,9],6:[1,3,4,6,7,9]}[n]||[];return`<span class="pips f${n}">${[1,2,3,4,5,6,7,8,9].map(i=>`<i class="${P.includes(i)?'on':''}"></i>`).join('')}</span>`}
@@ -1752,7 +1764,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 78${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 79${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

@@ -434,7 +434,7 @@ nav button b{position:relative}
 .tdi{z-index:4;cursor:pointer;filter:drop-shadow(0 .15em .15em rgba(0,0,0,.3));transition:transform .3s,opacity .3s}.tdi.got{transform:translate(-50%,-50%) scale(1.8)!important;opacity:0!important}
 .tdi.nw{animation:tdnw 1.2s ease-out}@keyframes tdnw{0%{transform:translate(-50%,-50%) scale(.2);filter:drop-shadow(0 0 1em #fde047)}60%{transform:translate(-50%,-50%) scale(1.3)}}
 .tdp{z-index:3;cursor:pointer;filter:drop-shadow(0 .2em .2em rgba(0,0,0,.3))}.tdp.dusty{filter:grayscale(1) brightness(.55) sepia(.6) blur(.5px)}
-.tdk{z-index:3;aspect-ratio:1;border-radius:50%;background:radial-gradient(#000 45%,rgba(0,0,0,.85) 62%,transparent 72%);cursor:pointer;transition:opacity .8s}
+.tdk{z-index:3;aspect-ratio:1;border-radius:50%;background:radial-gradient(rgba(8,6,4,.97) 28%,rgba(8,6,4,.85) 48%,rgba(8,6,4,.5) 62%,transparent 72%);filter:blur(4px);cursor:pointer;transition:opacity .8s}
 .tdk.op,.tdp.op{pointer-events:none;z-index:2}.tdk.op{opacity:0}
 .tdim{height:1.15em;width:auto;display:block;pointer-events:none;-webkit-user-drag:none}.tdtg span .tdim{height:30px;margin:auto}.tdbag button .tdim{height:34px;margin:auto}.tdbi{height:46px}.tdb img{height:30px;display:block;margin:auto}.tdsr{height:18px;vertical-align:middle}.tdsr.off{filter:grayscale(1) brightness(.7);opacity:.45}.tdws .tdsr{height:46px}
 .tdcat{height:84px;margin:-34px -4px -8px 0;pointer-events:none;object-fit:contain;filter:drop-shadow(0 3px 4px rgba(0,0,0,.35));filter:drop-shadow(0 .05em .1em rgba(0,0,0,.4))}
@@ -1690,7 +1690,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 71${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 72${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};
@@ -1726,53 +1726,44 @@ const TD=[
   it:[['tb','🧸','Gấu bông',30,52,9,'e',1,-8],['sk','🧦','Đôi tất',38,93,7,'e',1,25],['bk','📕','Quyển sách',80,45.5,6,'e',1,-6],['ck','⏰','Đồng hồ',88,40.5,4,'h',.8],['pz','🧩','Mảnh ghép',14,73,4,'h',.8,-20],
       ['sc','✂️','Cái kéo',60,80,6,'t',1,30],['yo','🪀','Yo-yo',86,86,7,'x']],
   sp:[['🎁',86,87,11,'sc','📦',['yo'],'Hộp quà buộc dây chặt quá, cần gì đó để cắt']]},
- {n:'Gian bếp nhỏ',bg:'linear-gradient(#bbf7d0 0 58%,#e7e5e4 58%)',
-  d:[['#a8a29e',50,58,100,1.2,0],['🪟',22,18,18],['🔪',56,24,7,30],['🥘',40,60,13],['🧺',14,82,14],['🪑',36,82,18],['🗄️',80,66,24],['#fef3c7',60,47,40,3,4]],
-  it:[['sp','🥄','Cái thìa',62,62,7,'e',1,40],['pn','🍳','Cái chảo',22,52,10,'e'],['sl','🧂','Lọ muối',48,42,4.5,'h',.75],['eg','🥚','Quả trứng',8,73,4.5,'h'],['cr','🥕','Củ cà rốt',70,86,8,'e',1,-30],
-      ['ky','🔑','Chìa khoá',90,92,5,'t',.8,60],['co','🍪','Bánh quy',80,63,8,'x']],
-  sp:[['🔒',80,64,9,'ky','🔓',['co'],'Tủ bị khoá rồi']]},
- {n:'Khu vườn sau nhà',bg:'linear-gradient(#bae6fd 0 50%,#4ade80 50%)',
-  d:[['🏡',22,32,30],['🌳',76,32,42],['🌷',40,66,9],['🌼',60,78,8],['🌷',92,62,8],['☁️',45,10,14]],
-  it:[['sf','🌻','Hoa hướng dương',11,62,10,'e'],['lb','🐞','Bọ rùa',54,68,4,'h',.8],['sn','🐌','Ốc sên',88,88,5,'h'],['bf','🦋','Con bướm',42,22,7,'e'],
-      ['ld','🪜','Cái thang',30,86,12,'t',1,-15],['pk','⛏️','Cuốc chim',64,54,6,'t',.85],['ns','🪺','Tổ chim',80,14,8,'x'],['rg','💍','Chiếc nhẫn',48,88,6,'x']],
-  sp:[['🪺',80,14,8,'ld','',['ns'],'Tổ chim cao quá, không với tới'],['🪨',48,88,14,'pk','',['rg'],'Tảng đá nặng quá, cần dụng cụ đập vỡ']]},
- {n:'Gác mái bụi bặm',bg:'linear-gradient(#92400e,#451a03)',
-  d:[['#78350f',50,94,100,12,0],['🧳',20,70,18],['📦',76,76,18],['🪑',50,62,14],['🖼️',82,24,12,10],['🕸️',7,7,14]],
-  it:[['rd','📻','Cái đài',76,62,8,'e'],['ht','🎩','Mũ ảo thuật',20,58,9,'e'],['yn','🧶','Cuộn len',44,90,7,'e'],['fl','🔦','Đèn pin',90,92,6,'t'],['br','🧹','Cái chổi',6,46,12,'t',1,20],
-      ['cd','🕯️','Cây nến',30,32,7,'x'],['ok','🗝️','Chìa khoá cổ',66,40,7,'x'],['dl','🪆','Búp bê gỗ',92,13,7,'x']],
-  sp:[['dark',30,32,28,'fl','',['cd'],'Góc này tối om, chẳng thấy gì'],['dark',66,40,26,'fl','',['ok'],'Tối quá, cần soi sáng'],['🕸️',92,13,14,'br','',['dl'],'Mạng nhện dày quá, cần quét đi']]},
- {n:'Lớp học buổi chiều',bg:'linear-gradient(#e0f2fe 0 62%,#a16207 62%)',
-  d:[['#14532d',50,20,62,22,6],['#92400e',30,72,34,4,3],['#92400e',72,72,34,4,3],['🪑',30,84,14],['🪑',72,84,14],['🗄️',90,52,16],['🕰️',90,12,9]],
-  it:[['gb','🌍','Quả địa cầu',12,60,10,'e'],['pc','✏️','Bút chì',36,68,7,'e',1,60],['ab','🧮','Bàn tính',68,66,9,'e'],['rl','📐','Thước ê ke',58,32,5,'h',.7],['cp','📎','Kẹp giấy',80,90,4,'h',.85,30],
-      ['sc','✂️','Cái kéo',8,92,5,'t',.85],['ky','🔑','Chìa khoá',22,22,6,'y'],['ms','🔬','Kính hiển vi',90,50,8,'x']],
-  sp:[['🎁',22,22,10,'sc','📦',['ky'],'Hộp quà buộc dây, cần cắt dây'],['🔒',90,52,8,'ky','🔓',['ms'],'Tủ khoá rồi']]},
- {n:'Bãi biển ngày nắng',bg:'linear-gradient(#7dd3fc 0 34%,#0ea5e9 34% 48%,#fde68a 48%)',
-  d:[['⛱️',25,56,22],['🌴',86,40,34],['⛵',58,38,10],['🌊',30,42,9],['☀️',12,10,12]],
-  it:[['sh','🐚','Vỏ sò',40,80,7,'e'],['cb','🦀','Con cua',76,70,8,'e'],['sg','🕶️','Kính râm',28,64,5,'h',.8],['dp','🩴','Đôi dép',12,90,8,'e',1,-20],
-      ['fr','🎣','Cần câu',90,86,10,'t',1,-20],['pk','⛏️','Cuốc chim',55,92,5,'t',.8],['fs','🐠','Con cá',60,60,8,'x'],['dm','💎','Viên kim cương',15,72,7,'x']],
-  sp:[['🕳️',60,62,13,'fr','',['fs'],'Hố nước sâu, thò tay không tới'],['🪨',15,72,14,'pk','',['dm'],'Có gì đó lấp lánh dưới tảng đá']]},
- {n:'Hang động bí ẩn',bg:'radial-gradient(circle at 50% 60%,#57534e,#1c1917 75%)',
-  d:[['🪨',8,60,16],['🪨',92,66,18],['🦇',30,12,8],['🦇',70,16,7,20],['#292524',50,96,100,10,0]],
-  it:[['bn','🦴','Khúc xương',20,86,8,'e',1,30],['vs','🏺','Bình gốm',80,76,10,'e'],['mr','🍄','Cây nấm',45,72,4.5,'h'],['fl','🔦','Đèn pin',88,92,5.5,'t',.75],
-      ['pk','⛏️','Cuốc chim',26,42,7,'y'],['mb','💰','Túi vàng',36,50,7,'x'],['nk','📿','Chuỗi hạt',70,40,7,'x'],['cw','👑','Vương miện',52,86,8,'x']],
-  sp:[['dark',30,45,32,'fl','',['pk','mb'],'Tối om, nghe như có tiếng leng keng'],['dark',70,40,28,'fl','',['nk'],'Góc này tối quá'],['🪨',52,86,15,'pk','',['cw'],'Tảng đá chắn mất rồi']]},
- {n:'Phiên chợ quê',bg:'linear-gradient(#fef3c7 0 55%,#d6d3d1 55%)',
-  d:[['#dc2626',28,20,48,6,3],['#f8fafc',28,26,48,3,0],['#2563eb',76,24,44,6,3],['#92400e',28,48,44,4,2],['#92400e',76,50,40,4,2],['🧺',14,40,12],['🍌',36,42,8],['🛒',88,84,14]],
-  it:[['wm','🍉','Quả dưa hấu',24,40,9,'e'],['ck','🐓','Con gà trống',8,74,10,'e'],['cn','🌽','Bắp ngô',84,44,8,'e',1,20],['mg','🥭','Quả xoài',66,44,5,'h',.85],
-      ['mt','🍖','Miếng thịt',52,88,7,'t'],['hm','🔨','Cái búa',93,58,5.5,'t',.8,-30],['pa','🍍','Quả dứa',66,72,8,'x'],['cn2','🪙','Đồng xu',38,80,6,'x']],
-  sp:[['🐕',66,72,15,'mt','💤',['pa'],'Chú chó đang canh, không cho lại gần'],['🏺',38,80,12,'hm','',['cn2'],'Hũ đất bị gắn kín miệng']]},
- {n:'Thư viện cổ',bg:'linear-gradient(#7c2d12,#431407)',
-  d:[['#a16207',50,36,92,2,0],['#a16207',50,62,92,2,0],['📚',12,31,9],['📚',30,31,9],['📚',58,57,9],['📚',84,57,9],['📚',40,57,9],['🪑',30,84,14],['🕯️',62,80,7]],
-  it:[['sr','📜','Cuộn giấy',50,30,8,'e'],['ft','🪶','Lông vũ',88,30,5,'h',.8,40],['bb','📘','Sách xanh',22,57,6,'h'],['cm','🧭','La bàn',48,88,5,'h',.85],
-      ['sg','🧽','Miếng bọt biển',8,90,7,'t'],['sd','🪛','Tua vít',92,92,5,'t',.8,40],['ky','🔑','Chìa khoá',70,14,6,'y'],['hg','⌛','Đồng hồ cát',15,80,7,'x'],['tl','🔭','Kính thiên văn',84,78,8,'x']],
-  sp:[['🖼️',70,14,17,'sg','🖼️',['ky'],'Bức tranh phủ đầy bụi'],['🔩',15,80,9,'sd','',['hg'],'Nắp thông gió vặn chặt ốc'],['🔒',84,78,9,'ky','🔓',['tl'],'Tủ bị khoá']]},
- {n:'Lâu đài cổ',bg:'linear-gradient(#4338ca,#1e1b4b)',
-  d:[['#312e81',50,92,100,16,0],['#57534e',50,58,34,22,4],['🪟',18,16,12],['🪟',82,16,12],['🕯️',10,50,8],['🕯️',90,50,8],['🗿',90,78,13]],
-  it:[['sw','🗡️','Thanh kiếm',16,72,9,'e',1,-30],['sd','🛡️','Tấm khiên',76,40,10,'e'],['tr','🏆','Cúp vàng',62,88,4.5,'h',.8],['rg','💍','Chiếc nhẫn',36,36,4,'h',.75],
-      ['bk','🪣','Cái xô nước',8,90,9,'t'],['br','🧹','Cái chổi',94,34,10,'t',.9,-15],['ky','🔑','Chìa khoá',50,12,6,'y'],['sr','📜','Bản đồ cổ',50,58,8,'x'],['cw','👑','Vương miện',30,86,8,'x']],
-  sp:[['🕸️',50,12,15,'br','',['ky'],'Mạng nhện chằng chịt'],['🔥',50,60,16,'bk','💨',['sr'],'Lò sưởi đang cháy, nóng quá'],['🔒',30,86,9,'ky','🔓',['cw'],'Rương bị khoá']]}
+ {n:'Gian bếp nhỏ',img:'td-n02.jpg',bg:'linear-gradient(#bbf7d0 0 58%,#e7e5e4 58%)',d:[],
+  it:[['sp','🥄','Cái thìa',42,46.5,6,'e',1,40],['pn','🍳','Cái chảo',13,82,10,'e'],['sl','🧂','Lọ muối',19.5,44.5,3.6,'h',.9],['eg','🥚','Quả trứng',30,65,3.8,'h'],['cr','🥕','Củ cà rốt',58,88,8,'e',1,-30],
+      ['ky','🔑','Chìa khoá',31,38.5,4,'t',.9,60],['co','🍪','Bánh quy',87,47,7,'x']],
+  sp:[['🔒',87,57,7,'ky','🔓',['co'],'Tủ bị khoá rồi']]},
+ {n:'Khu vườn sau nhà',img:'td-n03.jpg',bg:'linear-gradient(#bae6fd 0 50%,#4ade80 50%)',d:[],
+  it:[['sf','🌻','Hoa hướng dương',44,64,9,'e'],['lb','🐞','Bọ rùa',71,57,3.2,'h',.95],['sn','🐌','Ốc sên',93,79,4.5,'h'],['bf','🦋','Con bướm',38,26,7,'e',1,-10],
+      ['ld','🪜','Cái thang',22,86,11,'t',1,-12],['pk','⛏️','Cuốc chim',33,61,5,'t',.9,20],['ns','🪺','Tổ chim',76,15,8,'x'],['rg','💍','Chiếc nhẫn',62,84,5.5,'x']],
+  sp:[['🪺',76,15,8,'ld','',['ns'],'Tổ chim cao quá, không với tới'],['🪨',62,86,13,'pk','',['rg'],'Tảng đá nặng quá, cần dụng cụ đập vỡ']]},
+ {n:'Gác mái bụi bặm',img:'td-n04.jpg',bg:'linear-gradient(#92400e,#451a03)',d:[],
+  it:[['rd','📻','Cái đài',86,65,8,'e'],['ht','🎩','Mũ ảo thuật',60,61,7.5,'e'],['yn','🧶','Cuộn len',15,68,6,'e'],['fl','🔦','Đèn pin',36,91,6,'t',1,-20],['br','🧹','Cái chổi',58,92,10,'t',1,-60],
+      ['cd','🕯️','Cây nến',18,48,7,'x'],['ok','🗝️','Chìa khoá cổ',40,22,6,'x'],['dl','🪆','Búp bê gỗ',90,11,7,'x']],
+  sp:[['dark',18,48,30,'fl','',['cd'],'Góc này tối om, chẳng thấy gì'],['dark',40,22,24,'fl','',['ok'],'Tối quá, cần soi sáng'],['🕸️',90,11,15,'br','',['dl'],'Mạng nhện dày quá, cần quét đi']]},
+ {n:'Lớp học buổi chiều',img:'td-n05.jpg',bg:'linear-gradient(#e0f2fe 0 62%,#a16207 62%)',d:[],
+  it:[['gb','🌍','Quả địa cầu',77,54,8,'e'],['pc','✏️','Bút chì',34,58.5,5.5,'e',1,60],['ab','🧮','Bàn tính',50,86,9,'e'],['rl','📐','Thước ê ke',62,43.5,4.2,'h',.85],['cp','📎','Kẹp giấy',27,90,3.4,'h',.95,30],
+      ['sc','✂️','Cái kéo',11,77,5,'t',.95],['ky','🔑','Chìa khoá',87,87,5.5,'y'],['ms','🔬','Kính hiển vi',92,37,7,'x']],
+  sp:[['🎁',87,88,10,'sc','📦',['ky'],'Hộp quà buộc dây, cần cắt dây'],['🔒',93,49,7,'ky','🔓',['ms'],'Tủ khoá rồi']]},
+ {n:'Bãi biển ngày nắng',img:'td-n06.jpg',bg:'linear-gradient(#7dd3fc 0 34%,#0ea5e9 34% 48%,#fde68a 48%)',d:[],
+  it:[['sh','🐚','Vỏ sò',40,80,6,'e'],['cb','🦀','Con cua',72,72,7,'e'],['sg','🕶️','Kính râm',33,63,4.5,'h',.9],['dp','🩴','Đôi dép',12,90,7,'e',1,-20],
+      ['fr','🎣','Cần câu',88,84,9,'t',1,-20],['pk','⛏️','Cuốc chim',55,93,4.5,'t',.9],['fs','🐠','Con cá',60,64,7,'x'],['dm','💎','Viên kim cương',17,74,6,'x']],
+  sp:[['🕳️',60,67,13,'fr','',['fs'],'Hố nước sâu, thò tay không tới'],['🪨',17,76,12,'pk','',['dm'],'Có gì đó lấp lánh dưới tảng đá']]},
+ {n:'Hang động bí ẩn',img:'td-n07.jpg',bg:'radial-gradient(circle at 50% 60%,#57534e,#1c1917 75%)',d:[],
+  it:[['bn','🦴','Khúc xương',22,88,7,'e',1,30],['vs','🏺','Bình gốm',84,84,9,'e'],['mr','🍄','Cây nấm',38,67,4,'h'],['fl','🔦','Đèn pin',87,92,5,'t',.85],
+      ['pk','⛏️','Cuốc chim',12,22,6,'y'],['mb','💰','Túi vàng',24,30,7,'x'],['nk','📿','Chuỗi hạt',82,28,7,'x'],['cw','👑','Vương miện',52,84,8,'x']],
+  sp:[['dark',18,26,32,'fl','',['pk','mb'],'Tối om, nghe như có tiếng leng keng'],['dark',82,28,26,'fl','',['nk'],'Góc này tối quá'],['🪨',52,86,15,'pk','',['cw'],'Tảng đá chắn mất rồi']]},
+ {n:'Phiên chợ quê',img:'td-n08.jpg',bg:'linear-gradient(#fef3c7 0 55%,#d6d3d1 55%)',d:[],
+  it:[['wm','🍉','Quả dưa hấu',14,54,8,'e'],['ck','🐓','Con gà trống',44,78,9,'e'],['cn','🌽','Bắp ngô',90,54,7,'e',1,20],['mg','🥭','Quả xoài',25,64,4.2,'h',.95],
+      ['mt','🍖','Miếng thịt',34,93,6,'t'],['hm','🔨','Cái búa',86,75,5,'t',.9,-30],['pa','🍍','Quả dứa',63,69,7,'x'],['cn2','🪙','Đồng xu',8,82,5,'x']],
+  sp:[['🐕',63,70,15,'mt','💤',['pa'],'Chú chó đang canh, không cho lại gần'],['🏺',8,83,11,'hm','',['cn2'],'Hũ đất bị gắn kín miệng']]},
+ {n:'Thư viện cổ',img:'td-n09.jpg',bg:'linear-gradient(#7c2d12,#431407)',d:[],
+  it:[['sr','📜','Cuộn giấy',33,31,7,'e'],['ft','🪶','Lông vũ',50,17,4.5,'h',.9,40],['bb','📘','Sách xanh',62,44,5,'h'],['cm','🧭','La bàn',48,87,4.5,'h',.9],
+      ['sg','🧽','Miếng bọt biển',22,63,6,'t'],['sd','🪛','Tua vít',94,91,5,'t',.9,40],['ky','🔑','Chìa khoá',52,64,5.5,'y'],['hg','⌛','Đồng hồ cát',9,82,6,'x'],['tl','🔭','Kính thiên văn',85,43,7,'x']],
+  sp:[['🖼️',52,64,15,'sg','🖼️',['ky'],'Bức tranh phủ đầy bụi'],['🔩',4,72,8,'sd','',['hg'],'Nắp thông gió vặn chặt ốc'],['🔒',85,60,7,'ky','🔓',['tl'],'Tủ bị khoá']]},
+ {n:'Lâu đài cổ',img:'td-n10.jpg',bg:'linear-gradient(#4338ca,#1e1b4b)',d:[],
+  it:[['sw','🗡️','Thanh kiếm',14,86,8,'e',1,-30],['sd','🛡️','Tấm khiên',32,44,7,'e'],['tr','🏆','Cúp vàng',66,88,4,'h',.9],['rg','💍','Chiếc nhẫn',40,47,3.4,'h',.85],
+      ['bk','🪣','Cái xô nước',7,92,8,'t'],['br','🧹','Cái chổi',22,66,8,'t',.9,-15],['ky','🔑','Chìa khoá',50,10,5.5,'y'],['sr','📜','Bản đồ cổ',50,64,7,'x'],['cw','👑','Vương miện',30,86,7,'x']],
+  sp:[['🕸️',50,10,15,'br','',['ky'],'Mạng nhện chằng chịt'],['🔥',50,63,15,'bk','💨',['sr'],'Lò sưởi đang cháy, nóng quá'],['🔒',30,87,8,'ky','🔓',['cw'],'Rương bị khoá']]}
 ];
-const TDI={'✂️':'dc-keo','🔑':'dc-chia','🪜':'dc-thang','⛏️':'dc-cuoc','🔦':'dc-den','🧹':'dc-choi','🎣':'dc-cancau','🍖':'dc-thit','🔨':'dc-bua','🧽':'dc-mutbot','🪛':'dc-tuavit','🪣':'dc-xo','🪺':'cg-tochim','🧸':'d-gaubong','🧦':'d-tat','📕':'d-sach','⏰':'d-dongho','🧩':'d-manhghep','🪀':'d-yoyo','🥄':'d-thia','🍳':'d-chao','🧂':'d-muoi','🥚':'d-trung','🥕':'d-carot','🍪':'d-banhquy','🌻':'d-huongduong','🐞':'d-boruoa','🐌':'d-ocsen','🦋':'d-buom','2:🪺':'d-tochim','2:💍':'d-nhan','📻':'d-dai','🎩':'d-mu','🧶':'d-len','🕯️':'d-nen','🗝️':'d-chiacokhoa','🪆':'d-bupbe','🐚':'d-vocso','🦀':'d-cua','🕶️':'d-kinh','🩴':'d-dep','🐠':'d-ca','💎':'d-kimcuong','🦴':'d-xuong','6:🏺':'d-binhgom','🍄':'d-nam','💰':'d-tuivang','📿':'d-chuoihat','6:👑':'d-vuongmien1','🍉':'d-duahau','🐓':'d-ga','🌽':'d-ngo','🥭':'d-xoai','🍍':'d-dua','🪙':'d-dongxu','8:📜':'d-cuongiay','🪶':'d-longvu','📘':'d-sachxanh','🧭':'d-labam','⌛':'d-dongho-cat','🔭':'d-kinhtv','🗡️':'d-kiem','🛡️':'d-khien','🏆':'d-cup','9:💍':'d-nhando','9:📜':'d-bando','9:👑':'d-vuongmien2'};
+const TDI={'✂️':'dc-keo','🔑':'dc-chia','🪜':'dc-thang','⛏️':'dc-cuoc','🔦':'dc-den','🧹':'dc-choi','🎣':'dc-cancau','🍖':'dc-thit','🔨':'dc-bua','🧽':'dc-mutbot','🪛':'dc-tuavit','🪣':'dc-xo','🪺':'cg-tochim','🧸':'d-gaubong','🧦':'d-tat','📕':'d-sach','⏰':'d-dongho','🧩':'d-manhghep','🪀':'d-yoyo','🥄':'d-thia','🍳':'d-chao','🧂':'d-muoi','🥚':'d-trung','🥕':'d-carot','🍪':'d-banhquy','🌻':'d-huongduong','🐞':'d-boruoa','🐌':'d-ocsen','🦋':'d-buom','2:🪺':'d-tochim','2:💍':'d-nhan','📻':'d-dai','🎩':'d-mu','🧶':'d-len','🕯️':'d-nen','🗝️':'d-chiacokhoa','🪆':'d-bupbe','🐚':'d-vocso','🦀':'d-cua','🕶️':'d-kinh','🩴':'d-dep','🐠':'d-ca','💎':'d-kimcuong','🦴':'d-xuong','6:🏺':'d-binhgom','🍄':'d-nam','💰':'d-tuivang','📿':'d-chuoihat','6:👑':'d-vuongmien1','🍉':'d-duahau','🐓':'d-ga','🌽':'d-ngo','🥭':'d-xoai','🍍':'d-dua','🪙':'d-dongxu','8:📜':'d-cuongiay','🪶':'d-longvu','📘':'d-sachxanh','🧭':'d-labam','⌛':'d-dongho-cat','🔭':'d-kinhtv','🗡️':'d-kiem','🛡️':'d-khien','🏆':'d-cup','9:💍':'d-nhando','9:📜':'d-bando','9:👑':'d-vuongmien2','🌍':'d-diacau','✏️':'d-butchi','🧮':'d-bantinh','📐':'d-thuoc','📎':'d-kep','🔬':'d-kinhhv'};
 const TDS={'🎁':'cg-hopqua','🔒':'cg-khoa','🪺':'cg-tochim','🪨':'cg-da','🕸️':'cg-mangnhen','🕳️':'cg-honuoc','🐕':'cg-cho','🏺':'cg-hu','🖼️':'cg-tranh','🔩':'cg-thonggio','🔥':'cg-lua'};
 const TDO={'🎁':1,'🔒':1,'🪨':1,'🐕':1,'🏺':1,'🖼️':1,'🔩':1,'🔥':1};
 const tdIm=(e,M,li)=>{const f=M[li+':'+e]||M[e];return f?`<img class="tdim" src="assets/${f}.png" alt="${e}">`:e};

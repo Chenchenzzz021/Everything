@@ -421,6 +421,35 @@ nav button b{position:relative}
 .dice.roll{animation:dtum .6s linear infinite}.tdice.roll .pips{animation:dtum .55s linear infinite}.tdice.roll .pips+.pips{animation-delay:-.22s;animation-direction:reverse}
 @keyframes dtum{0%{transform:perspective(260px) rotateX(0) rotateY(0) translateY(0)}25%{transform:perspective(260px) rotateX(180deg) rotateY(90deg) translateY(-12px) scale(1.06)}50%{transform:perspective(260px) rotateX(360deg) rotateY(180deg) translateY(0)}75%{transform:perspective(260px) rotateX(540deg) rotateY(270deg) translateY(-7px) scale(1.04)}100%{transform:perspective(260px) rotateX(720deg) rotateY(360deg) translateY(0)}}
 .pips{animation:dland .35s cubic-bezier(.3,1.6,.6,1)}@keyframes dland{0%{transform:scale(.85)}100%{transform:none}}
+.gcard.g-td{background:linear-gradient(150deg,#86efac,#16a34a 55%,#7c2d12)}
+.tdv{position:fixed;inset:0;z-index:1850;background:linear-gradient(#1e293b,#0f172a);display:flex;flex-direction:column;align-items:center;gap:8px;padding:calc(8px + env(safe-area-inset-top)) 10px calc(10px + env(safe-area-inset-bottom));overflow-y:auto;color:#fff}
+.tdtop{display:flex;align-items:center;gap:8px;width:100%;max-width:520px}.tdtop b{flex:1;text-align:center;font-size:17px}
+.tdb{width:44px;height:44px;border-radius:14px;border:3px solid #1f2937;background:#facc15;font-size:20px;position:relative;box-shadow:0 3px 0 #1f2937}.tdb small{position:absolute;right:-6px;top:-6px;background:#ef4444;color:#fff;border-radius:999px;font-size:11px;min-width:18px;padding:1px 4px}
+.tdintro{max-width:520px;font-size:14px;opacity:.85;text-align:center}
+.tdlv{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:520px}.tdlv button{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:10px 12px;border-radius:16px;border:0;background:linear-gradient(150deg,#fde68a,#f59e0b);color:#1f2937;font-family:inherit;box-shadow:0 4px 0 #92400e}
+.tdlv button i{font-style:normal;font-weight:800;font-size:20px}.tdlv button b{font-size:14px}.tdlv button span{font-size:12px}.tdlv button:disabled{background:#475569;color:#cbd5e1;box-shadow:0 4px 0 #1e293b}
+.tdst{position:relative;width:100%;max-width:520px;aspect-ratio:4/5;border-radius:18px;overflow:hidden;border:4px solid #1f2937;box-shadow:0 8px 24px rgba(0,0,0,.5);flex-shrink:0;user-select:none;-webkit-user-select:none}
+.tdst>*>span,.tdst>span,.tdr,.tdk{position:absolute;transform:translate(-50%,-50%) rotate(var(--r,0deg));line-height:1}
+.tdd{pointer-events:none;z-index:1;filter:drop-shadow(0 .3em .3em rgba(0,0,0,.25))}.tdr{pointer-events:none;z-index:0}
+.tdi{z-index:4;cursor:pointer;filter:drop-shadow(0 .15em .15em rgba(0,0,0,.3));transition:transform .3s,opacity .3s}.tdi.got{transform:translate(-50%,-50%) scale(1.8)!important;opacity:0!important}
+.tdi.nw{animation:tdnw 1.2s ease-out}@keyframes tdnw{0%{transform:translate(-50%,-50%) scale(.2);filter:drop-shadow(0 0 1em #fde047)}60%{transform:translate(-50%,-50%) scale(1.3)}}
+.tdp{z-index:3;cursor:pointer;filter:drop-shadow(0 .2em .2em rgba(0,0,0,.3))}.tdp.dusty{filter:grayscale(1) brightness(.55) sepia(.6) blur(.5px)}
+.tdk{z-index:3;aspect-ratio:1;border-radius:50%;background:radial-gradient(#000 45%,rgba(0,0,0,.85) 62%,transparent 72%);cursor:pointer;transition:opacity .8s}
+.tdk.op,.tdp.op{pointer-events:none;z-index:2}.tdk.op{opacity:0}
+.tdcat{font-size:36px;line-height:1;pointer-events:none;filter:drop-shadow(0 .05em .1em rgba(0,0,0,.4))}
+.tdfx{position:absolute;z-index:6;transform:translate(-50%,-50%);font-size:8em;pointer-events:none;animation:tdfx 1.2s ease-out forwards;white-space:nowrap;font-weight:800;color:#fff;text-shadow:0 2px 4px #000}
+@keyframes tdfx{to{transform:translate(-50%,-160%);opacity:0}}
+.tdmiss{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;border:3px solid rgba(255,255,255,.8);border-radius:50%;pointer-events:none;z-index:7;animation:tdms .5s ease-out forwards}@keyframes tdms{to{transform:scale(2);opacity:0}}
+.tdst.shk{animation:tdshk .35s}@keyframes tdshk{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.hint{animation:tdhint .6s ease-in-out 5!important;z-index:5!important}@keyframes tdhint{50%{filter:drop-shadow(0 0 .4em #fde047) drop-shadow(0 0 .8em #facc15) brightness(1.4);opacity:1}}
+.tdbag{display:flex;align-items:center;gap:8px;width:100%;max-width:520px;background:#78350f;border:3px solid #1f2937;border-radius:16px;padding:6px 10px;min-height:56px}.tdbag>span{font-size:26px}
+.tdbag>div{display:flex;gap:6px}.tdbag button{width:44px;height:44px;border-radius:12px;border:3px solid #fde68a;background:#fef3c7;font-size:24px}.tdbag button.on{background:#facc15;border-color:#fff;transform:scale(1.12);box-shadow:0 0 12px #fde047}
+.tdbag small{flex:1;font-size:13px;opacity:.9;text-align:right}
+.tdtg{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:6px;width:100%;max-width:520px}
+.tdtg div{background:#334155;border-radius:12px;padding:4px;text-align:center;display:flex;flex-direction:column;align-items:center}.tdtg span{font-size:26px;filter:brightness(0) invert(.75);opacity:.6}.tdtg small{font-size:11px;opacity:.75;line-height:1.1}
+.tdtg div.ok{background:#16a34a}.tdtg div.ok span{filter:none;opacity:1}.tdtg div.ok small{opacity:1}
+.tdwin{position:fixed;inset:0;z-index:1900;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:20px}.tdwin>div{background:#fff;color:#1f2937;border-radius:24px;padding:20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;max-width:340px;width:100%;animation:tdnw .6s}
+.tdwc{font-size:72px;line-height:1}.tdwin b{font-size:22px}.tdws{font-size:34px;color:#f59e0b}
 </style>
 </head>
 <body>
@@ -1124,11 +1153,11 @@ function drawGames(){const e=$('#game');if(!e)return;const inv=GM.filter(gInvite
   const rk=[{id:NET.uid,gp:myPts()}].concat((S.locs||[]).filter(l=>l.id!==NET.uid&&((S.couple&&S.couple.members)||[]).includes(l.id)).map(l=>({id:l.id,gp:+l.gp||0}))).sort((a,b)=>b.gp-a.gp);
   e.innerHTML=`<h1>Trò chơi</h1>${act.length?`<div class="card gcont"><div class="gch2">▶️ Ván đang chơi dở</div>${act.map(g=>row(g,`<button class="btn" data-open="${g.id}" style="min-height:38px;padding:6px 12px">▶️ Chơi tiếp</button>`)).join('')}</div>`:''}<div class="card gpcard"><div class="gpme"><span>⭐</span><div><b>${myPts().toLocaleString('vi')} điểm</b><small>Mỗi ván thắng +${PTS} điểm</small></div></div>
     <div class="gprk">${rk.map((x,i)=>`<div class="${x.id===NET.uid?'me':''}"><i>${['🥇','🥈','🥉'][i]||i+1}</i>${avHtml(personOf(x.id),24)}<span>${esc(x.id===NET.uid?'Bạn':nameOf(x.id))}</span><b>${x.gp.toLocaleString('vi')}</b></div>`).join('')}</div></div>
-    <div class="gcards">${Object.keys(GT).map(k=>`<div class="gcard g-${k}"><span class="ge">${GT[k].e}</span><b>${GT[k].n}</b><span>${GT[k].d}</span><div class="gbtns">${(()=>{const a=act.find(g=>g.type===k);return a?`<button data-open="${a.id}" class="gcon">▶️ Chơi tiếp</button>`:''})()}<button data-new="${k}">👥 Mời bạn</button><button data-bot="${k}">🤖 Chơi với máy</button></div></div>`).join('')}</div>
+    <div class="gcards">${Object.keys(GT).map(k=>`<div class="gcard g-${k}"><span class="ge">${GT[k].e}</span><b>${GT[k].n}</b><span>${GT[k].d}</span><div class="gbtns">${(()=>{const a=act.find(g=>g.type===k);return a?`<button data-open="${a.id}" class="gcon">▶️ Chơi tiếp</button>`:''})()}<button data-new="${k}">👥 Mời bạn</button><button data-bot="${k}">🤖 Chơi với máy</button></div></div>`).join('')}<div class="gcard g-td"><span class="ge">🔍</span><b>Tìm đồ giải đố</b><span>1 người · 10 màn · tìm đồ dễ, đồ khó, dùng dụng cụ để lấy đồ bị giấu</span><div class="gbtns"><button id="tdgo">▶️ Chơi${(()=>{const P=LS.get('td',{u:0,s:{}});return' · màn '+(P.u+1)+'/10'})()}</button></div></div></div>
     ${inv.length?`<h2>Lời mời</h2><div class="card" style="padding:4px 12px">${inv.map(g=>row(g,`<button class="btn" data-join="${g.id}" style="min-height:36px;padding:6px 12px">Vào chơi</button><button class="btn gh" data-no="${g.id}" style="min-height:36px;padding:6px 8px">✕</button>`)).join('')}</div>`:''}
 
     ${done.length?`<h2>Đã chơi</h2><div class="card" style="padding:4px 12px">${done.map(g=>row(g,`<button class="btn gh" data-open="${g.id}" style="min-height:36px;padding:6px 10px">Xem</button>`)).join('')}</div>`:''}`;
-  e.querySelectorAll('[data-new]').forEach(b=>b.onclick=()=>newGame(b.dataset.new));e.querySelectorAll('[data-bot]').forEach(b=>b.onclick=()=>askBot(b.dataset.bot));
+  e.querySelectorAll('[data-new]').forEach(b=>b.onclick=()=>newGame(b.dataset.new));const tdg=e.querySelector('#tdgo');if(tdg)tdg.onclick=openTd;e.querySelectorAll('[data-bot]').forEach(b=>b.onclick=()=>askBot(b.dataset.bot));
   e.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openGame(b.dataset.open));
   e.querySelectorAll('[data-join]').forEach(b=>b.onclick=()=>joinGame(b.dataset.join));
   e.querySelectorAll('[data-no]').forEach(b=>b.onclick=()=>declineGame(b.dataset.no))}
@@ -1660,7 +1689,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 67${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 68${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};
@@ -1684,6 +1713,110 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   const doLeave=async()=>{
     try{await API.delLoc(S.code);const c=await API.getCouple(S.code);if(c)await API.patchCouple(S.code,{members:(c.members||[]).filter(x=>x!==NET.uid)})}catch(er){toast(errMsg(er));return}
     API.saveProfile({code:''}).catch(()=>{});toast('Đã rời nhóm');leaveLocal()}}
+
+// ===== Trò 5: Tìm đồ giải đố (chơi 1 người, 10 màn) =====
+// Toạ độ x,y theo % khung (khung dọc 4:5), cỡ s theo % chiều ngang.
+// d: trang trí ['emoji',x,y,s,xoay,mờ] hoặc ['#màu',x,y,rộng,cao,bo góc] (khối màu)
+// it: [id,emoji,tên,x,y,s,loại,mờ,xoay]  loại: e dễ tìm · h khó tìm · t dụng cụ · x đồ bị ẩn · y dụng cụ bị ẩn
+// sp: [emoji|'dark',x,y,s,dụng cụ cần,emoji sau khi mở,[đồ hiện ra],gợi ý]
+const TD=[
+ {n:'Phòng ngủ của Bé Na',bg:'linear-gradient(#fde68a 0 60%,#d97706 60%)',
+  d:[['#b45309',50,61,100,1.5,0],['🛏️',30,70,36],['🪟',72,20,22],['🖼️',24,18,13],['🪴',90,70,15],['🗄️',70,70,19],['🧺',52,86,12]],
+  it:[['tb','🧸','Gấu bông',20,63,10,'e'],['sk','🧦','Đôi tất',60,90,8,'e',1,25],['bk','📕','Quyển sách',70,58,7,'e'],['ck','⏰','Đồng hồ',87,31,5,'h',.75],['pz','🧩','Mảnh ghép',38,60,4.5,'h',.8,-20],
+      ['sc','✂️','Cái kéo',11,90,7,'t',1,30],['yo','🪀','Yo-yo',45,49,8,'x']],
+  sp:[['🎁',45,51,11,'sc','📦',['yo'],'Hộp quà buộc dây chặt quá, cần gì đó để cắt']]},
+ {n:'Gian bếp nhỏ',bg:'linear-gradient(#bbf7d0 0 58%,#e7e5e4 58%)',
+  d:[['#a8a29e',50,58,100,1.2,0],['🪟',22,18,18],['🔪',56,24,7,30],['🥘',40,60,13],['🧺',14,82,14],['🪑',36,82,18],['🗄️',80,66,24],['#fef3c7',60,47,40,3,4]],
+  it:[['sp','🥄','Cái thìa',62,62,7,'e',1,40],['pn','🍳','Cái chảo',22,52,10,'e'],['sl','🧂','Lọ muối',48,42,4.5,'h',.75],['eg','🥚','Quả trứng',8,73,4.5,'h'],['cr','🥕','Củ cà rốt',70,86,8,'e',1,-30],
+      ['ky','🔑','Chìa khoá',90,92,5,'t',.8,60],['co','🍪','Bánh quy',80,63,8,'x']],
+  sp:[['🔒',80,64,9,'ky','🔓',['co'],'Tủ bị khoá rồi']]},
+ {n:'Khu vườn sau nhà',bg:'linear-gradient(#bae6fd 0 50%,#4ade80 50%)',
+  d:[['🏡',22,32,30],['🌳',76,32,42],['🌷',40,66,9],['🌼',60,78,8],['🌷',92,62,8],['☁️',45,10,14]],
+  it:[['sf','🌻','Hoa hướng dương',11,62,10,'e'],['lb','🐞','Bọ rùa',54,68,4,'h',.8],['sn','🐌','Ốc sên',88,88,5,'h'],['bf','🦋','Con bướm',42,22,7,'e'],
+      ['ld','🪜','Cái thang',30,86,12,'t',1,-15],['pk','⛏️','Cuốc chim',64,54,6,'t',.85],['ns','🪺','Tổ chim',80,14,8,'x'],['rg','💍','Chiếc nhẫn',48,88,6,'x']],
+  sp:[['🪺',80,14,8,'ld','',['ns'],'Tổ chim cao quá, không với tới'],['🪨',48,88,14,'pk','',['rg'],'Tảng đá nặng quá, cần dụng cụ đập vỡ']]},
+ {n:'Gác mái bụi bặm',bg:'linear-gradient(#92400e,#451a03)',
+  d:[['#78350f',50,94,100,12,0],['🧳',20,70,18],['📦',76,76,18],['🪑',50,62,14],['🖼️',82,24,12,10],['🕸️',7,7,14]],
+  it:[['rd','📻','Cái đài',76,62,8,'e'],['ht','🎩','Mũ ảo thuật',20,58,9,'e'],['yn','🧶','Cuộn len',44,90,7,'e'],['fl','🔦','Đèn pin',90,92,6,'t'],['br','🧹','Cái chổi',6,46,12,'t',1,20],
+      ['cd','🕯️','Cây nến',30,32,7,'x'],['ok','🗝️','Chìa khoá cổ',66,40,7,'x'],['dl','🪆','Búp bê gỗ',92,13,7,'x']],
+  sp:[['dark',30,32,28,'fl','',['cd'],'Góc này tối om, chẳng thấy gì'],['dark',66,40,26,'fl','',['ok'],'Tối quá, cần soi sáng'],['🕸️',92,13,14,'br','',['dl'],'Mạng nhện dày quá, cần quét đi']]},
+ {n:'Lớp học buổi chiều',bg:'linear-gradient(#e0f2fe 0 62%,#a16207 62%)',
+  d:[['#14532d',50,20,62,22,6],['#92400e',30,72,34,4,3],['#92400e',72,72,34,4,3],['🪑',30,84,14],['🪑',72,84,14],['🗄️',90,52,16],['🕰️',90,12,9]],
+  it:[['gb','🌍','Quả địa cầu',12,60,10,'e'],['pc','✏️','Bút chì',36,68,7,'e',1,60],['ab','🧮','Bàn tính',68,66,9,'e'],['rl','📐','Thước ê ke',58,32,5,'h',.7],['cp','📎','Kẹp giấy',80,90,4,'h',.85,30],
+      ['sc','✂️','Cái kéo',8,92,5,'t',.85],['ky','🔑','Chìa khoá',22,22,6,'y'],['ms','🔬','Kính hiển vi',90,50,8,'x']],
+  sp:[['🎁',22,22,10,'sc','📦',['ky'],'Hộp quà buộc dây, cần cắt dây'],['🔒',90,52,8,'ky','🔓',['ms'],'Tủ khoá rồi']]},
+ {n:'Bãi biển ngày nắng',bg:'linear-gradient(#7dd3fc 0 34%,#0ea5e9 34% 48%,#fde68a 48%)',
+  d:[['⛱️',25,56,22],['🌴',86,40,34],['⛵',58,38,10],['🌊',30,42,9],['☀️',12,10,12]],
+  it:[['sh','🐚','Vỏ sò',40,80,7,'e'],['cb','🦀','Con cua',76,70,8,'e'],['sg','🕶️','Kính râm',28,64,5,'h',.8],['dp','🩴','Đôi dép',12,90,8,'e',1,-20],
+      ['fr','🎣','Cần câu',90,86,10,'t',1,-20],['pk','⛏️','Cuốc chim',55,92,5,'t',.8],['fs','🐠','Con cá',60,60,8,'x'],['dm','💎','Viên kim cương',15,72,7,'x']],
+  sp:[['🕳️',60,62,13,'fr','',['fs'],'Hố nước sâu, thò tay không tới'],['🪨',15,72,14,'pk','',['dm'],'Có gì đó lấp lánh dưới tảng đá']]},
+ {n:'Hang động bí ẩn',bg:'radial-gradient(circle at 50% 60%,#57534e,#1c1917 75%)',
+  d:[['🪨',8,60,16],['🪨',92,66,18],['🦇',30,12,8],['🦇',70,16,7,20],['#292524',50,96,100,10,0]],
+  it:[['bn','🦴','Khúc xương',20,86,8,'e',1,30],['vs','🏺','Bình gốm',80,76,10,'e'],['mr','🍄','Cây nấm',45,72,4.5,'h'],['fl','🔦','Đèn pin',88,92,5.5,'t',.75],
+      ['pk','⛏️','Cuốc chim',26,42,7,'y'],['mb','💰','Túi vàng',36,50,7,'x'],['nk','📿','Chuỗi hạt',70,40,7,'x'],['cw','👑','Vương miện',52,86,8,'x']],
+  sp:[['dark',30,45,32,'fl','',['pk','mb'],'Tối om, nghe như có tiếng leng keng'],['dark',70,40,28,'fl','',['nk'],'Góc này tối quá'],['🪨',52,86,15,'pk','',['cw'],'Tảng đá chắn mất rồi']]},
+ {n:'Phiên chợ quê',bg:'linear-gradient(#fef3c7 0 55%,#d6d3d1 55%)',
+  d:[['#dc2626',28,20,48,6,3],['#f8fafc',28,26,48,3,0],['#2563eb',76,24,44,6,3],['#92400e',28,48,44,4,2],['#92400e',76,50,40,4,2],['🧺',14,40,12],['🍌',36,42,8],['🛒',88,84,14]],
+  it:[['wm','🍉','Quả dưa hấu',24,40,9,'e'],['ck','🐓','Con gà trống',8,74,10,'e'],['cn','🌽','Bắp ngô',84,44,8,'e',1,20],['mg','🥭','Quả xoài',66,44,5,'h',.85],
+      ['mt','🍖','Miếng thịt',52,88,7,'t'],['hm','🔨','Cái búa',93,58,5.5,'t',.8,-30],['pa','🍍','Quả dứa',66,72,8,'x'],['cn2','🪙','Đồng xu',38,80,6,'x']],
+  sp:[['🐕',66,72,15,'mt','💤',['pa'],'Chú chó đang canh, không cho lại gần'],['🏺',38,80,12,'hm','',['cn2'],'Hũ đất bị gắn kín miệng']]},
+ {n:'Thư viện cổ',bg:'linear-gradient(#7c2d12,#431407)',
+  d:[['#a16207',50,36,92,2,0],['#a16207',50,62,92,2,0],['📚',12,31,9],['📚',30,31,9],['📚',58,57,9],['📚',84,57,9],['📚',40,57,9],['🪑',30,84,14],['🕯️',62,80,7]],
+  it:[['sr','📜','Cuộn giấy',50,30,8,'e'],['ft','🪶','Lông vũ',88,30,5,'h',.8,40],['bb','📘','Sách xanh',22,57,6,'h'],['cm','🧭','La bàn',48,88,5,'h',.85],
+      ['sg','🧽','Miếng bọt biển',8,90,7,'t'],['sd','🪛','Tua vít',92,92,5,'t',.8,40],['ky','🔑','Chìa khoá',70,14,6,'y'],['hg','⌛','Đồng hồ cát',15,80,7,'x'],['tl','🔭','Kính thiên văn',84,78,8,'x']],
+  sp:[['🖼️',70,14,17,'sg','🖼️',['ky'],'Bức tranh phủ đầy bụi'],['🔩',15,80,9,'sd','',['hg'],'Nắp thông gió vặn chặt ốc'],['🔒',84,78,9,'ky','🔓',['tl'],'Tủ bị khoá']]},
+ {n:'Lâu đài cổ',bg:'linear-gradient(#4338ca,#1e1b4b)',
+  d:[['#312e81',50,92,100,16,0],['#57534e',50,58,34,22,4],['🪟',18,16,12],['🪟',82,16,12],['🕯️',10,50,8],['🕯️',90,50,8],['🗿',90,78,13]],
+  it:[['sw','🗡️','Thanh kiếm',16,72,9,'e',1,-30],['sd','🛡️','Tấm khiên',76,40,10,'e'],['tr','🏆','Cúp vàng',62,88,4.5,'h',.8],['rg','💍','Chiếc nhẫn',36,36,4,'h',.75],
+      ['bk','🪣','Cái xô nước',8,90,9,'t'],['br','🧹','Cái chổi',94,34,10,'t',.9,-15],['ky','🔑','Chìa khoá',50,12,6,'y'],['sr','📜','Bản đồ cổ',50,58,8,'x'],['cw','👑','Vương miện',30,86,8,'x']],
+  sp:[['🕸️',50,12,15,'br','',['ky'],'Mạng nhện chằng chịt'],['🔥',50,60,16,'bk','💨',['sr'],'Lò sưởi đang cháy, nóng quá'],['🔒',30,86,9,'ky','🔓',['cw'],'Rương bị khoá']]}
+];
+const tdSave=o=>LS.set('td',Object.assign(LS.get('td',{u:0,s:{}}),o));
+function openTd(){const old=$('.tdv');if(old)old.remove();const v=document.createElement('div');v.className='tdv';document.body.appendChild(v);
+  const menu=()=>{const P=LS.get('td',{u:0,s:{}});
+    v.innerHTML=`<div class="tdtop"><button class="tdb" id="tdx">✕</button><b>🔍 Tìm đồ giải đố</b><span></span></div>
+      <div class="tdintro">Tìm đủ đồ trong mỗi màn để qua màn. Đồ khó tìm thì nhỏ và mờ. Có đồ bị giấu đi: nhặt dụng cụ cho vào túi 🎒, chọn dụng cụ rồi chạm đúng chỗ mới lấy ra được.</div>
+      <div class="tdlv">${TD.map((L,i)=>{const lk=i>P.u,st=P.s[i]||0;return`<button data-l="${i}" ${lk?'disabled':''}><i>${lk?'🔒':i+1}</i><b>${L.n}</b><span>${lk?'Chưa mở':st?'⭐'.repeat(st)+'☆'.repeat(3-st):'Chưa chơi'}</span></button>`}).join('')}</div>`;
+    v.querySelector('#tdx').onclick=()=>v.remove();v.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>play(+b.dataset.l))};
+  const play=li=>{const L=TD[li],IT={},SP=L.sp.map((s,j)=>({j,e:s[0],x:s[1],y:s[2],s:s[3],tool:s[4],oe:s[5],rv:s[6],h:s[7],op:false}));
+    L.it.forEach(a=>IT[a[0]]={id:a[0],e:a[1],n:a[2],x:a[3],y:a[4],s:a[5],k:a[6],o:a[7]==null?1:a[7],r:a[8]||0,got:false,show:a[6]!=='x'&&a[6]!=='y'});
+    const tg=Object.values(IT).filter(t=>t.k==='e'||t.k==='h'||t.k==='x');let bag=[],sel='',hints=3,used=0;const t0=Date.now();
+    const pos=(x,y)=>`left:${x}%;top:${y}%`;
+    v.innerHTML=`<div class="tdtop"><button class="tdb" id="tdm">☰</button><b>Màn ${li+1} · ${esc(L.n)}</b><button class="tdb" id="tdh">💡<small id="tdhn">3</small></button></div>
+      <div class="tdst" id="tdst" style="background:${L.bg}">${L.d.map(d=>d[0][0]==='#'?`<div class="tdr" style="${pos(d[1],d[2])};width:${d[3]}%;height:${d[4]}%;background:${d[0]};border-radius:${d[5]}px"></div>`:`<span class="tdd" style="${pos(d[1],d[2])};font-size:${d[3]}em;--r:${d[4]||0}deg;opacity:${d[5]==null?1:d[5]}">${d[0]}</span>`).join('')}
+        <div id="tdit"></div><div id="tdsp"></div></div>
+      <div class="tdbag"><span>🎒</span><div id="tdbag"></div><small id="tdsel">Túi đồ trống</small><div class="tdcat" id="tdcat">😿</div></div>
+      <div class="tdtg" id="tdtg"></div>`;
+    const st=v.querySelector('#tdst'),fit=()=>{st.style.fontSize=st.clientWidth/100+'px'};fit();new ResizeObserver(fit).observe(st);
+    const drawIt=()=>{v.querySelector('#tdit').innerHTML=Object.values(IT).filter(t=>t.show&&!t.got).map(t=>`<span class="tdi${t.k==='h'?' hd':''}${t.nw?' nw':''}" data-i="${t.id}" style="${pos(t.x,t.y)};font-size:${t.s}em;--r:${t.r}deg;opacity:${t.o}">${t.e}</span>`).join('');
+      v.querySelectorAll('[data-i]').forEach(e=>e.onclick=ev=>{ev.stopPropagation();take(IT[e.dataset.i],e)})};
+    const drawSp=()=>{v.querySelector('#tdsp').innerHTML=SP.map(s=>s.e==='dark'?`<div class="tdk${s.op?' op':''}" data-s="${s.j}" style="${pos(s.x,s.y)};width:${s.s}%;"></div>`:(s.op&&!s.oe)?'':`<span class="tdp${s.op?' op':''}${s.e==='🖼️'&&!s.op?' dusty':''}" data-s="${s.j}" style="${pos(s.x,s.y)};font-size:${s.op?s.s*.7:s.s}em">${s.op?s.oe:s.e}</span>`).join('');
+      v.querySelectorAll('[data-s]').forEach(e=>e.onclick=ev=>{ev.stopPropagation();useSp(SP[+e.dataset.s])})};
+    const drawTg=()=>{v.querySelector('#tdtg').innerHTML=tg.map(t=>`<div class="${t.got?'ok':''}"><span>${t.e}</span><small>${esc(t.n)}</small></div>`).join('');
+      const need=SP.filter(s=>!s.op).map(s=>s.tool);bag=bag.filter(id=>need.includes(id));if(sel&&!bag.includes(sel))sel='';
+      v.querySelector('#tdbag').innerHTML=bag.map(id=>`<button class="${sel===id?'on':''}" data-b="${id}">${IT[id].e}</button>`).join('');
+      v.querySelector('#tdsel').textContent=sel?'Đang cầm '+IT[sel].n.toLowerCase()+', chạm vào chỗ cần dùng':bag.length?'Chạm vào dụng cụ để cầm lên':'Túi đồ trống';
+      v.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{sel=sel===b.dataset.b?'':b.dataset.b;drawTg()});
+      const n=tg.filter(t=>t.got).length;v.querySelector('#tdcat').textContent=n===tg.length?'😸':n*2>=tg.length?'🙀':'😿'};
+    const pop=(x,y,t)=>{const d=document.createElement('div');d.className='tdfx';d.textContent=t;d.style.left=x+'%';d.style.top=y+'%';st.appendChild(d);setTimeout(()=>d.remove(),1200)};
+    const take=(t,el)=>{if(t.got)return;t.got=true;el.classList.add('got');
+      if(t.k==='t'||t.k==='y'){bag.push(t.id);pop(t.x,t.y,'🎒 +'+t.e);toast('Nhặt được '+t.n.toLowerCase()+', đã cho vào túi 🎒',2200)}else pop(t.x,t.y,'✨');
+      setTimeout(()=>{drawIt();drawTg();if(tg.every(x=>x.got))win()},350)};
+    const useSp=s=>{if(s.op)return;if(!sel||sel!==s.tool){if(sel)toast('Dùng '+IT[sel].n.toLowerCase()+' ở đây không được rồi',2200);else toast('🤔 '+s.h,2600);st.classList.remove('shk');void st.offsetWidth;st.classList.add('shk');return}
+      s.op=true;pop(s.x,s.y,IT[s.tool].e);s.rv.forEach(id=>{IT[id].show=true;IT[id].nw=true});drawSp();drawIt();drawTg();setTimeout(()=>{s.rv.forEach(id=>IT[id].nw=false)},1500)};
+    st.onclick=ev=>{const r=st.getBoundingClientRect(),d=document.createElement('div');d.className='tdmiss';d.style.left=(ev.clientX-r.left)+'px';d.style.top=(ev.clientY-r.top)+'px';st.appendChild(d);setTimeout(()=>d.remove(),500)};
+    const hint=()=>{if(!hints)return toast('Hết lượt gợi ý màn này rồi',2000);
+      let h=SP.find(s=>!s.op&&bag.includes(s.tool));let el=h&&v.querySelector(`[data-s="${h.j}"]`);
+      if(!el){const t=Object.values(IT).find(t=>t.show&&!t.got&&(t.k==='t'||t.k==='y')&&SP.some(s=>!s.op&&s.tool===t.id))||Object.values(IT).find(t=>t.show&&!t.got&&t.k!=='t'&&t.k!=='y');el=t&&v.querySelector(`[data-i="${t.id}"]`)}
+      if(!el){const s=SP.find(s=>!s.op);el=s&&v.querySelector(`[data-s="${s.j}"]`)}
+      if(!el)return;hints--;used++;v.querySelector('#tdhn').textContent=hints;el.classList.remove('hint');void el.offsetWidth;el.classList.add('hint');setTimeout(()=>el.classList.remove('hint'),3000)};
+    const win=()=>{const stars=used===0?3:used<3?2:1,P=LS.get('td',{u:0,s:{}});P.s[li]=Math.max(P.s[li]||0,stars);P.u=Math.max(P.u,Math.min(li+1,TD.length-1));LS.set('td',P);
+      const sec=Math.round((Date.now()-t0)/1000),o=document.createElement('div');o.className='tdwin';
+      o.innerHTML=`<div><div class="tdwc">😸</div><b>${li===TD.length-1?'Bạn đã phá đảo cả 10 màn! 🏆':'Qua màn '+(li+1)+'!'}</b><div class="tdws">${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div><small>Thời gian ${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}${used?' · dùng '+used+' gợi ý':' · không cần gợi ý'}</small>
+        <div class="row" style="gap:8px;width:100%;margin-top:12px"><button class="btn gh grow" id="tdw0">☰ Chọn màn</button>${li<TD.length-1?'<button class="btn grow" id="tdw1">Màn tiếp ▶️</button>':''}</div></div>`;
+      v.appendChild(o);o.querySelector('#tdw0').onclick=menu;const n=o.querySelector('#tdw1');if(n)n.onclick=()=>play(li+1)};
+    v.querySelector('#tdm').onclick=menu;v.querySelector('#tdh').onclick=hint;drawIt();drawSp();drawTg()};
+  menu()}
 
 if('serviceWorker'in navigator&&!DEMO)navigator.serviceWorker.register('sw.js').catch(()=>{});
 applyBg();boot();

@@ -1689,7 +1689,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 68${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 69${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};
@@ -1720,11 +1720,11 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
 // it: [id,emoji,tên,x,y,s,loại,mờ,xoay]  loại: e dễ tìm · h khó tìm · t dụng cụ · x đồ bị ẩn · y dụng cụ bị ẩn
 // sp: [emoji|'dark',x,y,s,dụng cụ cần,emoji sau khi mở,[đồ hiện ra],gợi ý]
 const TD=[
- {n:'Phòng ngủ của Bé Na',bg:'linear-gradient(#fde68a 0 60%,#d97706 60%)',
-  d:[['#b45309',50,61,100,1.5,0],['🛏️',30,70,36],['🪟',72,20,22],['🖼️',24,18,13],['🪴',90,70,15],['🗄️',70,70,19],['🧺',52,86,12]],
-  it:[['tb','🧸','Gấu bông',20,63,10,'e'],['sk','🧦','Đôi tất',60,90,8,'e',1,25],['bk','📕','Quyển sách',70,58,7,'e'],['ck','⏰','Đồng hồ',87,31,5,'h',.75],['pz','🧩','Mảnh ghép',38,60,4.5,'h',.8,-20],
-      ['sc','✂️','Cái kéo',11,90,7,'t',1,30],['yo','🪀','Yo-yo',45,49,8,'x']],
-  sp:[['🎁',45,51,11,'sc','📦',['yo'],'Hộp quà buộc dây chặt quá, cần gì đó để cắt']]},
+ {n:'Phòng ngủ của Bé Na',img:'td-n01.jpg',bg:'linear-gradient(#fde68a 0 60%,#d97706 60%)',
+  d:[],
+  it:[['tb','🧸','Gấu bông',30,52,9,'e',1,-8],['sk','🧦','Đôi tất',38,93,7,'e',1,25],['bk','📕','Quyển sách',80,45.5,6,'e',1,-6],['ck','⏰','Đồng hồ',88,40.5,4,'h',.8],['pz','🧩','Mảnh ghép',14,73,4,'h',.8,-20],
+      ['sc','✂️','Cái kéo',60,80,6,'t',1,30],['yo','🪀','Yo-yo',86,86,7,'x']],
+  sp:[['🎁',86,87,11,'sc','📦',['yo'],'Hộp quà buộc dây chặt quá, cần gì đó để cắt']]},
  {n:'Gian bếp nhỏ',bg:'linear-gradient(#bbf7d0 0 58%,#e7e5e4 58%)',
   d:[['#a8a29e',50,58,100,1.2,0],['🪟',22,18,18],['🔪',56,24,7,30],['🥘',40,60,13],['🧺',14,82,14],['🪑',36,82,18],['🗄️',80,66,24],['#fef3c7',60,47,40,3,4]],
   it:[['sp','🥄','Cái thìa',62,62,7,'e',1,40],['pn','🍳','Cái chảo',22,52,10,'e'],['sl','🧂','Lọ muối',48,42,4.5,'h',.75],['eg','🥚','Quả trứng',8,73,4.5,'h'],['cr','🥕','Củ cà rốt',70,86,8,'e',1,-30],
@@ -1783,7 +1783,7 @@ function openTd(){const old=$('.tdv');if(old)old.remove();const v=document.creat
     const tg=Object.values(IT).filter(t=>t.k==='e'||t.k==='h'||t.k==='x');let bag=[],sel='',hints=3,used=0;const t0=Date.now();
     const pos=(x,y)=>`left:${x}%;top:${y}%`;
     v.innerHTML=`<div class="tdtop"><button class="tdb" id="tdm">☰</button><b>Màn ${li+1} · ${esc(L.n)}</b><button class="tdb" id="tdh">💡<small id="tdhn">3</small></button></div>
-      <div class="tdst" id="tdst" style="background:${L.bg}">${L.d.map(d=>d[0][0]==='#'?`<div class="tdr" style="${pos(d[1],d[2])};width:${d[3]}%;height:${d[4]}%;background:${d[0]};border-radius:${d[5]}px"></div>`:`<span class="tdd" style="${pos(d[1],d[2])};font-size:${d[3]}em;--r:${d[4]||0}deg;opacity:${d[5]==null?1:d[5]}">${d[0]}</span>`).join('')}
+      <div class="tdst" id="tdst" style="background:${L.img?`url(assets/${L.img}) center/cover no-repeat,`:''}${L.bg}">${L.d.map(d=>d[0][0]==='#'?`<div class="tdr" style="${pos(d[1],d[2])};width:${d[3]}%;height:${d[4]}%;background:${d[0]};border-radius:${d[5]}px"></div>`:`<span class="tdd" style="${pos(d[1],d[2])};font-size:${d[3]}em;--r:${d[4]||0}deg;opacity:${d[5]==null?1:d[5]}">${d[0]}</span>`).join('')}
         <div id="tdit"></div><div id="tdsp"></div></div>
       <div class="tdbag"><span>🎒</span><div id="tdbag"></div><small id="tdsel">Túi đồ trống</small><div class="tdcat" id="tdcat">😿</div></div>
       <div class="tdtg" id="tdtg"></div>`;

@@ -672,7 +672,7 @@ function renderSetup(step){
       if(reg&&!n)return toast('Nhập tên hiển thị');if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
       e.target.disabled=true;
       try{if(reg){await API.register(u,p);S.name=n;LS.set('name',n);S.user=u;LS.set('user',u);await API.saveProfile({name:n,user:u,code:S.code||''})}
-        else{await API.login(u,p);S.user=u;LS.set('user',u);const pr=await API.getProfile();S.name=pr.name||u;if(pr.nickj)try{S.nick=JSON.parse(pr.nickj);LS.set('nick',S.nick)}catch(e){}if(pr.hidej)try{S.hide=JSON.parse(pr.hidej);LS.set('hide',S.hide)}catch(e){}mergeGw(pr.gwj);LS.set('name',S.name);if(pr.em){S.em=pr.em;LS.set('em',pr.em)}if(pr.av){S.av=pr.av;LS.set('av',pr.av)}
+        else{await API.login(u,p);S.user=u;LS.set('user',u);const pr=await API.getProfile();S.name=pr.name||u;if(pr.nickj)try{S.nick=JSON.parse(pr.nickj);LS.set('nick',S.nick)}catch(e){}if(pr.hidej)try{S.hide=JSON.parse(pr.hidej);LS.set('hide',S.hide)}catch(e){}mergeGw(pr.gwj);mergeTd(pr.tdj);LS.set('name',S.name);if(pr.em){S.em=pr.em;LS.set('em',pr.em)}if(pr.av){S.av=pr.av;LS.set('av',pr.av)}
           if(pr.code&&!S.invite){const c=await API.getCouple(pr.code).catch(()=>null);if(c&&(c.members||[]).includes(NET.uid)){S.code=pr.code;LS.set('code',S.code);toast('Chào '+S.name+' 💞');return renderMain()}}}
         renderSetup(S.invite?'join':'choose')}catch(er){e.target.disabled=false;toast(errMsg(er),4500)}};return}
   if(step==='choose'){A.innerHTML=`<div class="page"><div class="scroll">
@@ -801,7 +801,7 @@ const nickOf=uid=>uid&&uid!==NET.uid?(S.nick||{})[uid]||'':'';
 const dn=(p,d)=>{const n=(p&&p.name)||d||'Thành viên',k=p&&nickOf(p.id);return k?n+' ('+k+')':n};
 const BOTS={bot1:{name:'Máy',em:'🤖'},bot2:{name:'Máy Mập',em:'👾'},bot3:{name:'Máy Gầy',em:'🦾'}};
 const nameOf=uid=>BOTS[uid]?BOTS[uid].name:uid===NET.uid?S.name:dn({id:uid,name:((S.locs||[]).find(l=>l.id===uid)||{}).name});
-async function syncNick(){try{const pr=await API.getProfile();if(pr.nickj){S.nick=JSON.parse(pr.nickj);LS.set('nick',S.nick)}if(mergeGw(pr.gwj))pushId()}catch(e){}}
+async function syncNick(){try{const pr=await API.getProfile();if(pr.nickj){S.nick=JSON.parse(pr.nickj);LS.set('nick',S.nick)}if(mergeGw(pr.gwj))pushId();mergeTd(pr.tdj)}catch(e){}}
 function editNick(uid,done){const p=personOf(uid);const sh=document.createElement('div');sh.className='sheet';sh.style.zIndex=2000;sh.innerHTML=`<div>
   <div class="row"><div class="grow"><h2 style="margin:0">Biệt danh</h2><div class="mut">cho ${esc(p.name||'Thành viên')} · chỉ mình bạn thấy</div></div><button class="ib" id="x">${I.x}</button></div>
   <div style="height:10px"></div><input class="t" id="nk" maxlength="20" value="${esc(nickOf(uid))}" placeholder="Ví dụ: Bé Mít, Sếp, Vợ yêu…">
@@ -1196,7 +1196,7 @@ function drawGames(){const e=$('#game');if(!e)return;const inv=GM.filter(gInvite
   const rk=[{id:NET.uid,gp:myPts()}].concat((S.locs||[]).filter(l=>l.id!==NET.uid&&((S.couple&&S.couple.members)||[]).includes(l.id)).map(l=>({id:l.id,gp:+l.gp||0}))).sort((a,b)=>b.gp-a.gp);
   e.innerHTML=`<h1>Trò chơi</h1>${act.length?`<div class="card gcont"><div class="gch2">▶️ Ván đang chơi dở</div>${act.map(g=>row(g,`<button class="btn" data-open="${g.id}" style="min-height:38px;padding:6px 12px">▶️ Chơi tiếp</button>`)).join('')}</div>`:''}${GW.length?`<div class="card gcont gwl"><div class="gch2">👀 Nhóm đang chơi</div>${GW.map(g=>row(g,`<button class="btn sec" data-open="${g.id}" style="min-height:38px;padding:6px 12px">👀 Xem</button>`)).join('')}</div>`:''}<div class="card gpcard"><div class="gpme"><span>⭐</span><div><b>${myPts().toLocaleString('vi')} điểm</b><small>Mỗi ván thắng +${PTS} điểm</small></div></div>
     <div class="gprk">${rk.map((x,i)=>`<div class="${x.id===NET.uid?'me':''}"><i>${['🥇','🥈','🥉'][i]||i+1}</i>${avHtml(personOf(x.id),24)}<span>${esc(x.id===NET.uid?'Bạn':nameOf(x.id))}</span><b>${x.gp.toLocaleString('vi')}</b></div>`).join('')}</div></div>
-    <div class="gcards">${Object.keys(GT).map(k=>`<div class="gcard g-${k}"><span class="ge">${GT[k].e}</span><b>${GT[k].n}</b><span>${GT[k].d}</span><div class="gbtns">${(()=>{const a=act.find(g=>g.type===k);return a?`<button data-open="${a.id}" class="gcon">▶️ Chơi tiếp</button>`:''})()}<button data-new="${k}">👥 Mời bạn</button><button data-bot="${k}">🤖 Chơi với máy</button></div></div>`).join('')}<div class="gcard g-td"><span class="ge">🔍</span><b>Tìm đồ giải đố</b><span>1 người · 10 màn · tìm đồ dễ, đồ khó, dùng dụng cụ để lấy đồ bị giấu</span><div class="gbtns"><button id="tdgo">▶️ Chơi${(()=>{const P=LS.get('td',{u:0,s:{}});return' · màn '+(P.u+1)+'/10'})()}</button></div></div></div>
+    <div class="gcards">${Object.keys(GT).map(k=>`<div class="gcard g-${k}"><span class="ge">${GT[k].e}</span><b>${GT[k].n}</b><span>${GT[k].d}</span><div class="gbtns">${(()=>{const a=act.find(g=>g.type===k);return a?`<button data-open="${a.id}" class="gcon">▶️ Chơi tiếp</button>`:''})()}<button data-new="${k}">👥 Mời bạn</button><button data-bot="${k}">🤖 Chơi với máy</button></div></div>`).join('')}<div class="gcard g-td"><span class="ge">🔍</span><b>Tìm đồ giải đố</b><span>1 người · 10 màn · tìm đồ dễ, đồ khó, dùng dụng cụ để lấy đồ bị giấu</span><div class="gbtns"><button id="tdgo">▶️ Chơi${(()=>{const P=LS.get('td',{u:0,s:{}});return' · màn '+(P.u+1)+'/'+TD.length})()}</button></div></div></div>
     ${inv.length?`<h2>Lời mời</h2><div class="card" style="padding:4px 12px">${inv.map(g=>row(g,`<button class="btn" data-join="${g.id}" style="min-height:36px;padding:6px 12px">Vào chơi</button><button class="btn gh" data-no="${g.id}" style="min-height:36px;padding:6px 8px">✕</button>`)).join('')}</div>`:''}
 
     ${done.length?`<h2>Đã chơi</h2><div class="card" style="padding:4px 12px">${done.map(g=>row(g,`<button class="btn gh" data-open="${g.id}" style="min-height:36px;padding:6px 10px">Xem</button>`)).join('')}</div>`:''}`;
@@ -1764,7 +1764,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 82${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 83${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};
@@ -2092,6 +2092,12 @@ const tdStar=n=>[0,1,2].map(i=>`<img class="tdsr${i<n?'':' off'}" src="assets/gd
 const TDF=[['số bánh xe của chiếc thuyền','số chân của con rắn'],['số vòi của con voi','số mặt trời trên bầu trời'],['số cánh của con chim','số chân của con gà'],['số cạnh của hình tam giác','số bánh của chiếc xe ba bánh'],['số chân của con mèo','số mùa trong một năm'],['số ngón tay trên một bàn tay','số cánh của ngôi sao ⭐'],['số chân của con kiến','số mặt của con xúc xắc'],['số ngày trong một tuần','số màu của cầu vồng'],['số chân của con nhện','số tay của con bạch tuộc'],['số lớn nhất có một chữ số','kết quả của 3 nhân 3']];
 const tdShuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const tdSave=o=>LS.set('td',Object.assign(LS.get('td',{u:0,s:{}}),o));
+// tiến độ Tìm đồ đồng bộ theo tài khoản (users/{uid}.tdj): lấy màn xa nhất và số sao cao nhất của mỗi máy
+const tdPush=()=>{const P=LS.get('td',{u:0,s:{}});API.saveProfile({tdj:JSON.stringify({u:P.u||0,s:P.s||{}})}).catch(()=>{})};
+function mergeTd(j){let o={};try{o=JSON.parse(j||'{}')}catch(e){}const P=LS.get('td',{u:0,s:{}});P.s=P.s||{};let up=false,down=false;
+  const ru=+o.u||0,lu=+P.u||0;if(ru>lu){P.u=Math.min(ru,TD.length-1);down=true}else if(lu>ru)up=true;
+  const rs=o.s||{};for(const k in rs)if((+rs[k]||0)>(+P.s[k]||0)){P.s[k]=+rs[k];down=true}for(const k in P.s)if((+P.s[k]||0)>(+rs[k]||0))up=true;
+  LS.set('td',P);if(up)tdPush();return down}
 function openTd(){const old=$('.tdv');if(old)old.remove();const v=document.createElement('div');v.className='tdv';document.body.appendChild(v);
   const menu=()=>{const P=LS.get('td',{u:0,s:{}});
     v.innerHTML=`<div class="tdtop"><button class="tdb" id="tdx">✕</button><b>🔍 Tìm đồ giải đố</b><span></span></div>
@@ -2163,14 +2169,14 @@ function openTd(){const old=$('.tdv');if(old)old.remove();const v=document.creat
       if(!el){h=SP.find(s=>vis(s)&&!s.op&&!s.tool);el=h&&q(`[data-s="${h.j}"]`)}
       if(!el){h=SP.find(s=>vis(s)&&!s.op);el=h&&q(`[data-s="${h.j}"]`)}
       if(!el)return;hints--;used++;v.querySelector('#tdhn').textContent=hints;el.classList.remove('hint');void el.offsetWidth;el.classList.add('hint');setTimeout(()=>el.classList.remove('hint'),3000)};
-    const win=()=>{const sec=Math.round((Date.now()-t0)/1000),stars=hard?(used===0&&sec<180?3:used<=1?2:1):(used===0?3:used<3?2:1),P=LS.get('td',{u:0,s:{}});P.s[li]=Math.max(P.s[li]||0,stars);P.u=Math.max(P.u,Math.min(li+1,TD.length-1));LS.set('td',P);
+    const win=()=>{const sec=Math.round((Date.now()-t0)/1000),stars=hard?(used===0&&sec<180?3:used<=1?2:1):(used===0?3:used<3?2:1),P=LS.get('td',{u:0,s:{}});P.s[li]=Math.max(P.s[li]||0,stars);P.u=Math.max(P.u,Math.min(li+1,TD.length-1));LS.set('td',P);tdPush();
       const o=document.createElement('div');o.className='tdwin';
       o.innerHTML=`<div><img class="tdwc" src="assets/td-meo-vui.png" alt="😸"><b>${li===TD.length-1?`Bạn đã phá đảo cả ${TD.length} màn! 🏆`:'Qua màn '+(li+1)+'!'}</b><div class="tdws">${tdStar(stars)}</div><small>Thời gian ${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}${used?' · dùng '+used+' gợi ý':' · không cần gợi ý'}${hard&&stars<3&&!used?'<br>Xong trong 3 phút để được 3 sao':''}</small>
         <div class="row" style="gap:8px;width:100%;margin-top:12px"><button class="btn gh grow" id="tdw0">☰ Chọn màn</button>${li<TD.length-1?'<button class="btn grow" id="tdw1">Màn tiếp ▶️</button>':''}</div></div>`;
       v.appendChild(o);o.querySelector('#tdw0').onclick=menu;const n=o.querySelector('#tdw1');if(n)n.onclick=()=>play(li+1)};
     v._td={L,IT,SP,code,ord,get bag(){return bag}};
     v.querySelector('#tdm').onclick=menu;v.querySelector('#tdh').onclick=hint;drawIt();drawSp();drawTg()};
-  menu()}
+  menu();API.getProfile().then(pr=>{if(mergeTd(pr&&pr.tdj)&&v.isConnected&&!v.querySelector('#tdh'))menu()}).catch(()=>{})}
 
 if('serviceWorker'in navigator&&!DEMO)navigator.serviceWorker.register('sw.js').catch(()=>{});
 applyBg();boot();

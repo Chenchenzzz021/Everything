@@ -177,7 +177,7 @@ ul.ck li{margin:4px 0}
 .dvchs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%}
 .dvch{background:#fff7ed;color:#451a03;border:3px solid #fed7aa;border-radius:16px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:3px;box-shadow:0 3px 0 #9a3412}
 .dvch.on{border-color:#f59e0b;background:#fef08a;box-shadow:0 0 0 3px #fbbf24,0 3px 0 #9a3412;transform:translateY(-2px)}
-.dvchi{font-size:44px;line-height:1;height:62px;display:grid;place-items:center}.dvchi img{height:62px;max-width:100%;object-fit:contain}
+.dvchi{font-size:44px;line-height:1;height:84px;display:grid;place-items:center}.dvchi img{height:84px;max-width:100%;object-fit:contain}
 .dvch b{font-size:13px}.dvch i{font-style:normal;font-size:12px;font-weight:700;color:#b45309}.dvch small{font-size:11px;line-height:1.3;color:#78350f}
 .dvbtns{display:flex;flex-direction:column;gap:8px;width:100%;max-width:340px}
 .dvgame{position:relative;display:flex;flex-direction:column;align-items:center;width:100%;flex:1}
@@ -1813,7 +1813,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 85${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 86${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};
@@ -2305,7 +2305,7 @@ function openDv(mp){dvLoad();const old=$('.dvv');if(old)old.remove();const v=doc
   const close=()=>{cancelAnimationFrame(raf);v.remove();if(!mp)loadGames()};
   const send=(stt)=>{if(!mp)return;mp.push([run.lv,Math.round(st&&!st.done?st.money:run.money),stt,run.ch].join('|'))};
   const top=t=>`<div class="dvtop"><button class="tdb" id="dvx">✕</button><b>${t}</b><span style="width:44px"></span></div>`;
-  const chCards=sel=>Object.entries(DVCH).map(([k,c])=>`<button class="dvch${sel===k?' on':''}" data-ch="${k}"><span class="dvchi">${dvIm(k+'-1')?`<img src="assets/dv-${k}-1.png" alt="">`:c.e}</span><b>${c.n}</b><i>⭐ ${c.k}</i><small>${c.d}</small></button>`).join('');
+  const chCards=sel=>Object.entries(DVCH).map(([k,c])=>`<button class="dvch${sel===k?' on':''}" data-ch="${k}"><span class="dvchi"><img src="assets/dv-${k}-1.png" alt="" onerror="this.replaceWith(document.createTextNode('${c.e}'))"></span><b>${c.n}</b><i>⭐ ${c.k}</i><small>${c.d}</small></button>`).join('');
   // ----- màn chọn nhân vật / bắt đầu -----
   const menu=()=>{cancelAnimationFrame(raf);const R=dvRec();let sel=(run&&run.ch)||LS.get('dvch','chui');
     const cont=run&&run.lv>0&&!run.over;
@@ -2358,10 +2358,10 @@ function openDv(mp){dvLoad();const old=$('.dvv');if(old)old.remove();const v=doc
     st.items.forEach(o=>drawIt(ctx,o));
     // nhân vật
     const pulling=st.hk.st==='bk'&&st.hk.it,ci=dvIm(st.ch+(pulling?'-2':'-1'));const bob=pulling?Math.sin(performance.now()/70)*2:0;
-    if(ci)img(ctx,ci,DV_PX,52+bob,96);else{ctx.fillStyle='#a16207';ctx.fillRect(DV_PX-20,70,40,18);ctx.fillStyle='#713f12';ctx.beginPath();ctx.arc(DV_PX,79,7,0,7);ctx.fill();emo(ctx,DVCH[st.ch].e,DV_PX,46+bob,46);if(pulling)emo(ctx,'💦',DV_PX+26,30,16)}
+    if(ci)img(ctx,ci,DV_PX,53+bob,86);else{ctx.fillStyle='#a16207';ctx.fillRect(DV_PX-20,70,40,18);ctx.fillStyle='#713f12';ctx.beginPath();ctx.arc(DV_PX,79,7,0,7);ctx.fill();emo(ctx,DVCH[st.ch].e,DV_PX,46+bob,46);if(pulling)emo(ctx,'💦',DV_PX+26,30,16)}
     // dây + móc
     const p=dvTip(st),a=st.hk.a;ctx.strokeStyle='#3f2d1c';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(DV_PX,DV_PY-6);ctx.lineTo(p.x,p.y);ctx.stroke();
-    const hi=dvIm('hook');if(hi){ctx.save();ctx.translate(p.x,p.y);ctx.rotate(-a);ctx.drawImage(hi,-14,-4,28,28*hi.height/hi.width);ctx.restore()}
+    const hi=dvIm('hook');if(hi){ctx.save();ctx.translate(p.x,p.y);ctx.rotate(-a);{const hh=24*hi.height/hi.width;ctx.drawImage(hi,-12,-hh*.55,24,hh)};ctx.restore()}
     else{ctx.save();ctx.translate(p.x,p.y);ctx.rotate(-a);ctx.strokeStyle='#475569';ctx.lineWidth=3.2;ctx.lineCap='round';ctx.beginPath();ctx.arc(-6,6,8,-1.9,.6);ctx.stroke();ctx.beginPath();ctx.arc(6,6,8,Math.PI-.6,Math.PI+1.9);ctx.stroke();ctx.fillStyle='#64748b';ctx.beginPath();ctx.arc(0,0,4,0,7);ctx.fill();ctx.restore()}
     // chữ bay
     fl=fl.filter(f=>(f.a-=1/60)>0);fl.forEach(f=>{ctx.save();ctx.globalAlpha=Math.min(1,f.a*1.5);if(f.big){emo(ctx,f.t,f.x,f.y,f.big===2?90:46)}else{f.y-=.5;ctx.font='bold 20px system-ui';ctx.textAlign='center';ctx.lineWidth=4;ctx.strokeStyle='rgba(0,0,0,.55)';ctx.strokeText(f.t,f.x,f.y);ctx.fillStyle=f.c;ctx.fillText(f.t,f.x,f.y)}ctx.restore()});

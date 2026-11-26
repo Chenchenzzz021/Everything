@@ -1538,7 +1538,7 @@ const TCOL=['#ef4444','#22c55e','#eab308','#3b82f6'];
 const TPAL=[['#ef4444','Đỏ'],['#22c55e','Xanh lá'],['#eab308','Vàng'],['#3b82f6','Xanh dương']];
 const tyCol=(g,s)=>(g&&g.tc&&g.tc[s])||TCOL[s%4];
 function tyColors(pl,tcs){const m={};(tcs||[]).forEach(x=>{const [u,c]=String(x).split('|');if(u&&c)m[u]=c});const used=new Set(Object.values(m)),free=TPAL.map(x=>x[0]).filter(c=>!used.has(c));return pl.map(u=>m[u]||free.shift()||'#64748b')}
-const TSK={go:['🏁','Lộc Xuất phát','Đi qua Xuất phát được thêm 25'],rent:['🛡️','Mặc cả','Giảm 10% tiền thuê khi vào đất người khác'],build:['🔨','Nhà thầu','Xây nhà, khách sạn rẻ hơn 20%'],jam:['🛵','Shipper','Đi ngang qua đất của mình được 5 mỗi ô, bị kẹt xe thì được bù 50']};
+const TSK={go:['🏁','Lộc Xuất phát','Đi qua Xuất phát được thêm 25'],rent:['🛡️','Mặc cả','Giảm 12% tiền thuê khi vào đất người khác'],build:['🔨','Nhà thầu','Xây nhà, khách sạn rẻ hơn 30%'],jam:['🛵','Shipper','Đi ngang qua đất của mình được 5 mỗi ô, bị kẹt xe thì được bù 50']};
 const tySk=(t,s)=>(t&&t.sk&&t.sk[s])||'';
 // ===== Khoanh số: 500 số rải ngẫu nhiên, lần lượt tìm số kế tiếp =====
 const KS_N=200,KS_P=100,KS_BOT=[4000,10000],KS_SUB='Số bạn khoanh được sẽ có vòng tròn màu này.';
@@ -1605,7 +1605,7 @@ function tyWorld(t){if(t.hotr>0){t.hotr--;if(!t.hotr)t.hot=-1}if(t.coldr>0){t.co
   else{let s=0;alive.forEach(k=>{const n=Math.floor(Math.max(0,t.cash[k])*.1/10)*10;if(n>0){tyPay(t,k,-2,n);s+=n}});add('🏛️ Thu thuế đột xuất: mỗi người nộp 10% tiền mặt vào quỹ'+(s?' (tổng '+tyMoney(s)+')':''))}
   t.wev=k+':'+gg+':'+t.rd}
 const tyUpCost=i=>Math.round(TB[i].p/2);
-const tyUpFor=(t,s,i)=>Math.round(tyUpCost(i)*(tySk(t,s)==='build'?.8:1));
+const tyUpFor=(t,s,i)=>Math.round(tyUpCost(i)*(tySk(t,s)==='build'?.7:1));
 const tyGoAmt=(t,s,poor)=>(poor?TY_GO*2:TY_GO)+(tySk(t,s)==='go'?25:0);
 const TY_LAST=10,TY_SHIP=5;
 function tyPoor(t){if(!t.cash||(t.rd||0)<TY_ROUNDS-TY_LAST)return -1;const A=tyActive(t);if(A.length<2)return -1;let b=-1,bw=1e12;A.forEach(i=>{const w=tyWorth(t,i);if(w<bw){bw=w;b=i}});return b}
@@ -1634,7 +1634,7 @@ function tyLand(t,noLuck){const s=t.turn,i=t.pos[s],T=TB[i];t.ph='done';
     if(o<0){if(t.cash[s]>=T.p){t.ph='buy';t.msg=nameOf(t.pl[s])+' đến '+T.n+' (giá '+tyMoney(T.p)+')'}else t.msg=nameOf(t.pl[s])+' đến '+T.n+' nhưng không đủ tiền mua'}
     else if(o===s){if(T.k==='c'&&(t.lv[i]||0)<3&&t.cash[s]>=tyUpFor(t,s,i)){t.ph='up';t.msg=nameOf(t.pl[s])+' về đất nhà ở '+T.n}else t.msg=nameOf(t.pl[s])+' về đất nhà ở '+T.n}
     else if(!t.out[o]&&tyCold(t,i)){t.msg='🌧️ '+T.n+' đang mưa lũ, '+nameOf(t.pl[s])+' được miễn tiền thuê';t.ev='cold:'+i}
-    else if(!t.out[o]){const pr=tyPoor(t);let r=tyRent(t,i);if(pr===s)r=Math.ceil(r/2);else if(pr===o)r*=2;const bg=tySk(t,s)==='rent';if(bg)r=Math.round(r*.9);t.msg='💸 '+nameOf(t.pl[s])+' trả '+tyMoney(r)+' tiền thuê cho '+nameOf(t.pl[o]);t.ev='rent:'+i;if(tyFull(t,i))t.msg+=' (🎯 đủ bộ x2)';if(tyHot(t,i))t.msg+=' (☀️ mùa du lịch x3)';if(pr===s)t.msg+=' (🔥 giảm nửa)';else if(pr===o)t.msg+=' (🔥 x2)';if(bg)t.msg+=' (🛡️ -10%)';tyPay(t,s,o,r)}
+    else if(!t.out[o]){const pr=tyPoor(t);let r=tyRent(t,i);if(pr===s)r=Math.ceil(r/2);else if(pr===o)r*=2;const bg=tySk(t,s)==='rent';if(bg)r=Math.round(r*.88);t.msg='💸 '+nameOf(t.pl[s])+' trả '+tyMoney(r)+' tiền thuê cho '+nameOf(t.pl[o]);t.ev='rent:'+i;if(tyFull(t,i))t.msg+=' (🎯 đủ bộ x2)';if(tyHot(t,i))t.msg+=' (☀️ mùa du lịch x3)';if(pr===s)t.msg+=' (🔥 giảm nửa)';else if(pr===o)t.msg+=' (🔥 x2)';if(bg)t.msg+=' (🛡️ -12%)';tyPay(t,s,o,r)}
     if(T.k==='st'&&t.ph==='done')tyTrav(t)}
   else if(T.k==='lk'&&!noLuck){const GD=[0,1,4,7,10],c=tyPoor(t)===s?TLUCK[GD[Math.floor(Math.random()*GD.length)]]:TLUCK[Math.floor(Math.random()*TLUCK.length)];t.msg='🎁 '+nameOf(t.pl[s])+': '+c[0];t.ev='luck';c[1](t)}
   else if(T.k==='sta'){const O=tyOwned(t,s).filter(j=>TB[j].k==='c');if(O.length){t.ph='sta';t.msg='🎪 '+nameOf(t.pl[s])+' tới ô Sự kiện: chọn 1 tỉnh của mình để tiền thuê x2 trong '+TY_STAN+' vòng'}else{t.msg='🎪 '+nameOf(t.pl[s])+' tới ô Sự kiện, chưa có đất nên nhận 50 tiền thưởng';tyPay(t,-1,s,50)}}
@@ -1909,7 +1909,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 107${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 108${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

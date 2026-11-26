@@ -1538,7 +1538,7 @@ const TCOL=['#ef4444','#22c55e','#eab308','#3b82f6'];
 const TPAL=[['#ef4444','Đỏ'],['#22c55e','Xanh lá'],['#eab308','Vàng'],['#3b82f6','Xanh dương']];
 const tyCol=(g,s)=>(g&&g.tc&&g.tc[s])||TCOL[s%4];
 function tyColors(pl,tcs){const m={};(tcs||[]).forEach(x=>{const [u,c]=String(x).split('|');if(u&&c)m[u]=c});const used=new Set(Object.values(m)),free=TPAL.map(x=>x[0]).filter(c=>!used.has(c));return pl.map(u=>m[u]||free.shift()||'#64748b')}
-const TSK={go:['🏁','Lộc Xuất phát','Đi qua Xuất phát được thêm 25'],rent:['🛡️','Mặc cả','Giảm 10% tiền thuê khi vào đất người khác'],build:['🔨','Nhà thầu','Xây nhà, khách sạn rẻ hơn 20%'],jam:['🛵','Luồn lách','Không bao giờ bị kẹt xe mất lượt, dừng ở ô Kẹt xe còn được 50']};
+const TSK={go:['🏁','Lộc Xuất phát','Đi qua Xuất phát được thêm 25'],rent:['🛡️','Mặc cả','Giảm 10% tiền thuê khi vào đất người khác'],build:['🔨','Nhà thầu','Xây nhà, khách sạn rẻ hơn 20%'],jam:['🛵','Shipper','Đi ngang qua đất của mình được 5 mỗi ô, không bao giờ bị kẹt xe']};
 const tySk=(t,s)=>(t&&t.sk&&t.sk[s])||'';
 // ===== Khoanh số: 500 số rải ngẫu nhiên, lần lượt tìm số kế tiếp =====
 const KS_N=200,KS_P=100,KS_BOT=[4000,10000],KS_SUB='Số bạn khoanh được sẽ có vòng tròn màu này.';
@@ -1607,13 +1607,13 @@ function tyWorld(t){if(t.hotr>0){t.hotr--;if(!t.hotr)t.hot=-1}if(t.coldr>0){t.co
 const tyUpCost=i=>Math.round(TB[i].p/2);
 const tyUpFor=(t,s,i)=>Math.round(tyUpCost(i)*(tySk(t,s)==='build'?.8:1));
 const tyGoAmt=(t,s,poor)=>(poor?TY_GO*2:TY_GO)+(tySk(t,s)==='go'?25:0);
-const TY_LAST=10;
+const TY_LAST=10,TY_SHIP=5;
 function tyPoor(t){if(!t.cash||(t.rd||0)<TY_ROUNDS-TY_LAST)return -1;const A=tyActive(t);if(A.length<2)return -1;let b=-1,bw=1e12;A.forEach(i=>{const w=tyWorth(t,i);if(w<bw){bw=w;b=i}});return b}
 const tyAssets=(t,s)=>tyWorth(t,s)-t.cash[s];
 function tyWorth(t,s){let w=t.cash[s]-(t.ln&&t.ln[s]>0?TY_LOANR:0);TB.forEach((T,i)=>{if(t.own[i]===s)w+=T.p+(t.lv[i]||0)*tyUpCost(i)});return w}
 function tyInit(pl){const a=PROV.map((x,i)=>i);for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}const cities=a.slice(0,TY_NC).sort((x,y)=>x-y),ls=1+Math.floor(Math.random()*2e9);tyUse({cities,ls});return{cities,ls,pl,pos:pl.map(()=>0),cash:pl.map(()=>TY_START),own:TB.map(()=>-1),lv:TB.map(()=>0),skip:pl.map(()=>0),out:pl.map(()=>0),d1:0,d2:0,ph:'roll',turn:0,rd:0,pot:0,dbl:0,msg:'',ev:'',hot:-1,hotr:0,wev:'',cold:-1,coldr:0,wlr:0,wp:TY_WP[Math.floor(Math.random()*TY_WP.length)]}}
 const TLUCK=[['💸 Trúng xổ số, nhận 150',t=>tyPay(t,-1,t.turn,150)],['🛍️ Bán đồ cũ được 80',t=>tyPay(t,-1,t.turn,80)],['💡 Đóng tiền điện 100',t=>tyPay(t,t.turn,-2,100)],['📸 Bị phạt nguội 50',t=>tyPay(t,t.turn,-2,50)],
-  ['🏁 Về thẳng Xuất phát',t=>{t.pos[t.turn]=0;tyPay(t,-1,t.turn,tyGoAmt(t,t.turn,false));t.mv='jump'}],['↩️ Đi lùi 3 ô',t=>{t.pos[t.turn]=(t.pos[t.turn]+TN-3)%TN;t.mv='jump';tyLand(t,true)}],['🚧 Bị kẹt xe, mất 1 lượt',t=>{t.pos[t.turn]=Math.max(0,TB.findIndex(x=>x.k==='jam'));t.mv='jump';if(tySk(t,t.turn)==='jam')t.note=(t.note?t.note+' · ':'')+'🛵 luồn lách thoát luôn';else t.skip[t.turn]=1}],
+  ['🏁 Về thẳng Xuất phát',t=>{t.pos[t.turn]=0;tyPay(t,-1,t.turn,tyGoAmt(t,t.turn,false));t.mv='jump'}],['↩️ Đi lùi 3 ô',t=>{t.pos[t.turn]=(t.pos[t.turn]+TN-3)%TN;t.mv='jump';tyLand(t,true)}],['🚧 Bị kẹt xe, mất 1 lượt',t=>{t.pos[t.turn]=Math.max(0,TB.findIndex(x=>x.k==='jam'));t.mv='jump';if(tySk(t,t.turn)==='jam')t.note=(t.note?t.note+' · ':'')+'🛵 shipper luồn lách thoát luôn';else t.skip[t.turn]=1}],
   ['🎂 Sinh nhật! Mỗi người tặng bạn 30',t=>tyActive(t).forEach(o=>{if(o!==t.turn)tyPay(t,o,t.turn,30)})],['🍻 Bạn khao cả nhóm, trả mỗi người 30',t=>tyActive(t).forEach(o=>{if(o!==t.turn)tyPay(t,t.turn,o,30)})],
   ['🔧 Sửa nhà, mỗi căn 30',t=>{const n=t.lv.reduce((a,l,i)=>a+(t.own[i]===t.turn?l:0),0);if(n)tyPay(t,t.turn,-2,30*n)}],['🏖️ Đi nghỉ ở Bãi biển',t=>{t.pos[t.turn]=Math.max(0,TB.findIndex(x=>x.k==='beach'));t.mv='jump';tyLand(t,true)}]];
 // from/to: chỉ số người chơi, -1 = ngân hàng, -2 = quỹ bãi biển
@@ -1642,7 +1642,7 @@ function tyLand(t,noLuck){const s=t.turn,i=t.pos[s],T=TB[i];t.ph='done';
   else if(T.k==='tax'){t.msg='🧾 '+nameOf(t.pl[s])+' đóng thuế '+TY_TAX+' vào quỹ Bãi biển';tyPay(t,s,-2,TY_TAX)}
   else if(T.k==='beach'){const p=t.pot;t.msg='🏖️ '+nameOf(t.pl[s])+(p?' nhận quỹ Bãi biển '+tyMoney(p)+'!':' nghỉ ngơi ở Bãi biển');if(p){t.pot=0;tyPay(t,-1,s,p);t.ev='pot'}}
   else if(T.k==='fest'){t.msg='🎉 '+nameOf(t.pl[s])+' đi lễ hội, nhận '+TY_FEST;tyPay(t,-1,s,TY_FEST)}
-  else if(T.k==='jam'){if(tySk(t,s)==='jam'){t.msg='🛵 '+nameOf(t.pl[s])+' luồn lách qua kẹt xe, không mất lượt, nhận 50';tyPay(t,-1,s,50)}else{t.skip[s]=1;t.msg='🚧 '+nameOf(t.pl[s])+' bị kẹt xe, mất 1 lượt'}}
+  else if(T.k==='jam'){if(tySk(t,s)==='jam'){t.msg='🛵 '+nameOf(t.pl[s])+' là shipper, luồn lách qua kẹt xe không mất lượt'}else{t.skip[s]=1;t.msg='🚧 '+nameOf(t.pl[s])+' bị kẹt xe, mất 1 lượt'}}
   else if(T.k==='go'){t.msg=nameOf(t.pl[s])+' dừng ở Xuất phát'}
   if(t.out[s])t.ph='done'}
 // Bến xe: về thẳng Xuất phát · Sân bay: bay tới ô bất kì (không áp dụng khi vừa bay/đi xe tới)
@@ -1670,8 +1670,8 @@ function tyNext(t){const A=tyActive(t);if(A.length<=1){t.st='end';t.win=A.length
   if(t.rd>=TY_ROUNDS){let best=-1,bw=-1e9;A.forEach(i=>{const w=tyWorth(t,i);if(w>bw){bw=w;best=i}});t.st='end';t.win=t.pl[best];t.msg='⏰ Hết '+TY_ROUNDS+' vòng! '+nameOf(t.pl[best])+' giàu nhất với '+tyMoney(bw)}}
 function tyRollState(g,bx){tyUse(g);const t=JSON.parse(JSON.stringify(g));t.fx=[];t.note='';t.ev='';t.mv='walk';t.fl=0;const s=t.turn;
   if(t.skip[s]>0){t.skip[s]--;t.d1=t.d2=0;t.msg='🚧 '+nameOf(t.pl[s])+' đang kẹt xe, bỏ lượt';t.mv='';tyNext(t);return t}
-  const useBx=bx>=1&&bx<=12&&t.bx&&t.bx[s];if(useBx){t.bx[s]=0;t.d1=t.d2=0}else{t.d1=1+Math.floor(Math.random()*6);t.d2=1+Math.floor(Math.random()*6)}const from=t.pos[s],to=(from+(useBx?bx:t.d1+t.d2))%TN;t.pos[s]=to;
-  const poor=tyPoor(t)===s;if(to<from||to===0){t.go=tyGoAmt(t,s,poor);tyPay(t,-1,s,t.go)}tyLand(t);if(t.go&&!/Xuất phát/.test(t.msg))t.msg='🏁 +'+t.go+(poor?' (🔥x2)':'')+' qua Xuất phát · '+t.msg;delete t.go;if(useBx)t.msg='🚌 '+nameOf(t.pl[s])+' đi xe '+bx+' bước · '+t.msg;if(t.ph==='done')tyNext(t);else if(t.ph==='sell')t.msg+=' · 😰 Hết tiền, phải bán đất trả nợ '+tyMoney(-t.cash[s]);if(t.note)t.msg+=' · '+t.note;return t}
+  const useBx=bx>=1&&bx<=12&&t.bx&&t.bx[s];if(useBx){t.bx[s]=0;t.d1=t.d2=0}else{t.d1=1+Math.floor(Math.random()*6);t.d2=1+Math.floor(Math.random()*6)}const from=t.pos[s],nst=useBx?bx:t.d1+t.d2,to=(from+nst)%TN;t.pos[s]=to;let shp=0;if(tySk(t,s)==='jam')for(let k=1;k<nst;k++)if(t.own[(from+k)%TN]===s)shp++;if(shp)tyPay(t,-1,s,TY_SHIP*shp);
+  const poor=tyPoor(t)===s;if(to<from||to===0){t.go=tyGoAmt(t,s,poor);tyPay(t,-1,s,t.go)}tyLand(t);if(t.go&&!/Xuất phát/.test(t.msg))t.msg='🏁 +'+t.go+(poor?' (🔥x2)':'')+' qua Xuất phát · '+t.msg;delete t.go;if(shp)t.msg='🛵 +'+TY_SHIP*shp+' giao hàng qua '+shp+' ô nhà · '+t.msg;if(useBx)t.msg='🚌 '+nameOf(t.pl[s])+' đi xe '+bx+' bước · '+t.msg;if(t.ph==='done')tyNext(t);else if(t.ph==='sell')t.msg+=' · 😰 Hết tiền, phải bán đất trả nợ '+tyMoney(-t.cash[s]);if(t.note)t.msg+=' · '+t.note;return t}
 function tyBotBx(t){tyUse(t);const s=t.turn;let b=7,bs=-1e9;for(let n=1;n<=12;n++){const i=(t.pos[s]+n)%TN,T=TB[i],o=t.own[i];let sc=0;
   if(T.k==='c'||T.k==='st'){if(o<0)sc=t.cash[s]-T.p>=80?T.p:5;else if(o===s)sc=60;else sc=-tyRent(t,i)*2}else if(T.k==='beach')sc=t.pot;else if(T.k==='fest')sc=100;else if(T.k==='tax')sc=-100;else if(T.k==='jam')sc=-80;else if(T.k==='bank'||T.k==='lk')sc=40;else if(T.k==='sta')sc=50;
   if(i<t.pos[s])sc+=TY_GO;if(sc>bs){bs=sc;b=n}}return b}
@@ -1909,7 +1909,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 105${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 106${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};

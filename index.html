@@ -1295,6 +1295,7 @@ async function openConv(uid,quote){const p=personOf(uid),pid=pairId(uid),base=`$
 window.openConv=openConv;
 
 // ===== Trò chơi: Cờ ca rô, Cờ cá ngựa =====
+const ER_OPEN=Date.UTC(2026,10,27,15,0);// 22:00 ngày 27/11/2026 giờ VN
 const GT={caro:{n:'Cờ ca rô',e:'⭕',d:'2 người · ai xếp được 5 quân liền nhau là thắng',min:2,max:2},ludo:{n:'Cờ cá ngựa',e:'🎲',d:'Luôn đủ 4 người (thiếu thì máy vào) · đưa cả 4 quân về đích trước là thắng',min:2,max:4},ty:{n:'Cờ tỉ phú',e:'🏙️',d:'2–4 người · mua đất, xây nhà, ai giàu nhất thắng',min:2,max:4},ks:{n:'Khoanh số',e:'🔢',d:'2–4 người · 2 màn, tìm số từ 1 đến 200, ai khoanh trước được số đó, nhiều số nhất thắng',min:2,max:4},er:{n:'Thoát khỏi tiệm bánh',e:'🧁',d:'1–3 người · cùng giải đố thoát khỏi tiệm bánh trong 60 phút',min:1,max:3},dv:{n:'Đào vàng',e:'⛏️',d:'1–3 người · thả móc kéo vàng, kim cương, 20 màn · chơi chung thì ai nhiều tiền nhất thắng',min:2,max:3}};
 let GM=[];
 const gPath=id=>`${COL}/${S.code}/games${id?'/'+id:''}`;
@@ -1334,14 +1335,14 @@ function drawGames(){const e=$('#game');if(!e)return;const inv=GM.filter(gInvite
   const rk=[{id:NET.uid,gp:myPts()}].concat((S.locs||[]).filter(l=>l.id!==NET.uid&&((S.couple&&S.couple.members)||[]).includes(l.id)).map(l=>({id:l.id,gp:+l.gp||0}))).sort((a,b)=>b.gp-a.gp);
   e.innerHTML=`<h1>Trò chơi</h1>${inv.length?`<div class="card ginv" style="padding:4px 12px;border:2px solid var(--pk)"><div class="gch2">💌 Lời mời chơi</div>${inv.map(g=>row(g,`<button class="btn" data-join="${g.id}" style="min-height:36px;padding:6px 12px">Vào chơi</button><button class="btn gh" data-no="${g.id}" style="min-height:36px;padding:6px 8px">✕</button>`)).join('')}</div>`:''}${act.length?`<div class="card gcont"><div class="gch2">▶️ Ván đang chơi dở</div>${act.map(g=>row(g,`<button class="btn" data-open="${g.id}" style="min-height:38px;padding:6px 12px">▶️ Chơi tiếp</button>`)).join('')}</div>`:''}${GW.length?`<div class="card gcont gwl"><div class="gch2">👀 Nhóm đang chơi</div>${GW.map(g=>row(g,`<button class="btn sec" data-open="${g.id}" style="min-height:38px;padding:6px 12px">👀 Xem</button>`)).join('')}</div>`:''}<div class="card gpcard"><div class="gpme"><span>⭐</span><div><b>${myPts().toLocaleString('vi')} điểm</b><small>Mỗi ván thắng +${PTS} điểm</small></div><button class="gpdk" id="gpdk">🎲 Đổi xúc xắc</button></div>
     <div class="gprk">${rk.map((x,i)=>`<div class="${x.id===NET.uid?'me':''}"><i>${['🥇','🥈','🥉'][i]||i+1}</i>${avHtml(personOf(x.id),24)}<span>${esc(x.id===NET.uid?'Bạn':nameOf(x.id))}</span><b>${x.gp.toLocaleString('vi')}</b></div>`).join('')}</div></div>
-    <div class="gcards">${Object.keys(GT).map(k=>`<div class="gcard g-${k}"><div class="gchd"><span class="ge">${GT[k].e}</span><b>${GT[k].n}</b></div><div class="gbtns">${(()=>{const a=act.find(g=>g.type===k);return a?`<button data-open="${a.id}" class="gcon">▶️ Chơi tiếp</button>`:''})()}<button data-new="${k}">👥 Mời bạn</button><button data-bot="${k}">${k==='dv'?'⛏️ Chơi một mình':k==='er'?'🧁 Chơi một mình':'🤖 Chơi với máy'}</button></div></div>`).join('')}<div class="gcard g-td"><div class="gchd"><span class="ge">🔍</span><b>Tìm đồ</b></div><div class="gbtns"><button id="tdgo">▶️ Chơi${(()=>{const P=LS.get('td',{u:0,s:{}});return' · màn '+(P.u+1)+'/'+TD.length})()}</button></div></div></div>
+    <div class="gcards">${Object.keys(GT).map(k=>`<div class="gcard g-${k}"><div class="gchd"><span class="ge">${GT[k].e}</span><b>${GT[k].n}</b></div>${k==='er'&&Date.now()<ER_OPEN?'<div class="mut" style="font-size:12px;text-align:center">🔒 Mở lúc 22:00 tối nay</div>':''}<div class="gbtns">${(()=>{const a=act.find(g=>g.type===k);return a?`<button data-open="${a.id}" class="gcon">▶️ Chơi tiếp</button>`:''})()}<button data-new="${k}">👥 Mời bạn</button><button data-bot="${k}">${k==='dv'?'⛏️ Chơi một mình':k==='er'?'🧁 Chơi một mình':'🤖 Chơi với máy'}</button></div></div>`).join('')}<div class="gcard g-td"><div class="gchd"><span class="ge">🔍</span><b>Tìm đồ</b></div><div class="gbtns"><button id="tdgo">▶️ Chơi${(()=>{const P=LS.get('td',{u:0,s:{}});return' · màn '+(P.u+1)+'/'+TD.length})()}</button></div></div></div>
 
     ${done.length?`<h2>Đã chơi</h2><div class="card" style="padding:4px 12px">${done.map(g=>row(g,`<button class="btn gh" data-open="${g.id}" style="min-height:36px;padding:6px 10px">Xem</button>`)).join('')}</div>`:''}`;
   e.querySelectorAll('[data-new]').forEach(b=>b.onclick=()=>newGame(b.dataset.new));const tdg=e.querySelector('#tdgo');if(tdg)tdg.onclick=openTd;const gdk=e.querySelector('#gpdk');if(gdk)gdk.onclick=openDice;e.querySelectorAll('[data-bot]').forEach(b=>b.onclick=()=>askBot(b.dataset.bot));
   e.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openGame(b.dataset.open));
   e.querySelectorAll('[data-join]').forEach(b=>b.onclick=()=>joinGame(b.dataset.join));
   e.querySelectorAll('[data-no]').forEach(b=>b.onclick=()=>declineGame(b.dataset.no))}
-function newGame(type){const T=GT[type],O=others();if(!O.length){toast('Nhóm chưa có ai khác, chơi với máy nhé 🤖');return askBot(type)}const sel=new Set();
+function newGame(type){if(type==='er'&&erLocked())return;const T=GT[type],O=others();if(!O.length){toast('Nhóm chưa có ai khác, chơi với máy nhé 🤖');return askBot(type)}const sel=new Set();
   const sh=document.createElement('div');sh.className='sheet';sh.innerHTML=`<div><div class="row"><h2 class="grow" style="margin:0">${T.e} ${T.n}</h2><button class="ib" id="x">${I.x}</button></div>
     <p class="mut" style="margin:4px 0 10px">${T.max===2?'Chọn 1 người để mời':'Chọn 1 đến '+(T.max-1)+' người để mời'}</p>
     <div class="gpick">${O.map(p=>`<button data-u="${p.id}">${avHtml(p,40)}<span>${esc(dn(p))}</span></button>`).join('')}</div>
@@ -1983,7 +1984,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 111${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 112${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};
@@ -2700,10 +2701,11 @@ function erTone(f,d=.25,type='triangle',vol=.18){ERS.tone(f,d,type,vol)}
 const erDing=()=>ERS.fx.unlock(),erBuzz=()=>ERS.fx.wrong();
 const ER_NOTE=[523,659,784,587,698];
 // tạo ván
-function erSolo(){const id='L_er'+Date.now().toString(36),now=Date.now();const o={id,type:'er',by:NET.uid,t:now,upd:now,st:'wait',pl:[NET.uid],inv:[],sd:1+Math.floor(Math.random()*1e9),local:true};lgPut(id,o);loadGames();openEr(id)}
-async function erJoin(id){try{const g=await gGet(id);if(!g||g.st!=='wait')return toast('Ván này đã bắt đầu hoặc đã huỷ');const pl=(g.pl||[]).includes(NET.uid)?g.pl:[...(g.pl||[]),NET.uid];
+const erLocked=()=>{if(Date.now()>=ER_OPEN)return false;const m=Math.ceil((ER_OPEN-Date.now())/60000);toast('🔒 Thoát khỏi tiệm bánh mở lúc 22:00 tối nay (còn '+(m>=60?Math.floor(m/60)+' giờ '+(m%60)+' phút':m+' phút')+')');return true};
+function erSolo(){if(erLocked())return;const id='L_er'+Date.now().toString(36),now=Date.now();const o={id,type:'er',by:NET.uid,t:now,upd:now,st:'wait',pl:[NET.uid],inv:[],sd:1+Math.floor(Math.random()*1e9),local:true};lgPut(id,o);loadGames();openEr(id)}
+async function erJoin(id){if(erLocked())return;try{const g=await gGet(id);if(!g||g.st!=='wait')return toast('Ván này đã bắt đầu hoặc đã huỷ');const pl=(g.pl||[]).includes(NET.uid)?g.pl:[...(g.pl||[]),NET.uid];
   await API.put(gPath(id),{pl,upd:Date.now(),['u_'+NET.uid]:{c:-1,rd:0,r:0,x:50,at:Date.now()}},true);await loadGames();openEr(id)}catch(e){toast(errMsg(e))}}
-async function openEr(id){const old=$('.erv');if(old)old.remove();const gm=$('.gm');if(gm)gm.remove();
+async function openEr(id){if(erLocked())return;const old=$('.erv');if(old)old.remove();const gm=$('.gm');if(gm)gm.remove();
   const v=document.createElement('div');v.className='erv';v.dataset.id=id;document.body.appendChild(v);const loc=isLocal(id),me=NET.uid;ERS.start('banh');v.addEventListener('pointerdown',()=>ERS.start('banh'));
   let g=await gGet(id);if(!g){v.remove();return toast('Không tìm thấy ván này')}
   const P=erParams(g.sd||1);let S=erState(g),myE=(g['e_'+me]||[]).slice(),sel=null,mode='',timer=null,raf=0,modal=null,cool={},seenHints=S.hints.length,lastWin=0,ended=false,peek=null;

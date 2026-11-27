@@ -1296,7 +1296,7 @@ window.openConv=openConv;
 
 // ===== Trò chơi: Cờ ca rô, Cờ cá ngựa =====
 const ER_OPEN=Date.UTC(2026,10,27,15,0);// 22:00 ngày 27/11/2026 giờ VN
-const GT={caro:{n:'Cờ ca rô',e:'⭕',d:'2 người · ai xếp được 5 quân liền nhau là thắng',min:2,max:2},ludo:{n:'Cờ cá ngựa',e:'🎲',d:'Luôn đủ 4 người (thiếu thì máy vào) · đưa cả 4 quân về đích trước là thắng',min:2,max:4},ty:{n:'Cờ tỉ phú',e:'🏙️',d:'2–4 người · mua đất, xây nhà, ai giàu nhất thắng',min:2,max:4},ks:{n:'Khoanh số',e:'🔢',d:'2–4 người · 2 màn, tìm số từ 1 đến 200, ai khoanh trước được số đó, nhiều số nhất thắng',min:2,max:4},er:{n:'Thoát khỏi tiệm bánh',e:'🧁',d:'1–3 người · cùng giải đố thoát khỏi tiệm bánh trong 60 phút',min:1,max:3},dv:{n:'Đào vàng',e:'⛏️',d:'1–3 người · thả móc kéo vàng, kim cương, 20 màn · chơi chung thì ai nhiều tiền nhất thắng',min:2,max:3}};
+const GT={caro:{n:'Cờ ca rô',e:'⭕',d:'2 người · ai xếp được 5 quân liền nhau là thắng',min:2,max:2},ludo:{n:'Cờ cá ngựa',e:'🎲',d:'Luôn đủ 4 người (thiếu thì máy vào) · đưa cả 4 quân về đích trước là thắng',min:2,max:4},ty:{n:'Cờ tỉ phú',e:'🏙️',d:'2–4 người · mua đất, xây nhà, ai giàu nhất thắng',min:2,max:4},ks:{n:'Khoanh số',e:'🔢',d:'2–4 người · 2 màn, tìm số từ 1 đến 200, ai khoanh trước được số đó, nhiều số nhất thắng',min:2,max:4},er:{n:'Escape Room',e:'🧁',d:'1–3 người · cùng giải đố thoát khỏi tiệm bánh trong 60 phút',min:1,max:3},dv:{n:'Đào vàng',e:'⛏️',d:'1–3 người · thả móc kéo vàng, kim cương, 20 màn · chơi chung thì ai nhiều tiền nhất thắng',min:2,max:3}};
 let GM=[];
 const gPath=id=>`${COL}/${S.code}/games${id?'/'+id:''}`;
 const gTitle=g=>GT[g.type]?GT[g.type].n:'Trò chơi';
@@ -1984,7 +1984,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 112${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 113${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};
@@ -2701,7 +2701,7 @@ function erTone(f,d=.25,type='triangle',vol=.18){ERS.tone(f,d,type,vol)}
 const erDing=()=>ERS.fx.unlock(),erBuzz=()=>ERS.fx.wrong();
 const ER_NOTE=[523,659,784,587,698];
 // tạo ván
-const erLocked=()=>{if(Date.now()>=ER_OPEN)return false;const m=Math.ceil((ER_OPEN-Date.now())/60000);toast('🔒 Thoát khỏi tiệm bánh mở lúc 22:00 tối nay (còn '+(m>=60?Math.floor(m/60)+' giờ '+(m%60)+' phút':m+' phút')+')');return true};
+const erLocked=()=>{if(Date.now()>=ER_OPEN)return false;const m=Math.ceil((ER_OPEN-Date.now())/60000);toast('🔒 Escape Room mở lúc 22:00 tối nay (còn '+(m>=60?Math.floor(m/60)+' giờ '+(m%60)+' phút':m+' phút')+')');return true};
 function erSolo(){if(erLocked())return;const id='L_er'+Date.now().toString(36),now=Date.now();const o={id,type:'er',by:NET.uid,t:now,upd:now,st:'wait',pl:[NET.uid],inv:[],sd:1+Math.floor(Math.random()*1e9),local:true};lgPut(id,o);loadGames();openEr(id)}
 async function erJoin(id){if(erLocked())return;try{const g=await gGet(id);if(!g||g.st!=='wait')return toast('Ván này đã bắt đầu hoặc đã huỷ');const pl=(g.pl||[]).includes(NET.uid)?g.pl:[...(g.pl||[]),NET.uid];
   await API.put(gPath(id),{pl,upd:Date.now(),['u_'+NET.uid]:{c:-1,rd:0,r:0,x:50,at:Date.now()}},true);await loadGames();openEr(id)}catch(e){toast(errMsg(e))}}

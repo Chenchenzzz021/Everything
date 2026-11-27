@@ -2004,7 +2004,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 116${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 118${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};
@@ -2726,7 +2726,9 @@ const ERS=(()=>{let ac=null,sfx=null,mus=null,noiseB=null,musOn=false,timer=0,ne
   const pref=()=>LS.get('ersnd',2);// 2 = nhạc + tiếng, 1 = chỉ tiếng, 0 = tắt
   function ctx(){if(!ac){try{ac=new (window.AudioContext||window.webkitAudioContext)();const comp=ac.createDynamicsCompressor();comp.connect(ac.destination);sfx=ac.createGain();sfx.connect(comp);mus=ac.createGain();mus.gain.value=0;mus.connect(comp);
       noiseB=ac.createBuffer(1,ac.sampleRate,ac.sampleRate);const d=noiseB.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1}catch(e){ac=null}}
-    if(ac&&ac.state==='suspended')ac.resume().catch(()=>{});return ac}
+    if(ac&&ac.state!=='running')ac.resume().catch(()=>{});return ac}
+  // iPhone: Web Audio bị tắt theo nút im lặng/không chạy nếu chưa mở khoá bằng chạm → bật phiên 'playback' + phát âm thanh câm
+  let sil=null;function unlock(){try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}if(!sil){try{sil=new Audio('data:audio/wav;base64,UklGRkQDAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YSADAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgA==');sil.loop=true;sil.setAttribute('playsinline','');sil.volume=.01}catch(e){}}if(sil&&sil.paused)sil.play().catch(()=>{});const a=ctx();if(a){try{const b=a.createBuffer(1,1,22050),s=a.createBufferSource();s.buffer=b;s.connect(a.destination);s.start(0)}catch(e){}}}
   function apply(){if(!ctx())return;const p=pref();sfx.gain.value=p>0?1:0;mus.gain.cancelScheduledValues(ac.currentTime);mus.gain.setTargetAtTime(p>1&&musOn?.55:0,ac.currentTime,.6)}
   // một nốt: f tần số, d thời lượng, type, vol, at trễ (giây), out đường ra, glide tần số cuối, atk thời gian lên
   function tone(f,d=.25,type='triangle',vol=.18,at=0,out,glide,atk=.005){if(!ctx())return;const t=ac.currentTime+at,o=ac.createOscillator(),gn=ac.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(glide)o.frequency.exponentialRampToValueAtTime(glide,t+d);
@@ -2772,11 +2774,11 @@ const ERS=(()=>{let ac=null,sfx=null,mus=null,noiseB=null,musOn=false,timer=0,ne
       const play=pos%2===0?R()<.72:R()<.22;if(play){const pool=T.sc.filter(n=>chd.some(c=>(n-c)%12===0));const src=R()<.65&&pool.length?pool:T.sc;bell(N(src[Math.floor(R()*src.length)]),sp*3,.05,t,mus)}
       nextT+=sp;beat++}}
   function start(th){theme=THEMES[th]?th:'banh';if(!ctx())return;if(musOn){apply();return}musOn=true;rnd=Math.floor(Math.random()*1e6)+1;nextT=ac.currentTime+.15;beat=0;clearInterval(timer);timer=setInterval(sched,200);sched();apply()}
-  function stop(){musOn=false;clearInterval(timer);timer=0;if(ac)apply()}
-  document.addEventListener('visibilitychange',()=>{if(!ac)return;if(document.hidden)ac.suspend().catch(()=>{});else if(document.querySelector('.erv'))ac.resume().catch(()=>{})});
+  function stop(){musOn=false;clearInterval(timer);timer=0;if(ac)apply();try{if(sil)sil.pause()}catch(e){}}
+  document.addEventListener('visibilitychange',()=>{if(!ac)return;if(document.hidden){ac.suspend().catch(()=>{});try{if(sil)sil.pause()}catch(e){}}else if(document.querySelector('.erv')){ac.resume().catch(()=>{});if(sil)sil.play().catch(()=>{})}});
   function cycle(){const p=(pref()+2)%3;LS.set('ersnd',p);apply();return p}
   const icon=()=>['🔇','🔉','🔊'][pref()];
-  return{tone,fx,start,stop,cycle,icon,ctx,apply}})();
+  return{tone,fx,start,stop,cycle,icon,ctx,apply,unlock}})();
 function erTone(f,d=.25,type='triangle',vol=.18){ERS.tone(f,d,type,vol)}
 const erDing=()=>ERS.fx.unlock(),erBuzz=()=>ERS.fx.wrong();
 const ER_NOTE=[523,659,784,587,698];
@@ -2797,7 +2799,7 @@ function er2Guide(){return`<div class="ergdh"><img src="assets/er2-u-nhim.png" a
       <h3>💡 Lời khuyên</h3><p>Chia nhau tìm khắp phòng rồi kể cho nhau nghe: con số, ký hiệu, màu sắc. Manh mối ở phòng này thường dùng ở phòng sau.</p>`}
 async function openEr(id){if(erLocked())return;const old=$('.erv');if(old)old.remove();const gm=$('.gm');if(gm)gm.remove();
   const v=document.createElement('div');v.className='erv';v.dataset.id=id;document.body.appendChild(v);const loc=isLocal(id),me=NET.uid;
-  let g=await gGet(id);if(!g){v.remove();return toast('Không tìm thấy ván này')}erUse(g.lv||1);v.classList.toggle('erv2',ERL.id===2);ERS.start(ERL.mus);v.addEventListener('pointerdown',()=>ERS.start(ERL.mus));
+  let g=await gGet(id);if(!g){v.remove();return toast('Không tìm thấy ván này')}erUse(g.lv||1);v.classList.toggle('erv2',ERL.id===2);ERS.start(ERL.mus);const unl=()=>{ERS.unlock();ERS.start(ERL.mus)};['pointerdown','touchend','click'].forEach(t=>v.addEventListener(t,unl,{passive:true}));
   const P=ERL.params(g.sd||1);let S=erState(g),myE=(g['e_'+me]||[]).slice(),sel=null,mode='',timer=null,raf=0,modal=null,cool={},seenHints=S.hints.length,lastWin=0,ended=false,peek=null;
   // nhân vật: vị trí hiển thị (mượt) và đích
   const CH={};

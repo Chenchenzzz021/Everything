@@ -188,7 +188,7 @@ ul.ck li{margin:4px 0}
 .gprk{margin-top:8px;display:grid;gap:4px}.gprk>div{display:flex;align-items:center;gap:8px;padding:4px 8px;border-radius:12px;background:rgba(255,255,255,.65)}.gprk>div.me{background:#fff;box-shadow:0 0 0 2px #fbbf24 inset}.gprk i{font-style:normal;width:22px;text-align:center;font-weight:700;color:#9ca3af}.gprk span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gprk b{color:#d97706}
 .gpts{display:block;margin-top:8px;font-weight:700;color:#d97706;font-size:18px;animation:grpop .6s .3s both cubic-bezier(.3,1.5,.6,1)}
 .gcards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}
-.gcard.g-ty{background:linear-gradient(150deg,#fcd34d,#f59e0b 55%,#0284c7)}.gcard.g-dv{background:linear-gradient(150deg,#fde047,#d97706 55%,#78350f)}
+.gcard.g-ty{background:linear-gradient(150deg,#fcd34d,#f59e0b 55%,#0284c7)}.gcard.g-dv{background:linear-gradient(150deg,#fde047,#d97706 55%,#78350f)}.g-er{background:linear-gradient(150deg,#fbcfe8,#db2777 55%,#4a2c1a)}
 .dvv{position:fixed;inset:0;z-index:1900;background:linear-gradient(#422006,#1c1917);color:#fff;display:flex;flex-direction:column;align-items:center;overflow-y:auto;padding:calc(8px + env(safe-area-inset-top)) 10px calc(10px + env(safe-area-inset-bottom));user-select:none;-webkit-user-select:none}
 .dvtop{display:flex;align-items:center;gap:8px;width:100%;max-width:520px}.dvtop b{flex:1;text-align:center;font-size:18px}
 .dvmenu{width:100%;max-width:520px;display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center}.dvmenu h3{margin:4px 0 0}
@@ -536,6 +536,75 @@ nav button b{position:relative}
 .tdq{z-index:3;cursor:pointer;filter:drop-shadow(0 0 .15em #fff);transition:transform .2s}.tdq.on{transform:translate(-50%,-50%) scale(1.35);filter:drop-shadow(0 0 .3em #fde047) drop-shadow(0 0 .6em #facc15)}.tdq.op{pointer-events:none;opacity:.35}
 .tdbag button.nt{background:#fff7ed;border-color:#fb923c}
 .tdwc{height:150px;margin-top:-70px;filter:drop-shadow(0 6px 8px rgba(0,0,0,.25))}.tdmc{height:110px;margin:-4px 0 -6px}.tdcat.jmp{animation:tdjmp .7s}@keyframes tdjmp{40%{transform:translateY(-14px) scale(1.08)}}.tdwin b{font-size:22px}.tdws{font-size:34px;color:#f59e0b}
+.erv{position:fixed;inset:0;z-index:1850;background:radial-gradient(circle at 50% 0,#4a2c1a,#1c120c);display:flex;flex-direction:column;align-items:center;gap:8px;padding:calc(8px + env(safe-area-inset-top)) 10px calc(10px + env(safe-area-inset-bottom));overflow-y:auto;color:#fff}
+.ertop{display:flex;align-items:center;gap:6px;width:100%;max-width:520px}.ertop>b{flex:1;text-align:center;font-size:16px}.ertop .errn{font-size:14px;line-height:1.15}
+body:has(.erv) .gcmf{bottom:auto;top:calc(8px + env(safe-area-inset-top));right:max(10px,calc(50% - 250px));width:44px;height:44px;font-size:20px;border-width:3px;border-radius:14px;background:#22c55e;z-index:1900}
+body:has(.erv .erlob) .gcmf{display:none}
+.erv .ertop:has(.ertm){padding-right:50px}
+.ertm{display:flex;align-items:center;gap:3px;background:#fef3c7;color:#7c2d12;border:3px solid #1f2937;border-radius:14px;padding:2px 8px 2px 3px;font-variant-numeric:tabular-nums}.ertm img{height:30px}.ertm b{font-size:16px}.ertm.low{background:#fecaca;animation:erpl 1s infinite}
+@keyframes erpl{50%{transform:scale(1.07)}}
+.erhb img{height:32px;border-radius:50%;display:block;margin:auto}
+.erst{position:relative;width:100%;max-width:520px;aspect-ratio:4/5;border-radius:18px;overflow:hidden;border:4px solid #3b2416;box-shadow:0 8px 24px rgba(0,0,0,.5);flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:manipulation;transition:filter .3s}
+.erst.erfade{filter:brightness(.2)}
+.erbg{position:absolute;inset:0;background-size:100% 100%}
+.erhs,.erfx,.erchs{position:absolute;inset:0}.erfx,.erchs{pointer-events:none}.erchs .erc{pointer-events:auto}
+.erh{position:absolute;border-radius:10px;cursor:pointer}.erh:active{background:rgba(255,255,255,.18)}
+.ertrap{position:absolute;left:12%;top:70%;width:76%;opacity:.98;filter:drop-shadow(0 4px 6px rgba(0,0,0,.4))}
+.erc{position:absolute;height:22%;transform:translate(-50%,0);display:flex;flex-direction:column;align-items:center;will-change:left,transform}
+.erc>img{height:100%;width:auto;filter:drop-shadow(0 6px 4px rgba(0,0,0,.35));transition:transform .15s;pointer-events:none}
+.erc>span{position:absolute;top:-16px;font-size:11px;font-weight:700;background:rgba(0,0,0,.55);padding:1px 6px;border-radius:99px;white-space:nowrap}.erc.me>span{background:#16a34a}
+.ermsg{position:absolute;left:6%;right:6%;top:3%;background:#fffbeb;color:#422006;border:3px solid #3b2416;border-radius:14px;padding:8px 12px;font-size:15px;font-weight:600;text-align:center;box-shadow:0 4px 0 #3b2416;z-index:5;pointer-events:none}
+.erbag{display:flex;align-items:center;gap:8px;width:100%;max-width:520px;background:#78350f;border:3px solid #1f2937;border-radius:16px;padding:6px 10px;min-height:60px}.erbag>span{font-size:26px}
+.erbag>div{display:flex;gap:6px;flex-wrap:wrap;flex:1}.erbag button{width:46px;height:46px;border-radius:12px;border:3px solid #fde68a;background:#fef3c7;padding:2px;transition:transform .15s}.erbag button.on{background:#facc15;border-color:#fff;transform:scale(1.12);box-shadow:0 0 12px #fde047}
+.erbag small{font-size:12px;opacity:.9;max-width:110px;text-align:right}
+.eract{display:flex;gap:8px;width:100%;max-width:520px;justify-content:center}.eract:empty{display:none}.eract button{flex:1;max-width:200px;border:3px solid #1f2937;border-radius:12px;background:#fde68a;font-weight:700;padding:8px;font-size:14px}
+.eri{max-width:100%;max-height:100%;display:block;margin:auto;object-fit:contain;pointer-events:none}.eri.kn{filter:hue-rotate(-25deg) saturate(.7) brightness(1.15);transform:scale(.8)}.eri.on{filter:drop-shadow(0 0 6px #c084fc)}
+.eri.big{max-height:150px}
+.erm{position:fixed;inset:0;z-index:1950;background:rgba(15,8,4,.72);display:flex;align-items:center;justify-content:center;padding:14px}
+.ermb{position:relative;width:100%;max-width:440px;max-height:92vh;overflow-y:auto;background:#fff7ed;color:#422006;border:4px solid #3b2416;border-radius:20px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);animation:erin .2s ease-out}
+@keyframes erin{from{transform:scale(.9);opacity:0}}
+.erx{position:absolute;right:8px;top:8px;width:34px;height:34px;border-radius:50%;border:3px solid #3b2416;background:#fde68a;font-size:15px;z-index:3}
+.ermh{font-weight:800;font-size:17px;margin:2px 40px 10px 2px}
+.ermp{font-size:14px;margin:8px 2px;color:#7c2d12}.erem{font-size:14px;color:#a16207;text-align:center;margin:10px}
+.erpk{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0}.erpk button{width:92px;border:3px solid #d97706;background:#fffbeb;border-radius:14px;padding:6px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;color:#422006}.erpk button .eri{height:54px}
+.erbig{display:block;max-width:70%;max-height:220px;margin:4px auto}
+.erzm{position:relative;width:100%;border-radius:12px;border:3px solid #3b2416;overflow:hidden}
+.ercn{position:absolute;transform:translate(-50%,-50%);font-weight:700;font-size:13px;line-height:1.1;color:#fefce8;text-shadow:0 1px 2px #000;white-space:nowrap}
+.eruv{position:absolute;transform:translate(-50%,-50%);font-weight:900;font-size:30px;line-height:1;color:#e9d5ff;text-shadow:0 0 8px #a855f7,0 0 16px #a855f7;animation:eruv 1.6s infinite}
+@keyframes eruv{50%{opacity:.6}}
+.erdr{position:relative;width:70%;margin:0 auto}.erdr img{width:100%;display:block}.erdr button{position:absolute;left:50%;transform:translate(-50%,-50%);border:3px solid #3b2416;background:#fde68a;border-radius:10px;font-weight:700;font-size:13px;padding:5px 10px;white-space:nowrap}
+.erlk .erwh{display:flex;justify-content:center;gap:8px;margin:10px 0}.erwh>div{display:flex;flex-direction:column;align-items:center;gap:4px;background:#78350f;border:3px solid #3b2416;border-radius:12px;padding:6px 4px;min-width:56px}
+.erwh small{font-size:22px;line-height:1}.erwh b{font-size:28px;color:#fef3c7;background:#1c120c;border-radius:8px;width:44px;text-align:center;padding:4px 0}.erwh button{width:44px;height:34px;border:0;border-radius:8px;background:#fde68a;font-size:14px}
+.erpaper{background:#fefce8;border:2px dashed #d6a76a;border-radius:10px;padding:12px;font-size:16px;line-height:1.5;font-style:italic;color:#3f2a1d;margin:6px 0}
+.erpic div{font-size:26px;letter-spacing:2px;line-height:1.4}
+.ering{display:flex;justify-content:space-around;margin:8px 0}.ering span{display:flex;flex-direction:column;align-items:center;font-weight:700}.ering .eri{height:46px}
+.ermap{text-align:center}.ermap p{font-size:14px}
+.erback{display:flex;flex-direction:column;align-items:center;gap:6px;background:#efe3cc;border-radius:12px;padding:12px;border:3px solid #3b2416}.ermc{width:120px;height:120px}.ersun{font-size:64px}
+.erov{position:relative}.eroc{position:absolute;left:50%;top:60%;transform:translate(-50%,-50%);font:900 15px/1.25 'Courier New',monospace;color:#fff7ed;text-align:center;text-shadow:0 0 6px #f97316,0 1px 2px #000;opacity:.9;white-space:nowrap}.eroc.flip{transform:translate(-50%,-50%) scaleX(-1);filter:blur(.4px)}
+.erfg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;background:#a7f3d0;border:4px solid #047857;border-radius:14px;padding:8px}.erfg button{height:50px;border:2px solid #059669;background:#ecfdf5;border-radius:8px;font-size:20px}.erfg button:disabled{opacity:.4}
+.erz{position:relative;width:100%;border-radius:12px;overflow:hidden;border:3px solid #3b2416}.erz>img{width:100%;display:block}
+.erneedle{position:absolute;left:49.9%;top:51.5%;width:1.6%;height:17%;margin-left:-.8%;margin-top:-17%;background:linear-gradient(#3f2a1d,#3f2a1d);border-radius:3px;transform-origin:50% 100%;transition:transform .6s cubic-bezier(.3,1.6,.5,1)}
+.ersk{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0}.ersk button{border:3px solid #d97706;background:#fffbeb;border-radius:12px;padding:4px;display:flex;flex-direction:column;align-items:center;font-size:14px;color:#422006}.ersk button .eri{height:40px}.ersk button.on{background:#fde047;border-color:#92400e;transform:translateY(-3px)}
+.erdial{position:absolute;left:24.7%;top:27.6%;width:50.6%;height:auto}
+.ersw{position:absolute;left:50%;top:16%;transform:translate(-50%,-50%);width:28%;height:10%;border-radius:50% 50% 0 0;border:0;background:rgba(0,0,0,0);font-size:28px}.ersw.nt{background:rgba(30,41,90,.55)}
+.erbtn3{display:flex;gap:8px;margin:8px 0}.erbtn3 button{flex:1;border:3px solid #3b2416;background:#fde68a;border-radius:12px;padding:10px;font-weight:700}
+.erbk>div{display:flex;align-items:flex-end;gap:3px;height:70px;background:#78350f;border-bottom:6px solid #451a03;padding:4px 8px 0;margin-bottom:4px;border-radius:6px}.erbk button{flex:1;border:2px solid rgba(0,0,0,.35);border-radius:4px 4px 0 0;background:var(--c)}
+.ermn{position:absolute;width:11%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;border:0;background:transparent}.ermn.hit{background:rgba(255,255,255,.55);box-shadow:0 0 18px #fff}
+.erseq{display:flex;justify-content:center;gap:6px;margin:8px 0}.erseq i{width:22px;height:22px;border-radius:50%;border:2px solid #3b2416;background:#fff}
+.erslot{position:absolute;width:15%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;border:3px dashed rgba(120,53,15,.5);background:rgba(255,255,255,.15);padding:4px}
+.ertemp{display:flex;align-items:center;justify-content:center;gap:14px;margin:8px 0}.ertemp b{font-size:34px;min-width:110px;text-align:center;background:#1c120c;color:#fb923c;border-radius:12px;padding:4px 10px;font-variant-numeric:tabular-nums}.ertemp button{width:52px;height:52px;border-radius:50%;border:3px solid #3b2416;background:#fde68a;font-size:26px;font-weight:800}
+.erbook{position:relative}.erbook img{width:100%;display:block}.erpg{position:absolute;left:15%;right:15%;top:20%;bottom:28%;background:#fdf6e3;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-weight:700;font-size:17px;line-height:1.5;color:#3f2a1d;box-shadow:0 0 12px 6px #fdf6e3}
+.erhd{display:flex;align-items:center;gap:10px;margin-right:36px}.erhd img{width:64px;height:64px;border-radius:50%}.erhd b{display:block;font-size:17px}.erhd small{color:#92400e}
+.ermp2{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.ermr{background:#fde68a;border:3px solid #3b2416;border-radius:10px;padding:6px;min-height:70px;font-size:12px}.ermr.cur{background:#86efac}.ermr span{display:flex;gap:2px;margin-top:4px}.ermr img{height:32px}
+.erwin{text-align:center;background:linear-gradient(#fff7ed,#fde68a)}.erwin h2{margin:6px 0}.erstar{font-size:34px}
+.erframe{position:relative;width:62%;margin:0 auto}.erframe .erfr{width:100%;display:block}.erfrin{position:absolute;left:18%;right:18%;top:20%;bottom:20%;display:flex;align-items:flex-end;justify-content:center;gap:0;border-radius:50%;overflow:hidden;background:#fef3c7}.erfrin img{height:62%;margin:0 -6%;animation:erjp .7s infinite alternate}.erfrin img:nth-child(2){animation-delay:.2s}.erfrin img:nth-child(3){animation-delay:.4s}
+@keyframes erjp{to{transform:translateY(-14%)}}
+.erlob{width:100%;max-width:520px;display:flex;flex-direction:column;gap:10px}
+.ergd{background:#fef3c7;color:#422006;border:4px solid #78350f;border-radius:18px;padding:14px;box-shadow:inset 0 0 0 3px #fde68a}.ergd h3{margin:12px 0 4px;font-size:16px}.ergd p,.ergd li{font-size:14px;line-height:1.45}.ergd ul{padding-left:18px;margin:4px 0}.ergd li img{height:22px;vertical-align:middle}
+.ergdh{display:flex;align-items:center;gap:10px}.ergdh img{width:58px;height:58px;border-radius:50%}.ergdh b{display:block;font-size:19px}.ergdh small{color:#92400e}
+.erps{background:rgba(0,0,0,.3);border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:6px}.erpr{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border-radius:12px;padding:6px 8px}.erpr span{flex:1;font-weight:700}.erpr small{display:block;font-weight:400;opacity:.8;font-size:12px}.erpr img{height:40px}.erpr i{font-style:normal;font-size:20px}.erpr.off{opacity:.5}
+.erpick>b{display:block;margin:4px 2px 6px}.erpick>div{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.erpick button{border:3px solid #78350f;background:#fef3c7;border-radius:16px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;font-weight:700;font-size:12px;color:#422006}.erpick button img{height:78px}.erpick button.on{background:#86efac;border-color:#15803d;transform:translateY(-3px)}.erpick button:disabled{opacity:.35}
+.ergo{background:#16a34a!important}
 </style>
 </head>
 <body>
@@ -1221,11 +1290,11 @@ async function openConv(uid,quote){const p=personOf(uid),pid=pairId(uid),base=`$
 window.openConv=openConv;
 
 // ===== Trò chơi: Cờ ca rô, Cờ cá ngựa =====
-const GT={caro:{n:'Cờ ca rô',e:'⭕',d:'2 người · ai xếp được 5 quân liền nhau là thắng',min:2,max:2},ludo:{n:'Cờ cá ngựa',e:'🎲',d:'Luôn đủ 4 người (thiếu thì máy vào) · đưa cả 4 quân về đích trước là thắng',min:2,max:4},ty:{n:'Cờ tỉ phú',e:'🏙️',d:'2–4 người · mua đất, xây nhà, ai giàu nhất thắng',min:2,max:4},ks:{n:'Khoanh số',e:'🔢',d:'2–4 người · 2 màn, tìm số từ 1 đến 200, ai khoanh trước được số đó, nhiều số nhất thắng',min:2,max:4},dv:{n:'Đào vàng',e:'⛏️',d:'1–3 người · thả móc kéo vàng, kim cương, 20 màn · chơi chung thì ai nhiều tiền nhất thắng',min:2,max:3}};
+const GT={caro:{n:'Cờ ca rô',e:'⭕',d:'2 người · ai xếp được 5 quân liền nhau là thắng',min:2,max:2},ludo:{n:'Cờ cá ngựa',e:'🎲',d:'Luôn đủ 4 người (thiếu thì máy vào) · đưa cả 4 quân về đích trước là thắng',min:2,max:4},ty:{n:'Cờ tỉ phú',e:'🏙️',d:'2–4 người · mua đất, xây nhà, ai giàu nhất thắng',min:2,max:4},ks:{n:'Khoanh số',e:'🔢',d:'2–4 người · 2 màn, tìm số từ 1 đến 200, ai khoanh trước được số đó, nhiều số nhất thắng',min:2,max:4},er:{n:'Thoát khỏi tiệm bánh',e:'🧁',d:'1–3 người · cùng giải đố thoát khỏi tiệm bánh trong 60 phút',min:1,max:3},dv:{n:'Đào vàng',e:'⛏️',d:'1–3 người · thả móc kéo vàng, kim cương, 20 màn · chơi chung thì ai nhiều tiền nhất thắng',min:2,max:3}};
 let GM=[];
 const gPath=id=>`${COL}/${S.code}/games${id?'/'+id:''}`;
 const gTitle=g=>GT[g.type]?GT[g.type].n:'Trò chơi';
-const myTurn=g=>g.type!=='ks'&&g.type!=='dv'&&g.st==='play'&&(g.pl||[])[g.turn||0]===NET.uid;
+const myTurn=g=>g.type!=='ks'&&g.type!=='dv'&&g.type!=='er'&&g.st==='play'&&(g.pl||[])[g.turn||0]===NET.uid;
 const gInvited=g=>g.st==='wait'&&(g.inv||[]).includes(NET.uid)&&!(g.pl||[]).includes(NET.uid);
 // ván không ai chơi tiếp quá 24 giờ thì bị huỷ (ẩn đi, người tạo xoá hẳn)
 const G_TTL=864e5;
@@ -1256,11 +1325,11 @@ function gcmInit(v,id){const P=gPath(id)+'/cm';let L=[],seen=-1,open=false;
   const mo=new MutationObserver(()=>{if(!v.isConnected){clearInterval(iv);fab.remove();fly.remove();sh.remove();mo.disconnect()}});mo.observe(document.body,{childList:true})}
 function drawGames(){const e=$('#game');if(!e)return;const inv=GM.filter(gInvited),act=GM.filter(g=>g.st!=='end'&&(g.pl||[]).includes(NET.uid)),done=[];
   const who=g=>(g.pl||[]).map(id=>`<span title="${esc(nameOf(id))}">${emOf(id)||'🙂'}</span>`).join(' ');
-  const row=(g,btn)=>`<div class="grow2"><div class="gi">${GT[g.type].e}</div><div class="grow" style="min-width:0"><b>${gTitle(g)}</b><div class="mut" style="font-size:13px">${who(g)} · ${g.st==='wait'?'đang chờ người vào':g.st==='end'?(g.win?'🏆 '+esc(nameOf(g.win))+' thắng':'đã kết thúc'):g.type==='ks'?'đang chơi':myTurn(g)?'<b style="color:var(--pk)">đến lượt bạn</b>':'lượt của '+esc(nameOf(g.pl[g.turn||0]))} · ${ago(g.upd)}</div></div>${btn}</div>`;
+  const row=(g,btn)=>`<div class="grow2"><div class="gi">${GT[g.type].e}</div><div class="grow" style="min-width:0"><b>${gTitle(g)}</b><div class="mut" style="font-size:13px">${who(g)} · ${g.st==='wait'?'đang chờ người vào':g.st==='end'?(g.win?'🏆 '+esc(nameOf(g.win))+' thắng':'đã kết thúc'):(g.type==='ks'||g.type==='er')?'đang chơi':myTurn(g)?'<b style="color:var(--pk)">đến lượt bạn</b>':'lượt của '+esc(nameOf(g.pl[g.turn||0]))} · ${ago(g.upd)}</div></div>${btn}</div>`;
   const rk=[{id:NET.uid,gp:myPts()}].concat((S.locs||[]).filter(l=>l.id!==NET.uid&&((S.couple&&S.couple.members)||[]).includes(l.id)).map(l=>({id:l.id,gp:+l.gp||0}))).sort((a,b)=>b.gp-a.gp);
   e.innerHTML=`<h1>Trò chơi</h1>${inv.length?`<div class="card ginv" style="padding:4px 12px;border:2px solid var(--pk)"><div class="gch2">💌 Lời mời chơi</div>${inv.map(g=>row(g,`<button class="btn" data-join="${g.id}" style="min-height:36px;padding:6px 12px">Vào chơi</button><button class="btn gh" data-no="${g.id}" style="min-height:36px;padding:6px 8px">✕</button>`)).join('')}</div>`:''}${act.length?`<div class="card gcont"><div class="gch2">▶️ Ván đang chơi dở</div>${act.map(g=>row(g,`<button class="btn" data-open="${g.id}" style="min-height:38px;padding:6px 12px">▶️ Chơi tiếp</button>`)).join('')}</div>`:''}${GW.length?`<div class="card gcont gwl"><div class="gch2">👀 Nhóm đang chơi</div>${GW.map(g=>row(g,`<button class="btn sec" data-open="${g.id}" style="min-height:38px;padding:6px 12px">👀 Xem</button>`)).join('')}</div>`:''}<div class="card gpcard"><div class="gpme"><span>⭐</span><div><b>${myPts().toLocaleString('vi')} điểm</b><small>Mỗi ván thắng +${PTS} điểm</small></div><button class="gpdk" id="gpdk">🎲 Đổi xúc xắc</button></div>
     <div class="gprk">${rk.map((x,i)=>`<div class="${x.id===NET.uid?'me':''}"><i>${['🥇','🥈','🥉'][i]||i+1}</i>${avHtml(personOf(x.id),24)}<span>${esc(x.id===NET.uid?'Bạn':nameOf(x.id))}</span><b>${x.gp.toLocaleString('vi')}</b></div>`).join('')}</div></div>
-    <div class="gcards">${Object.keys(GT).map(k=>`<div class="gcard g-${k}"><div class="gchd"><span class="ge">${GT[k].e}</span><b>${GT[k].n}</b></div><div class="gbtns">${(()=>{const a=act.find(g=>g.type===k);return a?`<button data-open="${a.id}" class="gcon">▶️ Chơi tiếp</button>`:''})()}<button data-new="${k}">👥 Mời bạn</button><button data-bot="${k}">${k==='dv'?'⛏️ Chơi một mình':'🤖 Chơi với máy'}</button></div></div>`).join('')}<div class="gcard g-td"><div class="gchd"><span class="ge">🔍</span><b>Tìm đồ</b></div><div class="gbtns"><button id="tdgo">▶️ Chơi${(()=>{const P=LS.get('td',{u:0,s:{}});return' · màn '+(P.u+1)+'/'+TD.length})()}</button></div></div></div>
+    <div class="gcards">${Object.keys(GT).map(k=>`<div class="gcard g-${k}"><div class="gchd"><span class="ge">${GT[k].e}</span><b>${GT[k].n}</b></div><div class="gbtns">${(()=>{const a=act.find(g=>g.type===k);return a?`<button data-open="${a.id}" class="gcon">▶️ Chơi tiếp</button>`:''})()}<button data-new="${k}">👥 Mời bạn</button><button data-bot="${k}">${k==='dv'?'⛏️ Chơi một mình':k==='er'?'🧁 Chơi một mình':'🤖 Chơi với máy'}</button></div></div>`).join('')}<div class="gcard g-td"><div class="gchd"><span class="ge">🔍</span><b>Tìm đồ</b></div><div class="gbtns"><button id="tdgo">▶️ Chơi${(()=>{const P=LS.get('td',{u:0,s:{}});return' · màn '+(P.u+1)+'/'+TD.length})()}</button></div></div></div>
 
     ${done.length?`<h2>Đã chơi</h2><div class="card" style="padding:4px 12px">${done.map(g=>row(g,`<button class="btn gh" data-open="${g.id}" style="min-height:36px;padding:6px 10px">Xem</button>`)).join('')}</div>`:''}`;
   e.querySelectorAll('[data-new]').forEach(b=>b.onclick=()=>newGame(b.dataset.new));const tdg=e.querySelector('#tdgo');if(tdg)tdg.onclick=openTd;const gdk=e.querySelector('#gpdk');if(gdk)gdk.onclick=openDice;e.querySelectorAll('[data-bot]').forEach(b=>b.onclick=()=>askBot(b.dataset.bot));
@@ -1271,14 +1340,14 @@ function newGame(type){const T=GT[type],O=others();if(!O.length){toast('Nhóm ch
   const sh=document.createElement('div');sh.className='sheet';sh.innerHTML=`<div><div class="row"><h2 class="grow" style="margin:0">${T.e} ${T.n}</h2><button class="ib" id="x">${I.x}</button></div>
     <p class="mut" style="margin:4px 0 10px">${T.max===2?'Chọn 1 người để mời':'Chọn 1 đến '+(T.max-1)+' người để mời'}</p>
     <div class="gpick">${O.map(p=>`<button data-u="${p.id}">${avHtml(p,40)}<span>${esc(dn(p))}</span></button>`).join('')}</div>
-    ${T.max>2&&type!=='dv'?`<label class="gtog"><input type="checkbox" id="gbt" checked><span>🤖 Có máy chơi cùng<br><small class="mut">Thiếu người thì máy vào cho đủ 4. Bỏ chọn nếu chỉ muốn chơi với bạn bè.</small></span></label>`:''}
+    ${T.max>2&&type!=='dv'&&type!=='er'?`<label class="gtog"><input type="checkbox" id="gbt" checked><span>🤖 Có máy chơi cùng<br><small class="mut">Thiếu người thì máy vào cho đủ 4. Bỏ chọn nếu chỉ muốn chơi với bạn bè.</small></span></label>`:''}
     <div style="height:12px"></div><button class="btn w" id="ok" disabled>Gửi lời mời</button></div>`;
   document.body.appendChild(sh);const q=x=>sh.querySelector(x);q('#x').onclick=()=>sh.remove();sh.onclick=ev=>{if(ev.target===sh)sh.remove()};
   sh.querySelectorAll('[data-u]').forEach(b=>b.onclick=()=>{const u=b.dataset.u;if(sel.has(u))sel.delete(u);else{if(T.max===2)sel.clear();if(sel.size>=T.max-1)return toast('Tối đa '+T.max+' người');sel.add(u)}
     sh.querySelectorAll('[data-u]').forEach(x=>x.classList.toggle('on',sel.has(x.dataset.u)));q('#ok').disabled=!sel.size});
   q('#ok').onclick=async ev=>{if(type==='ty'&&ev.col==null){return pickColor([],null,c=>pickSkill(k=>q('#ok').onclick({target:q('#ok'),col:c,sk:k})))}if(type==='ks'&&ev.col==null){return pickColor([],null,c=>q('#ok').onclick({target:q('#ok'),col:c}),KS_SUB)}if(type==='ludo'&&ev.slot==null){return pickSlot(['','','',''],null,sl=>q('#ok').onclick({target:q('#ok'),slot:sl}))}
     ev.target.disabled=true;const id=Date.now().toString(36)+Math.random().toString(36).slice(2,5),now=Date.now();
-    const o={type,by:NET.uid,t:now,upd:now,st:'wait',pl:[NET.uid],inv:[...sel],turn:0,win:'',msg:'',bots:type!=='dv'&&(!q('#gbt')||q('#gbt').checked)};if(type==='caro'){o.b='.'.repeat(CB2);o.last=-1;o.wl=[]}else if(type==='ty'){o.pos=[];o.tcs=[NET.uid+'|'+ev.col+'|'+(ev.sk||'')]}else if(type==='ks'){o.tcs=[NET.uid+'|'+ev.col]}else{o.pos=[];o.d=0;o.rolled=false;o.cs=['','','',''];o.cs[ev.slot]=NET.uid}
+    const o={type,by:NET.uid,t:now,upd:now,st:'wait',pl:[NET.uid],inv:[...sel],turn:0,win:'',msg:'',bots:type!=='dv'&&(!q('#gbt')||q('#gbt').checked)};if(type==='caro'){o.b='.'.repeat(CB2);o.last=-1;o.wl=[]}else if(type==='ty'){o.pos=[];o.tcs=[NET.uid+'|'+ev.col+'|'+(ev.sk||'')]}else if(type==='ks'){o.tcs=[NET.uid+'|'+ev.col]}else if(type==='er'){o.sd=1+Math.floor(Math.random()*1e9);o.bots=false}else{o.pos=[];o.d=0;o.rolled=false;o.cs=['','','',''];o.cs[ev.slot]=NET.uid}
     try{await API.put(gPath(id),o);sh.remove();toast('Đã gửi lời mời 🎮');await loadGames();openGame(id)}catch(e){ev.target.disabled=false;toast(errMsg(e))}}}
 const isLocal=id=>String(id).startsWith('L_');
 const lgAll=()=>LS.get('lgames',{});
@@ -1294,7 +1363,7 @@ function pickSlot(cs,title,cb){const sh=document.createElement('div');sh.classNa
   <div class="ypick">${[0,1,2,3].map(i=>{const u=cs[i];return`<button data-s="${i}" ${u?'disabled':''} style="--c:${LCOL[i]}"><img src="assets/chuong-${YIMG[i]}.png" alt=""><b>${YNAME[i]}</b>${u?`<small>${avHtml(personOf(u),18)} ${esc(u===NET.uid?'Bạn':nameOf(u))}</small>`:'<small>Còn trống</small>'}</button>`}).join('')}</div></div>`;
   document.body.appendChild(sh);sh.querySelector('#x').onclick=()=>sh.remove();sh.onclick=ev=>{if(ev.target===sh)sh.remove()};
   sh.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{sh.remove();cb(+b.dataset.s)})}
-function askBot(type){if(type==='dv')return openDv();if(type==='caro')return botGame('caro');if(type==='ty'||type==='ks'){const sh=document.createElement('div');sh.className='sheet';sh.innerHTML=`<div><div class="row"><h2 class="grow" style="margin:0">${GT[type].e} ${GT[type].n} với máy</h2><button class="ib" id="x">${I.x}</button></div>
+function askBot(type){if(type==='er')return erSolo();if(type==='dv')return openDv();if(type==='caro')return botGame('caro');if(type==='ty'||type==='ks'){const sh=document.createElement('div');sh.className='sheet';sh.innerHTML=`<div><div class="row"><h2 class="grow" style="margin:0">${GT[type].e} ${GT[type].n} với máy</h2><button class="ib" id="x">${I.x}</button></div>
   <p class="mut">Chọn số máy chơi cùng bạn</p><div class="row" style="gap:8px">${[1,2,3].map(n=>`<button class="btn sec grow" data-n="${n}">${['🤖','🤖👾','🤖👾🦾'][n-1]}<br>${n} máy</button>`).join('')}</div></div>`;
   document.body.appendChild(sh);sh.querySelector('#x').onclick=()=>sh.remove();sh.onclick=ev=>{if(ev.target===sh)sh.remove()};sh.querySelectorAll('[data-n]').forEach(b=>b.onclick=()=>{sh.remove();if(type==='ks')pickColor([],null,c=>botGame('ks',+b.dataset.n,c),KS_SUB);else pickColor([],null,c=>pickSkill(k=>botGame('ty',+b.dataset.n,c,k)))});return}return pickSlot(['','','',''],'🐎 Chọn chuồng, 3 máy chơi cùng',sl=>botGame('ludo',sl));const sh=document.createElement('div');sh.className='sheet';sh.innerHTML=`<div><div class="row"><h2 class="grow" style="margin:0">🎲 Chơi cá ngựa với máy</h2><button class="ib" id="x">${I.x}</button></div>
   <p class="mut">Chọn số máy chơi cùng bạn</p><div class="row" style="gap:8px">${[1,2,3].map(n=>`<button class="btn sec grow" data-n="${n}">${'🤖👾🦾'.slice(0,n*2)}<br>${n} máy</button>`).join('')}</div></div>`;
@@ -1319,7 +1388,7 @@ function startState(g){const o={st:'play',turn:0,upd:Date.now(),msg:''};if(g.typ
   if(g.type==='ty'){const pl=(g.pl||[]).slice(0,4);if(g.bots!==false)['bot1','bot2','bot3'].forEach(b=>{if(pl.length<4)pl.push(b)});Object.assign(o,tyDiff(tyInit(pl)));o.tc=tyColors(pl,g.tcs);o.sk=tySkills(pl,g.tcs);o.st='play'}
   if(g.type==='ks'){const pl=(g.pl||[]).slice(0,4);if(g.bots!==false)['bot1','bot2','bot3'].forEach(b=>{if(pl.length<4)pl.push(b)});Object.assign(o,ksInit(pl));o.tc=tyColors(pl,g.tcs)}
   if(g.type==='dv'){o.sd=1+Math.floor(Math.random()*1e9);(g.pl||[]).forEach((u,i)=>o['k'+i]='')}return o}
-async function joinGame(id,slot,col,sk){try{const g=await gGet(id);if(!g||g.st!=='wait')return toast('Ván này không còn chờ nữa');
+async function joinGame(id,slot,col,sk){try{const g=await gGet(id);if(!g||g.st!=='wait')return toast('Ván này không còn chờ nữa');if(g.type==='er')return erJoin(id);
     if(g.type==='ty'&&!(g.tcs||[]).some(x=>String(x).startsWith(NET.uid+'|'))){const tk=(g.tcs||[]).map(x=>String(x).split('|')[1]);if(!col||tk.includes(col))return pickColor(g.tcs,col?'Màu đó vừa có người chọn, chọn màu khác nhé':null,c=>sk?joinGame(id,null,c,sk):pickSkill(k=>joinGame(id,null,c,k)));g.tcs=[...(g.tcs||[]),NET.uid+'|'+col+'|'+(sk||'')]}
     if(g.type==='ks'&&!(g.tcs||[]).some(x=>String(x).startsWith(NET.uid+'|'))){const tk=(g.tcs||[]).map(x=>String(x).split('|')[1]);if(!col||tk.includes(col))return pickColor(g.tcs,col?'Màu đó vừa có người chọn, chọn màu khác nhé':null,c=>joinGame(id,null,c),KS_SUB);g.tcs=[...(g.tcs||[]),NET.uid+'|'+col]}
     if(g.type==='ludo'&&g.cs&&!g.cs.includes(NET.uid)){if(slot==null||g.cs[slot])return pickSlot(g.cs,slot!=null?'Màu đó vừa có người chọn, chọn màu khác nhé':null,sl=>joinGame(id,sl));g.cs[slot]=NET.uid}
@@ -1350,7 +1419,7 @@ function ludoApply(g,k,t){const n=g.pl.length,s=g.turn,sl=SLOT(g)[s],P=g.pos.sli
   return{P,kicked}}
 const DICE=['','⚀','⚁','⚂','⚃','⚄','⚅'];
 // ----- màn chơi -----
-async function openGame(id){const old=$('.gm');if(old)old.remove();const v=document.createElement('div');v.className='gm';v.dataset.id=id;document.body.appendChild(v);let g=null,busy=false,timer=null,rolling=false,sv=0,pk=0;
+async function openGame(id){{const _g=GM.find(x=>x.id===id)||lgAll()[id];if(_g&&_g.type==='er')return openEr(id)}const old=$('.gm');if(old)old.remove();const v=document.createElement('div');v.className='gm';v.dataset.id=id;document.body.appendChild(v);let g=null,busy=false,timer=null,rolling=false,sv=0,pk=0;
   const close=()=>{clearInterval(timer);v.remove();loadGames()};
   const load=async()=>{if(busy)return;const ver=sv;try{const n=await gGet(id);if(busy||ver!==sv)return;if(!n){v.innerHTML='<div class="empty">Ván này đã bị xoá</div>';return}
     if(g&&n.type==='ty'&&n.tz&&n.tz!==g.tz){g.tz=n.tz;if(!String(n.tz).startsWith(NET.uid+'|'))tzShow(n.tz)}
@@ -1909,7 +1978,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 108${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 109${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};
@@ -2491,6 +2560,292 @@ function openDv(mp){dvLoad();const old=$('.dvv');if(old)old.remove();const v=doc
       v.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{const k=b.dataset.b,p=DVS[k].p(run.lv);if(run.money<p)return;run.money-=p;if(k==='dyn')run.dyn++;else run.mods[k]=1;bought[k]=1;saveRun();send('p');draw2()})};draw2()};
   if(mp&&run&&run.over)menu();else menu()}
 window.openDv=openDv;
+// ===== Escape room: Tiệm Bánh Bí Mật của Bà Sáu (er) =====
+// Đồng bộ: mỗi người chỉ ghi trường của mình (u_<uid> vị trí, e_<uid> nhật ký hành động) → không ghi đè nhau.
+// Trạng thái chung = phát lại toàn bộ nhật ký theo thời gian.
+const ER_T=36e5,ER_CH=[['meo','Mèo Bánh Quy'],['cun','Cún Kem Dâu'],['cao','Cáo Mật Ong']];
+const ER_R=[{n:'Quầy bánh',bg:'er-p1.jpg',fl:90},{n:'Bếp',bg:'er-p2.jpg',fl:91},{n:'Kho bột',bg:'er-p3.jpg',fl:90},{n:'Phòng làm việc của Bà',bg:'er-p4.jpg',fl:92},{n:'Hầm bí mật',bg:'er-p5.jpg',fl:91}];
+// điểm chạm: [id, x, y, w, h] theo % khung
+const ER_HS=[
+  [['menu',8.1,15.6,21.2,28.2],['cake',18.3,46,14,10],['tu',3.2,56.9,13.5,16.9],['case',32.3,51.6,45.8,21.3],['reg',36.1,40.8,14.5,10.8],['hatch',56,29.7,18.9,16.5],['photo',79.2,14.8,18.9,10.9],['dA',80.3,28.6,19.4,35.6]],
+  [['dA',0,22.1,12.4,53.4],['shelf',18.1,22.1,34.7,15.6],['fridge',14,37.3,19.9,31.3],['oven',34.3,47.6,20.2,20.6],['cork',38.6,38.6,14.4,7.4],['hatch',55.8,29.5,19.1,16.7],['table',53.9,48.6,30,29.5],['photo',79.2,14.8,18.9,10.9],['dB',84,28.2,15.8,36.5]],
+  [['dB',0,22.1,12.4,53.4],['shelf',17.8,20.4,35,38.6],['crate',19.9,60.3,30.7,9.5],['note',59.8,29.9,6.8,6.9],['photo',79.2,14.6,18.9,11.2],['dC',80.3,28.2,19.4,20],['scale',52.8,35.2,32.3,24.3]],
+  [['dC',0,22.1,12.7,53.4],['clock',23.5,23.3,15.5,44.9],['shelf',76,25.2,22.1,43],['chair',56.6,49.9,30,30],['mbox',51.5,45.3,11.9,8.5],['rug',9,78,20,14],['trap',32,77,36,15]],
+  [['up',0,23.2,17.9,55.4],['oven',17.9,23.7,27.9,40.6],['bowl',47.5,50.9,10.6,12.9],['book',58.1,44.6,15.6,19.6],['exit',77.1,33,17.9,39.3]]];
+const ER_HN={menu:'Bảng thực đơn',cake:'Bánh sinh nhật',tu:'Tủ ngăn kéo',case:'Tủ kính bánh',reg:'Máy tính tiền',hatch:'Ô cửa chuyển đồ',photo:'Ảnh treo tường',dA:'Cửa',dB:'Cửa',dC:'Cửa',shelf:'Kệ',fridge:'Tủ lạnh',oven:'Lò nướng',cork:'Bảng ghim',table:'Bàn nhào bột',crate:'Thùng gỗ',note:'Tờ giấy ghim',scale:'Cái cân',clock:'Đồng hồ quả lắc',chair:'Ghế bập bênh',mbox:'Hộp nhạc',rug:'Góc tấm thảm',trap:'Cửa sập',up:'Cầu thang',bowl:'Tô trộn bột',book:'Sổ công thức',exit:'Cửa tròn'};
+// cửa: [phòng a, x vào a, phòng b, x vào b]
+const ER_DR={dA:[0,84,1,10],dB:[1,88,2,10],dC:[2,88,3,10]};
+// đồ: tên, ảnh, chỗ giấu ban đầu
+const ERI={thu:['Lá thư của Bà','er-i-thu','r0dr1'],guong:['Gương nhỏ','er-i-guong','r0dr2'],bd1:['Mảnh bản đồ (trái)','er-i-bd1','r0dr2'],den:['Đèn tím (hết pin)','er-i-den','r0reg'],
+  bo:['Bơ','er-i-bo','r0case'],bv:['Bánh cupcake vàng','er-i-bv','r0case'],pin:['Viên pin','er-i-pin','r1fridge'],kdong:['Chìa khoá đồng','er-i-kdong','r1fridge'],trung:['Trứng','er-i-trung','r1fridge'],
+  ct:['Thẻ công thức','er-i-ct','r1cork'],bh:['Bánh cupcake hồng','er-i-bh','r1table'],kbac:['Chìa khoá bạc','er-i-kbac','r2scale'],bot:['Bao bột mì','er-i-bot','r2shelf'],bx:['Bánh cupcake xanh','er-i-bx','r2crate'],
+  bd2:['Mảnh bản đồ (giữa)','er-i-bd2','r3clock'],anh:['Ảnh cũ','er-i-anh','r3chair'],kn:['Chìa khoá nhỏ','er-i-kdong kn','r3books'],duong:['Hũ đường','er-i-duong','r3jars'],bd3:['Mảnh bản đồ (phải)','er-i-bd3','r3mbox'],
+  dent:['Đèn tím (đã lắp pin)','er-i-den on',''],bd:['Bản đồ kho báu','er-i-bd',''],kvang:['Chìa khoá vàng','er-i-kvang','r4oven']};
+const ER_FREE={r0dr1:1,r0dr3:1,r0case:1,r1cork:1,r1table:1,r2shelf:1,r2crate:1,r3chair:1,r3jars:1};
+const ER_CB=[[['den','pin'],'dent'],[['bd1','bd2','bd3'],'bd']];
+const ER_KEY={kdong:'dA',kbac:'dB',kn:'mboxu',kvang:'exit'};
+const ER_ING=['trung','bo','duong','bot'];
+const ER_CAKE=[['Kem','K'],['Cuộn','C'],['Sừng bò','S'],['Tạc trứng','T'],['Bông lan','B'],['Quy','Q']];
+const ER_PIC=['🧁','🥐','🍪'];
+function erRng(s){return()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+// thông số câu đố, đổi theo từng ván
+function erParams(sd){const R=erRng(sd),ri=(a,b)=>a+Math.floor(R()*(b-a+1)),sh=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(R()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+  const P={};P.code=[ri(1,9),ri(1,9),ri(1,9)];P.wo=sh([0,1,2]);P.year=ri(1968,1994);P.k=ri(3,9);P.tg=8+P.k;
+  // 6 bao bột, chỉ đúng 1 cách chọn ra tổng = tg
+  for(let n=0;n<500;n++){const w=sh([1,2,3,4,5,6,7,8,9,10,11,12]).slice(0,6);let c=0,pick=null;for(let m=1;m<64;m++){let s=0,k=0;for(let i=0;i<6;i++)if(m>>i&1){s+=w[i];k++}if(s===P.tg&&k>=2){c++;pick=m}}if(c===1){P.sk=w;P.skm=pick;break}}
+  P.fr=[ri(1,3),ri(1,4)];P.menu=sh([0,1,2,3,4,5]).slice(0,4);P.ck=[ri(1,12),ri(0,11),R()<.5?1:0];
+  do{P.mel=Array.from({length:6},()=>ri(0,2))}while(new Set(P.mel).size<3);
+  P.bk=[ri(1,3),ri(1,7)];P.ing=sh(ER_ING);P.tm=ri(0,3)*10;P.temp=P.tg*10+P.tm;return P}
+// phát lại nhật ký → trạng thái
+function erState(g){const pl=g.pl||[g.by],E=[];pl.forEach(u=>(g['e_'+u]||[]).forEach((e,i)=>E.push(Object.assign({u,i},e))));E.sort((a,b)=>a.t-b.t||(a.u<b.u?-1:a.u>b.u?1:a.i-b.i));
+  const S={op:{},loc:{},bowl:[],hints:[],win:0,winT:0,last:null};Object.keys(ERI).forEach(k=>S.loc[k]=ERI[k][2]?'c':'');
+  // ít người hơn 3: cửa vào phòng trống mở sẵn
+  if(pl.length<2)S.op.dA=1;if(pl.length<3)S.op.dB=1;
+  const bag=u=>'b:'+u,cont=k=>ERI[k][2],avail=k=>S.loc[k]==='c'&&(S.op[cont(k)]||ER_FREE[cont(k)]);
+  E.forEach(e=>{const u=e.u;switch(e.a){
+    case'op':S.op[e.s]=1;if(e.s==='exit'){S.win=1;S.winT=e.t}break;
+    case'pk':if(avail(e.i)||S.loc[e.i]==='h')S.loc[e.i]=bag(u);break;
+    case'hp':if(S.loc[e.i]===bag(u))S.loc[e.i]='h';break;
+    case'gv':if(S.loc[e.i]===bag(u)&&pl.includes(e.to))S.loc[e.i]=bag(e.to);break;
+    case'cb':{const c=ER_CB.find(x=>x[1]===e.i);if(c&&c[0].every(k=>S.loc[k]===bag(u))){c[0].forEach(k=>S.loc[k]='x');S.loc[e.i]=bag(u)}break}
+    case'us':if(S.loc[e.i]===bag(u)){if(e.s==='bowl'){if(S.bowl.length<4&&!S.bowl.includes(e.i)){S.bowl.push(e.i);S.loc[e.i]='x';if(S.bowl.length===4)S.op.bowl=1}}else{S.loc[e.i]=e.i==='dent'?bag(u):'x';S.op[e.s]=1;if(e.s==='exit'){S.win=1;S.winT=e.t}}}break;
+    case'ht':S.hints.push({u,t:e.t,n:e.n});break}S.last=e});
+  return S}
+const erBag=(S,u)=>Object.keys(S.loc).filter(k=>S.loc[k]==='b:'+u);
+// gợi ý của Bà Sáu theo tiến độ cả đội
+function erHint(S){const has=k=>String(S.loc[k]).startsWith('b:');const L=[
+  [!S.op.r2scale,'Cái cân ở Kho bột cần đúng số ký. Tờ giấy trên bảng ghim ở Bếp nói cách tính, phải đếm một thứ ở Quầy bánh. Chỉ chọn đúng vài bao bột thôi nhé.'],
+  [!S.op.r0dr2,'Ngăn kéo giữa ở Quầy khoá 3 bánh xe có hình. Tờ giấy ghim trên tường Kho bột cho biết mỗi hình là số mấy. Nhớ đọc theo hình, đừng theo thứ tự.'],
+  [!S.op.r1fridge,'Chữ trên cửa lò ở Bếp bị ngược. Một món ở Quầy soi được. Chuyển nó qua ô cửa sổ giữa Quầy và Bếp, chọn món đó rồi chạm vào lò.'],
+  [!S.op.dA||!S.op.dB,'Chìa đồng mở cửa giữa Quầy và Bếp. Chìa bạc mở cửa giữa Bếp và Kho bột. Chọn chìa trong túi rồi chạm vào cửa.'],
+  [!S.op.r0reg,'Máy tính tiền cần 4 số. Lá thư trong ngăn kéo trên cùng ở Quầy nói đó là số gì, câu trả lời nằm sau một tấm ảnh.'],
+  [!has('dent')&&!S.op.dC,'Đèn tím cần pin. Chọn đèn trong túi rồi chạm vào viên pin để lắp.'],
+  [!S.op.dC,'Cửa sang phòng Bà cần 4 chữ. Cầm đèn tím rồi xem bảng thực đơn ở Quầy. Lấy chữ cái đầu tên bánh theo thứ tự số hiện ra.'],
+  [!S.op.r3clock,'Đồng hồ quả lắc: lật sau 3 tấm ảnh ở Quầy, Bếp và Kho bột. Một tấm có kim ngắn, một tấm có kim dài, một tấm cho biết ngày hay đêm.'],
+  [!S.op.r3books,'Tấm ảnh cũ trong ghế bập bênh cho biết cuốn sách nào trên kệ. Đếm tầng từ trên xuống, đếm sách từ trái sang.'],
+  [!S.op.mboxu,'Hộp nhạc có lỗ khoá nhỏ. Chìa khoá nhỏ nằm trong một cuốn sách.'],
+  [!S.op.r3mbox,'Giai điệu hộp nhạc có 6 nốt. Mỗi chiếc cupcake ghi nó là nốt thứ mấy. Gom đủ 3 chiếc rồi bấm nút cùng màu theo thứ tự.'],
+  [!S.op.rug,'Ghép 3 mảnh bản đồ: chọn một mảnh rồi chạm vào mảnh khác trong túi. Dấu X giống hoa văn một thứ tròn tròn trong phòng Bà, thử chạm vào góc của nó.'],
+  [!S.op.bowl,'Cả đội cùng xuống hầm. Thẻ công thức ở Bếp cho biết thứ tự 4 nguyên liệu, bắt đầu từ ô trên cùng của tô rồi đi theo chiều kim đồng hồ.'],
+  [!S.op.r4oven,'Sổ công thức cho biết nhiệt độ lò. Cái cân là số ký bột đã đặt đúng ở Kho bột.'],
+  [true,'Chìa khoá vàng hình trái tim mở cánh cửa tròn. Sắp xong rồi!']];return L.find(x=>x[0])[1]}
+// đồng hồ nhỏ vẽ sau ảnh
+function erMiniClock(h,m){const a=(h%12)*30,b=m*30;const hand=(ang,len,w)=>`<line x1="50" y1="50" x2="${50+len*Math.sin(ang*Math.PI/180)}" y2="${50-len*Math.cos(ang*Math.PI/180)}" stroke="#3f2a1d" stroke-width="${w}" stroke-linecap="round"/>`;
+  return`<svg viewBox="0 0 100 100" class="ermc"><circle cx="50" cy="50" r="44" fill="#fffaf0" stroke="#7c4a2d" stroke-width="5"/>${Array.from({length:12},(_,i)=>`<line x1="50" y1="10" x2="50" y2="${i%3?16:20}" stroke="#7c4a2d" stroke-width="${i%3?2:4}" transform="rotate(${i*30} 50 50)"/>`).join('')}${h!=null?hand(a,24,7):''}${m!=null?hand(b,36,4):''}<circle cx="50" cy="50" r="5" fill="#3f2a1d"/></svg>`}
+let ER_AC=null;function erTone(f,d=.25,type='triangle',vol=.18){try{ER_AC=ER_AC||new (window.AudioContext||window.webkitAudioContext)();const o=ER_AC.createOscillator(),gn=ER_AC.createGain();o.type=type;o.frequency.value=f;gn.gain.setValueAtTime(vol,ER_AC.currentTime);gn.gain.exponentialRampToValueAtTime(.001,ER_AC.currentTime+d);o.connect(gn);gn.connect(ER_AC.destination);o.start();o.stop(ER_AC.currentTime+d)}catch(e){}}
+const erDing=()=>{erTone(880,.18);setTimeout(()=>erTone(1320,.3),120)},erBuzz=()=>erTone(140,.3,'sawtooth',.12);
+const ER_NOTE=[523,659,784,587,698];
+// tạo ván
+function erSolo(){const id='L_er'+Date.now().toString(36),now=Date.now();const o={id,type:'er',by:NET.uid,t:now,upd:now,st:'wait',pl:[NET.uid],inv:[],sd:1+Math.floor(Math.random()*1e9),local:true};lgPut(id,o);loadGames();openEr(id)}
+async function erJoin(id){try{const g=await gGet(id);if(!g||g.st!=='wait')return toast('Ván này đã bắt đầu hoặc đã huỷ');const pl=(g.pl||[]).includes(NET.uid)?g.pl:[...(g.pl||[]),NET.uid];
+  await API.put(gPath(id),{pl,upd:Date.now(),['u_'+NET.uid]:{c:-1,rd:0,r:0,x:50,at:Date.now()}},true);await loadGames();openEr(id)}catch(e){toast(errMsg(e))}}
+async function openEr(id){const old=$('.erv');if(old)old.remove();const gm=$('.gm');if(gm)gm.remove();
+  const v=document.createElement('div');v.className='erv';v.dataset.id=id;document.body.appendChild(v);const loc=isLocal(id),me=NET.uid;
+  let g=await gGet(id);if(!g){v.remove();return toast('Không tìm thấy ván này')}
+  const P=erParams(g.sd||1);let S=erState(g),myE=(g['e_'+me]||[]).slice(),sel=null,mode='',timer=null,raf=0,modal=null,cool={},seenHints=S.hints.length,lastWin=0,ended=false;
+  // nhân vật: vị trí hiển thị (mượt) và đích
+  const CH={};
+  const save=async o=>{o.upd=Date.now();if(loc){lgPut(id,o);g=Object.assign(g,JSON.parse(JSON.stringify(o)));return}Object.assign(g,o);try{await API.put(gPath(id),o,true)}catch(e){toast(errMsg(e))}};
+  const uState=u=>g['u_'+u]||{};const myU=()=>Object.assign({c:-1,rd:0,r:0,x:50},uState(me));
+  const ev=(a,o)=>{const e=Object.assign({t:Date.now(),a},o||{});myE.push(e);g['e_'+me]=myE;S=erState(g);save({['e_'+me]:myE});draw();return e};
+  const setU=o=>{const u=Object.assign(myU(),o,{at:Date.now()});g['u_'+me]=u;save({['u_'+me]:u})};
+  const nm=u=>u===me?'Bạn':nameOf(u),chOf=u=>{const c=uState(u).c;return c>=0?ER_CH[c]:null};
+  const players=()=>g.st==='wait'?(g.pl||[g.by]).filter(u=>u===g.by||g['u_'+u]):(g.pl||[g.by]);
+  const close=()=>{cancelAnimationFrame(raf);clearInterval(timer);v.remove();loadGames()};
+  const im=(k,cls)=>{const f=ERI[k][1].split(' ');return`<img class="eri ${f[1]||''} ${cls||''}" src="assets/${f[0]}.png" alt="">`};
+  // ===== Phòng chuẩn bị =====
+  function lobby(){const ps=players(),mine=myU(),isHost=g.by===me,taken=ps.filter(u=>u!==me).map(u=>uState(u).c).filter(c=>c>=0);const allRd=ps.every(u=>{const x=u===me?mine:uState(u);return x.c>=0&&x.rd});
+    v.innerHTML=`<div class="ertop"><button class="tdb" id="erx">✕</button><b>🧁 Tiệm Bánh Bí Mật của Bà Sáu</b><span></span></div>
+    <div class="erlob"><div class="ergd"><div class="ergdh"><img src="assets/er-u-ba.png" alt=""><div><b>Phòng chuẩn bị</b><small>Đọc kỹ bảng này trước khi vào tiệm nhé</small></div></div>
+      <h3>🎯 Mục tiêu</h3><p>Bà Sáu khoá cả đội trong tiệm bánh và giấu đi <b>công thức bánh bí mật</b>. Cả đội có <b>60 phút</b> để giải các câu đố, tìm công thức và mở cánh cửa cuối cùng để thoát ra.</p>
+      <h3>🎒 Đồ mang theo</h3><ul><li><img src="assets/er-u-bd.png" alt=""> <b>Bộ đàm</b>: nói chuyện với cả đội (nút 📻 ở góc trên).</li><li><img src="assets/er-u-ba.png" alt=""> <b>3 cuộc gọi cho Bà Sáu</b>: 3 gợi ý dùng chung cả đội. Ai gọi cũng được, mỗi lần gọi mất 1 gợi ý.</li><li><img src="assets/er-u-dh.png" alt=""> <b>Đồng hồ 60 phút</b>: hết giờ là thua.</li><li>🎒 <b>Túi đồ</b>: đồ nhặt được nằm trong túi của người nhặt.</li></ul>
+      <h3>🕹️ Cách chơi</h3><ul><li>Mỗi người bắt đầu ở <b>một phòng riêng</b>, cửa giữa các phòng đều khoá.</li><li>Chạm xuống sàn để đi. Chạm vào đồ đạc để lại gần xem, nhặt hoặc dùng.</li><li>Chọn một món trong túi rồi chạm vào chỗ cần dùng. Chọn món này rồi chạm món khác trong túi để ghép.</li><li>Mỗi đồ chỉ có <b>1 cái</b>. Muốn đưa cho bạn: chọn đồ rồi chạm vào nhân vật của bạn, hoặc bỏ qua <b>ô cửa chuyển đồ</b> giữa hai phòng.</li><li>Đoán sai nhiều lần thì ổ khoá bị kẹt một lúc.</li><li>Có những việc cả đội phải <b>cùng có mặt</b> mới làm được.</li></ul>
+      <h3>💡 Lời khuyên</h3><p>Nói cho nhau nghe mọi thứ mình thấy: con số, hình vẽ, màu sắc. Manh mối của phòng này thường dùng ở phòng khác.</p>
+      <button class="btn sec w" id="ercp">📋 Chép bảng hướng dẫn để gửi bạn bè</button></div>
+    <div class="erps"><b>👥 Cả đội (${ps.length}/3)</b>${ps.map((u,i)=>{const x=u===me?mine:uState(u),c=x.c>=0?ER_CH[x.c]:null;return`<div class="erpr">${avHtml(personOf(u),30)}<span>${esc(nm(u))}${u===g.by?' 👑':''}<small>${c?c[1]:'chưa chọn nhân vật'}</small></span>${c?`<img src="assets/er-${c[0]}-0.png" alt="">`:''}<i>${x.rd?'✅':'⏳'}</i></div>`}).join('')}
+      ${(g.inv||[]).filter(u=>!ps.includes(u)).map(u=>`<div class="erpr off">${avHtml(personOf(u),30)}<span>${esc(nameOf(u))}<small>chưa vào phòng</small></span></div>`).join('')}</div>
+    <div class="erpick"><b>Chọn nhân vật của bạn</b><div>${ER_CH.map((c,i)=>`<button data-c="${i}" class="${mine.c===i?'on':''}" ${taken.includes(i)?'disabled':''}><img src="assets/er-${c[0]}-0.png" alt=""><span>${c[1]}</span></button>`).join('')}</div></div>
+    <button class="btn w" id="errd" ${mine.c<0?'disabled':''}>${mine.rd?'✅ Đã sẵn sàng (chạm để huỷ)':'Sẵn sàng'}</button>
+    ${isHost?`<button class="btn w ergo" id="ergo" ${allRd?'':'disabled'}>🚪 Vào tiệm (${allRd?'cả đội đã sẵn sàng':'chờ cả đội sẵn sàng'})</button>`:'<p class="mut" style="text-align:center;color:#cbd5e1">Chờ chủ phòng bấm vào tiệm…</p>'}</div>`;
+    v.querySelector('#erx').onclick=close;
+    v.querySelector('#ercp').onclick=()=>{const t=v.querySelector('.ergd').innerText.replace('📋 Chép bảng hướng dẫn để gửi bạn bè','').trim();(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast('Đã chép, dán gửi bạn bè nhé 📋')).catch(()=>toast('Máy không cho chép, chụp màn hình gửi nhé'))};
+    v.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{setU({c:+b.dataset.c,rd:0});lobby()});
+    v.querySelector('#errd').onclick=()=>{setU({rd:mine.rd?0:1});lobby()};
+    const go=v.querySelector('#ergo');if(go)go.onclick=()=>{const pl=players();const o={st:'play',t0:Date.now(),pl};pl.forEach((u,i)=>{const x=Object.assign({},u===me?mine:uState(u),{r:Math.min(i,2),x:50,at:Date.now()+1});o['u_'+u]=x;g['u_'+u]=x});save(o);g=Object.assign(g,o);S=erState(g);build()}}
+  // ===== Màn chơi =====
+  const st=()=>v.querySelector('.erst');
+  function build(){v.innerHTML=`<div class="ertop"><button class="tdb" id="erx">✕</button><div class="ertm"><img src="assets/er-u-dh.png" alt=""><b id="ertm">60:00</b></div><b class="errn" id="errn"></b><button class="tdb erhb" id="erh"><img src="assets/er-u-ba.png" alt=""><small id="erhn">3</small></button><button class="tdb" id="ermp">🗺️</button></div>
+      <div class="erst"><div class="erbg"></div><div class="erhs"></div><div class="erfx"></div><div class="erchs"></div><div class="ermsg hide"></div></div>
+      <div class="erbag"><span>🎒</span><div id="erbg"></div><small id="erbt"></small></div><div class="eract" id="eract"></div>`;
+    v.querySelector('#erx').onclick=()=>{if(confirmClose())close()};v.querySelector('#erh').onclick=askHint;v.querySelector('#ermp').onclick=showMap;
+    st().addEventListener('click',onStage);
+    if(!loc&&!v.dataset.cm){v.dataset.cm=1;gcmInit(v,id);setTimeout(()=>{const f=[...document.querySelectorAll('.gcmf')].pop(),h=[...document.querySelectorAll('.gcms .gcmh b')].pop(),inp=[...document.querySelectorAll('#gci')].pop();if(f)f.firstChild.textContent='📻';if(h)h.textContent='📻 Bộ đàm của đội';if(inp)inp.placeholder='Nói gì đó với đội…'},50)}
+    draw();loop()}
+  const confirmClose=()=>{return true};
+  const myRoom=()=>myU().r;
+  function bubble(t,ms){const m=v.querySelector('.ermsg');if(!m)return;m.textContent=t;m.classList.remove('hide');clearTimeout(bubble.t);bubble.t=setTimeout(()=>m.classList.add('hide'),ms||2600)}
+  function draw(){if(g.st==='wait')return lobby();if(!st())return build();const r=myRoom(),R=ER_R[r];
+    st().querySelector('.erbg').style.backgroundImage=`url(assets/${R.bg})`;v.querySelector('#errn').textContent=R.n;
+    v.querySelector('#erhn').textContent=3-S.hints.length;
+    // điểm chạm
+    st().querySelector('.erhs').innerHTML=ER_HS[r].filter(h=>h[0]!=='trap'||S.op.rug).map(h=>`<div class="erh" data-h="${h[0]}" style="left:${h[1]}%;top:${h[2]}%;width:${h[3]}%;height:${h[4]}%"></div>`).join('');
+    // hiệu ứng phòng: thảm cuộn, cửa đã mở
+    let fx='';if(r===3&&S.op.rug)fx+=`<img class="ertrap" src="assets/er-o-tham.png" alt="">`;st().querySelector('.erfx').innerHTML=fx;
+    // túi đồ
+    const B=erBag(S,me);if(sel&&!B.includes(sel))sel=null;v.querySelector('#erbg').innerHTML=B.length?B.map(k=>`<button data-i="${k}" class="${sel===k?'on':''}">${im(k)}</button>`).join(''):'';
+    v.querySelector('#erbt').textContent=sel?ERI[sel][0]:B.length?'Chạm để chọn':'Túi đang trống';
+    v.querySelectorAll('#erbg [data-i]').forEach(b=>b.onclick=()=>bagTap(b.dataset.i));
+    const A=v.querySelector('#eract');A.innerHTML=sel?`<button data-a="see">🔍 Xem kỹ</button><button data-a="drop">✋ Bỏ chọn</button>`:'';A.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{if(b.dataset.a==='see')examine(sel);else{sel=null;draw()}});
+    syncChars();
+    if(S.hints.length>seenHints){const h=S.hints[S.hints.length-1];seenHints=S.hints.length;if(h.u!==me)showHint(h.n,h.u)}
+    if(S.win&&!ended){ended=true;setTimeout(winScreen,900)}}
+  function syncChars(){const box=st()&&st().querySelector('.erchs');if(!box)return;const r=myRoom();
+    players().forEach(u=>{const x=u===me?myU():uState(u);let c=CH[u];
+      if(!c){c=CH[u]={x:x.x==null?50:x.x,tx:x.x==null?50:x.x,r:x.r,f:1,el:null,pose:0,wt:0,busy:0};}
+      if(u!==me){if(c.r!==x.r){c.r=x.r;c.x=x.x}c.tx=x.x}else c.r=x.r;
+      const ch=x.c>=0?ER_CH[x.c][0]:'meo';
+      if(!c.el||!c.el.isConnected){c.el=document.createElement('div');c.el.className='erc'+(u===me?' me':'');c.el.dataset.u=u;c.el.innerHTML=`<img src="assets/er-${ch}-0.png" alt=""><span>${esc(u===me?'Bạn':nameOf(u))}</span>`;box.appendChild(c.el)}
+      c.ch=ch;c.el.style.display=c.r===r?'':'none'})}
+  // vòng lặp chuyển động mượt
+  function loop(){let t0=performance.now();const step=now=>{if(!v.isConnected)return;const dt=Math.min(.05,(now-t0)/1000);t0=now;const fl=ER_R[myRoom()].fl;
+      Object.keys(CH).forEach(u=>{const c=CH[u];if(!c.el)return;const d=c.tx-c.x,sp=26*dt;let pose=0;
+        if(Math.abs(d)>.3){c.x+=Math.sign(d)*Math.min(Math.abs(d),sp);c.f=d<0?-1:1;c.wt+=dt;pose=(Math.floor(c.wt*6)%2)?1:0}else{c.wt=0;if(Math.abs(d)<=.3&&c.arrive){const f=c.arrive;c.arrive=null;f()}}
+        if(c.busy>now)pose=2;if(c.joy)pose=3;
+        if(pose!==c.pose||!c.el.dataset.p){c.pose=pose;c.el.dataset.p=1;c.el.querySelector('img').src=`assets/er-${c.ch}-${pose}.png`}
+        const bob=pose===1?Math.abs(Math.sin(c.wt*12))*.8:0;
+        c.el.style.transform=`translate(-50%,${-bob}%)`;c.el.style.left=c.x+'%';c.el.style.bottom=(100-fl)+'%';c.el.querySelector('img').style.transform=`scaleX(${c.f})`;c.el.style.zIndex=u===me?3:2});
+      const tm=v.querySelector('#ertm');if(tm&&g.t0){const left=ER_T-((S.win?S.winT:Date.now())-g.t0);const s=Math.max(0,Math.ceil(left/1000));tm.textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');tm.parentNode.classList.toggle('low',s<300);if(s<=0&&!S.win&&!ended){ended=true;loseScreen()}}
+      raf=requestAnimationFrame(step)};raf=requestAnimationFrame(step)}
+  const me_=()=>CH[me];
+  function walkTo(x,cb){const c=me_();x=Math.max(7,Math.min(93,x));c.tx=x;c.arrive=cb||null;if(Math.abs(c.x-x)<=.3&&cb){c.arrive=null;cb()}clearTimeout(walkTo.t);walkTo.t=setTimeout(()=>setU({x}),250)}
+  const reach=()=>{const c=me_();c.busy=performance.now()+450};
+  function onStage(e){if(modal||S.win)return;const sr=st().getBoundingClientRect(),px=(e.clientX-sr.left)/sr.width*100,py=(e.clientY-sr.top)/sr.height*100;
+    const ce=e.target.closest('.erc');if(ce&&ce.dataset.u!==me){const u=ce.dataset.u;walkTo(CH[u].x+(CH[u].x>me_().x?-9:9),()=>{if(sel){const i=sel;sel=null;reach();ev('gv',{i,to:u});bubble('Đã đưa '+ERI[i][0]+' cho '+nameOf(u))}else bubble('Chọn một món trong túi rồi chạm vào bạn để đưa nhé')});return}
+    const h=e.target.closest('.erh');if(h){const hs=ER_HS[myRoom()].find(x=>x[0]===h.dataset.h);const fx=hs[1]+hs[3]/2;walkTo(fx,()=>{reach();act(h.dataset.h)});return}
+    walkTo(px)}
+  // ===== Túi đồ =====
+  function bagTap(k){if(sel&&sel!==k){const pair=[sel,k],c=ER_CB.find(x=>pair.every(p=>x[0].includes(p)));if(c){const B=erBag(S,me);if(c[0].every(p=>B.includes(p))){sel=null;ev('cb',{i:c[1]});erDing();bubble('Ghép thành: '+ERI[c[1]][0]);return}bubble(c[1]==='bd'?'Còn thiếu mảnh bản đồ':'Còn thiếu một món');sel=k;draw();return}bubble('Hai món này không ghép được');sel=k;draw();return}
+    sel=sel===k?null:k;draw()}
+  // ===== Hành động ở từng chỗ =====
+  const room=()=>myRoom(),op=s=>!!S.op[s];
+  function goRoom(r,x){const c=me_();setU({r,x});c.r=r;c.x=x;c.tx=x;const s=st();s.classList.add('erfade');setTimeout(()=>s.classList.remove('erfade'),350);draw()}
+  function act(h){const r=room(),key=`r${r}${h}`;
+    if(h==='dA'||h==='dB'||h==='dC'){const D=ER_DR[h];if(!op(h)){if(h==='dC')return openModal(letterLock());if(sel===(h==='dA'?'kdong':'kbac')){const i=sel;sel=null;ev('us',{i,s:h});erDing();bubble('Cạch! Cửa mở rồi');return}return bubble('Cửa khoá rồi. Có lỗ khoá '+(h==='dA'?'màu đồng':'màu bạc'))}
+      return r===D[0]?goRoom(D[2],D[3]):goRoom(D[0],D[1])}
+    if(h==='trap')return goRoom(4,12);if(h==='up')return goRoom(3,50);
+    if(h==='hatch')return openModal(hatchView());
+    const f=ER_ACT[r+':'+h];if(f)return f(key);bubble(ER_HN[h])}
+  // nhặt đồ trong một chỗ (đã mở)
+  function pickList(c,title,extra){const items=Object.keys(ERI).filter(k=>ERI[k][2]===c&&S.loc[k]==='c');
+    return`<div class="ermh">${title}</div>${extra||''}${items.length?`<div class="erpk">${items.map(k=>`<button data-pk="${k}">${im(k)}<span>${ERI[k][0]}</span></button>`).join('')}</div>`:'<p class="erem">Không còn gì ở đây.</p>'}`}
+  function bindPick(box){box.querySelectorAll('[data-pk]').forEach(b=>b.onclick=()=>{const k=b.dataset.pk;ev('pk',{i:k});erTone(660,.12);bubble('Đã nhặt: '+ERI[k][0]);refreshModal()})}
+  // ===== Cửa sổ cận cảnh =====
+  let mFn=null;
+  function openModal(fn){if(modal)modal.remove();mFn=fn;modal=document.createElement('div');modal.className='erm';v.appendChild(modal);refreshModal()}
+  function refreshModal(){if(!modal)return;const o=typeof mFn==='function'?mFn():mFn;if(!o)return closeModal();modal.innerHTML=`<div class="ermb ${o.cls||''}"><button class="erx" id="ermx">✕</button>${o.html}</div>`;modal.querySelector('#ermx').onclick=closeModal;modal.onclick=e=>{if(e.target===modal)closeModal()};bindPick(modal);if(o.bind)o.bind(modal)}
+  function closeModal(){if(modal)modal.remove();modal=null;mFn=null;draw()}
+  const cd=(k,n,sec)=>{cool[k]=(cool[k]||0)+1;if(cool[k]>=n){cool[k]=0;cool[k+'T']=Date.now()+sec*1000;bubble('Ổ khoá bị kẹt, chờ '+sec+' giây nhé',3000)}},jam=k=>{const t=(cool[k+'T']||0)-Date.now();if(t>0){bubble('Còn kẹt '+Math.ceil(t/1000)+' giây nữa');erBuzz();return true}return false};
+  function hatchView(){return()=>{const H=Object.keys(S.loc).filter(k=>S.loc[k]==='h');const to=room()===0?'Bếp':'Quầy bánh';
+    return{html:`<div class="ermh">🪟 Ô cửa chuyển đồ sang ${to}</div><p class="ermp">Đồ để ở đây thì người ở ${to} lấy được.</p>${H.length?`<div class="erpk">${H.map(k=>`<button data-pk="${k}">${im(k)}<span>${ERI[k][0]}</span></button>`).join('')}</div>`:'<p class="erem">Ô cửa đang trống.</p>'}${sel?`<button class="btn w" id="erput">Đặt ${ERI[sel][0]} vào ô cửa</button>`:'<p class="erem">Chọn đồ trong túi trước nếu muốn đặt vào đây.</p>'}`,
+      bind:m=>{const b=m.querySelector('#erput');if(b)b.onclick=()=>{const i=sel;sel=null;ev('hp',{i});erTone(520,.15);refreshModal()}}}}}
+  // khoá chữ cửa phòng Bà
+  function letterLock(){const L=['A','B','C','D','H','K','L','M','N','Q','S','T'];let w=[0,0,0,0];return()=>({cls:'erlk',html:`<div class="ermh">🔒 Ổ khoá 4 chữ</div><div class="erwh">${w.map((x,i)=>`<div><button data-u="${i}">▲</button><b>${L[x]}</b><button data-d="${i}">▼</button></div>`).join('')}</div><button class="btn w" id="erok">Mở khoá</button>`,
+    bind:m=>{m.querySelectorAll('[data-u]').forEach(b=>b.onclick=()=>{w[+b.dataset.u]=(w[+b.dataset.u]+1)%L.length;erTone(400,.05);refreshModal()});m.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{w[+b.dataset.d]=(w[+b.dataset.d]+L.length-1)%L.length;erTone(400,.05);refreshModal()});
+      m.querySelector('#erok').onclick=()=>{if(jam('dC'))return;const ans=P.menu.map(i=>ER_CAKE[i][1]).join('');if(w.map(x=>L[x]).join('')===ans){ev('op',{s:'dC'});erDing();closeModal();bubble('Cạch! Cửa mở rồi')}else{erBuzz();bubble('Chưa đúng');cd('dC',3,20)}}}})}
+  // khoá số chung (bánh xe)
+  function wheelLock(k,title,labels,ans,onOk){let w=labels.map(()=>0);return()=>({cls:'erlk',html:`<div class="ermh">${title}</div><div class="erwh">${w.map((x,i)=>`<div><small>${labels[i]}</small><button data-u="${i}">▲</button><b>${x}</b><button data-d="${i}">▼</button></div>`).join('')}</div><button class="btn w" id="erok">Thử mở</button>`,
+    bind:m=>{m.querySelectorAll('[data-u]').forEach(b=>b.onclick=()=>{w[+b.dataset.u]=(w[+b.dataset.u]+1)%10;erTone(400,.05);refreshModal()});m.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{w[+b.dataset.d]=(w[+b.dataset.d]+9)%10;erTone(400,.05);refreshModal()});
+      m.querySelector('#erok').onclick=()=>{if(jam(k))return;if(w.join('')===ans.join('')){ev('op',{s:k});erDing();onOk&&onOk()}else{erBuzz();bubble('Chưa đúng');cd(k,3,20)}}}})}
+  // xem kỹ đồ trong túi
+  function examine(k){const T={thu:`<div class="erpaper">Các cháu yêu,<br>Bà đã khoá tiệm lại rồi. Muốn lấy công thức bí mật thì phải cùng nhau làm việc nhé.<br>Mật mã két tiền là <b>năm Bà mở tiệm</b>. Bà vẫn giữ tấm ảnh ngày khai trương đấy.<br><i>Bà Sáu</i></div>`,
+      ct:`<div class="erpaper"><b>Bánh bông lan của Bà</b><br>Cho vào tô theo thứ tự:<div class="ering">${P.ing.map((x,i)=>`<span>${i+1}. ${im(x)}</span>`).join('')}</div><small>Bắt đầu từ ô trên cùng, đi theo chiều kim đồng hồ.</small></div>`,
+      anh:`<div class="erpaper">Mặt sau ảnh ghi:<br><b>“Cuốn yêu thích của Bà: tầng ${P.bk[0]}, cuốn thứ ${P.bk[1]}.”</b></div>`,
+      bd:`<div class="ermap">${im('bd','big')}<p>Dấu X nằm giữa một vòng tròn hoa văn…</p></div>`};
+    const cup={bh:0,bx:1,bv:2}[k];let html=T[k];
+    if(cup!=null){const pos=P.mel.map((c,i)=>c===cup?i+1:0).filter(Boolean);html=`<div class="ermap">${im(k,'big')}<div class="erpaper">Dưới đáy giấy bánh có vẽ: ♪ ${pos.map(p=>'nốt thứ '+p).join(', ')}</div></div>`}
+    if(k==='dent')html=`<div class="ermap">${im(k,'big')}<p>Đèn tím đã sáng. Cầm trong túi rồi đi xem những chỗ có thể có chữ giấu kín.</p></div>`;
+    openModal({html:`<div class="ermh">${ERI[k][0]}</div>${html||`<div class="ermap">${im(k,'big')}</div>`}`})}
+  // gợi ý
+  function showHint(n,u){openModal({cls:'erhint',html:`<div class="erhd"><img src="assets/er-u-ba.png" alt=""><div><b>Bà Sáu gọi${u&&u!==me?' cho '+esc(nameOf(u)):''}</b><small>Gợi ý ${S.hints.findIndex(h=>h.n===n)+1}/3</small></div></div><div class="erpaper">${esc(n)}</div>`})}
+  function askHint(){if(S.win)return;const left=3-S.hints.length;if(left<=0)return bubble('Cả đội đã dùng hết 3 gợi ý rồi');
+    openModal({cls:'erhint',html:`<div class="erhd"><img src="assets/er-u-ba.png" alt=""><div><b>Gọi cho Bà Sáu?</b><small>Cả đội còn ${left} gợi ý</small></div></div><p class="ermp">Bà sẽ gợi ý bước tiếp theo cả đội cần làm. Gợi ý hiện cho cả đội.</p><button class="btn w" id="erhok">📞 Gọi Bà (dùng 1 gợi ý)</button>`,
+      bind:m=>m.querySelector('#erhok').onclick=()=>{const n=erHint(S);ev('ht',{n});seenHints=S.hints.length;showHint(n,me)}})}
+  function showMap(){const ps=players();openModal({html:`<div class="ermh">🗺️ Sơ đồ tiệm</div><div class="ermp2">${[[0,'dA',1,'dB',2],[null,null,null,'dC',3]].map(()=>'').join('')}
+    ${ER_R.map((R,i)=>{const known=i<3||(i===3&&op('dC'))||(i===4&&op('rug'));return`<div class="ermr ${i===myRoom()?'cur':''}"><b>${known?R.n:'???'}</b><span>${ps.filter(u=>(u===me?myU():uState(u)).r===i).map(u=>{const c=chOf(u);return c?`<img src="assets/er-${c[0]}-0.png" alt="">`:''}).join('')}</span></div>`}).join('')}</div>
+    <p class="ermp">Cửa đã mở: ${['dA','dB','dC'].filter(op).length}/3${op('rug')?' · đã tìm thấy lối xuống hầm':''}</p>`})}
+  function winScreen(){const used=Math.round((S.winT-g.t0)/60000),hn=S.hints.length,stars=hn===0&&used<=50?3:hn<=1?2:1;Object.values(CH).forEach(c=>c.joy=1);erDing();setTimeout(erDing,300);
+    const ps=players();const best=LS.get('erbest',{});if(!best.t||used<best.t){best.t=used;best.h=hn;LS.set('erbest',best)}
+    openModal({cls:'erwin',html:`<div class="erframe"><img class="erfr" src="assets/er-u-khung.png" alt=""><div class="erfrin">${ps.map(u=>{const c=chOf(u);return c?`<img src="assets/er-${c[0]}-3.png" alt="">`:''}).join('')}</div></div><h2>🎉 Thoát khỏi tiệm rồi!</h2><p>Cả đội tìm ra công thức bánh bí mật của Bà Sáu sau <b>${used} phút</b>, dùng ${hn} gợi ý.</p><div class="erstar">${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div><p style="color:#92400e">Kỷ lục của bạn: ${best.t} phút</p><button class="btn w" id="erend">Về danh sách trò chơi</button>`,
+      bind:m=>m.querySelector('#erend').onclick=close});if(g.st!=='end'&&!loc)API.put(gPath(id),{st:'end',upd:Date.now()},true).catch(()=>{});if(loc)lgPut(id,{st:'end'})}
+  function loseScreen(){openModal({cls:'erwin',html:`<img src="assets/er-u-ba.png" alt="" style="width:110px"><h2>⏰ Hết giờ rồi!</h2><p>Bà Sáu đã về và mở cửa cho cả đội. Lần sau nhanh hơn nhé, công thức vẫn đang chờ!</p><button class="btn w" id="erend">Về danh sách trò chơi</button>`,bind:m=>m.querySelector('#erend').onclick=close});if(loc)lgPut(id,{st:'end'});else API.put(gPath(id),{st:'end',upd:Date.now()},true).catch(()=>{})}
+  // ===== Các chỗ trong từng phòng =====
+  const zoom=(r,x,y,w,h)=>`<div class="erzm" style="background-image:url(assets/${ER_R[r].bg});background-size:${100/w*100}% ${100/h*100}%;background-position:${x/(100-w)*100}% ${y/(100-h)*100}%;aspect-ratio:${w*4}/${h*5}">`;
+  const ER_ACT={
+    '0:menu':()=>openModal(()=>{const uv=erBag(S,me).includes('dent');const pos=[[30,19],[70,19],[30,47],[70,47],[30,75],[70,75]];
+      return{html:`<div class="ermh">Bảng thực đơn</div>${zoom(0,8.1,15.6,21.2,28.2)}${pos.map((p,i)=>`<span class="ercn" style="left:${p[0]}%;top:${p[1]+15}%">${ER_CAKE[i][0]}</span>${uv&&P.menu.includes(i)?`<span class="eruv" style="left:${p[0]}%;top:${p[1]+3}%">${P.menu.indexOf(i)+1}</span>`:''}`).join('')}</div>${uv?'<p class="ermp">Đèn tím làm hiện ra mấy con số!</p>':''}`}}),
+    '0:cake':()=>bubble('Bánh sinh nhật thơm phức, nhưng không được ăn vụng đâu'),
+    '0:tu':()=>openModal(()=>({html:`<div class="ermh">Tủ ngăn kéo</div><div class="erdr"><img src="assets/${op('r0dr2')?'er-o-tu':'er-d-tu'}.png" alt=""><button data-dr="1" style="top:24%">Ngăn trên</button><button data-dr="2" style="top:48%">Ngăn giữa ${op('r0dr2')?'':'🔒'}</button><button data-dr="3" style="top:72%">Ngăn dưới</button></div>`,
+      bind:m=>m.querySelectorAll('[data-dr]').forEach(b=>b.onclick=()=>{const d=b.dataset.dr;if(d==='1')openModal(()=>({html:pickList('r0dr1','Ngăn trên')}));else if(d==='3')openModal({html:'<div class="ermh">Ngăn dưới</div><p class="erem">Chỉ có giấy gói bánh và dây ruy băng.</p>'});
+        else if(op('r0dr2'))openModal(()=>({html:pickList('r0dr2','Ngăn giữa')}));else openModal(wheelLock('r0dr2','🔒 Ngăn giữa khoá 3 số',P.wo.map(i=>ER_PIC[i]),P.wo.map(i=>P.code[i]),()=>openModal(()=>({html:pickList('r0dr2','Ngăn giữa mở rồi!')})))) })})),
+    '0:reg':()=>{if(op('r0reg'))return openModal(()=>({html:pickList('r0reg','Máy tính tiền',`<img class="erbig" src="assets/er-o-quay.png" alt="">`)}));openModal(wheelLock('r0reg','🔒 Két tiền: 4 số',['','','',''],String(P.year).split('').map(Number),()=>openModal(()=>({html:pickList('r0reg','Két mở rồi!',`<img class="erbig" src="assets/er-o-quay.png" alt="">`)}))))},
+    '0:case':()=>openModal(()=>({html:pickList('r0case','Tủ kính bánh',`${zoom(0,32.3,51.6,45.8,21.3)}</div>`)})),
+    '0:photo':()=>photo(0,`<div class="erpaper">Ngày khai trương tiệm Bà Sáu<br><b>năm ${P.year}</b></div>${erMiniClock(P.ck[0],null)}`),
+    '1:shelf':()=>bubble('Toàn hũ bột quế, vani và ca cao'),
+    '1:fridge':()=>openModal(()=>{if(op('r1fridge'))return{html:pickList('r1fridge','Tủ lạnh',`<img class="erbig" src="assets/er-o-tl.png" alt="">`)};
+      return{html:`<div class="ermh">Tủ lạnh có 12 ngăn, ngăn nào cũng có nắp</div><div class="erfg">${[1,2,3].map(rw=>[1,2,3,4].map(cl=>`<button data-f="${rw},${cl}">❄️</button>`).join('')).join('')}</div><p class="ermp">Hàng tính từ trên xuống, ngăn tính từ trái sang.</p>`,
+        bind:m=>m.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{if(jam('r1fridge'))return;if(b.dataset.f===P.fr.join(',')){ev('op',{s:'r1fridge'});erDing();refreshModal()}else{erBuzz();b.textContent='∅';b.disabled=true;cd('r1fridge',3,15)}})}}),
+    '1:oven':()=>{const m=sel==='guong';openModal({html:`<div class="ermh">Lò nướng</div><div class="erov">${zoom(1,34.3,47.6,20.2,20.6)}<div class="eroc ${m?'':'flip'}">TỦ LẠNH<br>HÀNG ${P.fr[0]} · NGĂN ${P.fr[1]}</div></div></div><p class="ermp">${m?'Soi gương lên là đọc được rồi!':'Trên kính cửa lò có dòng chữ bị ngược…'}</p>`})},
+    '1:cork':()=>openModal(()=>({html:pickList('r1cork','Bảng ghim',`<div class="erpaper">Ghi chú của Bà:<br><b>Bột cần cân = số đĩa bánh trong tủ kính ở Quầy + ${P.k} ký.</b></div>`)})),
+    '1:table':()=>openModal(()=>({html:pickList('r1table','Bàn nhào bột')})),
+    '1:photo':()=>photo(1,`<div class="erpaper">Bà nướng mẻ bánh đầu tiên</div>${erMiniClock(null,P.ck[1])}`),
+    '2:shelf':()=>openModal(()=>({html:pickList('r2shelf','Kệ bột','<p class="ermp">Bao nào cũng nặng trịch, chỉ có một bao nhỏ mang đi được.</p>')})),
+    '2:crate':()=>openModal(()=>({html:pickList('r2crate','Thùng gỗ')})),
+    '2:note':()=>openModal({html:`<div class="ermh">Tờ giấy ghim trên tường</div><div class="erpaper erpic">${P.code.map((d,i)=>`<div>${ER_PIC[i].repeat(d)}</div>`).join('')}</div>`}),
+    '2:photo':()=>photo(2,`<div class="erpaper">Bà về nhà, trời đã…</div><div class="ersun">${P.ck[2]?'🌙':'☀️'}</div>`),
+    '2:scale':()=>openModal(scaleView()),
+    '3:clock':()=>openModal(clockView()),
+    '3:shelf':()=>openModal(()=>{const done=op('r3books');return{html:pickList('r3jars','Kệ sách của Bà','<p class="ermp">Trên nóc kệ có mấy hũ đồ khô.</p>')+`<div class="erbk">${[1,2,3].map(s=>`<div>${[1,2,3,4,5,6,7].map(b=>`<button data-b="${s},${b}" style="--c:${['#b45309','#be123c','#1d4ed8','#15803d','#7c3aed','#a16207','#0f766e'][(s*3+b)%7]};height:${70+((s*5+b*3)%4)*8}%"></button>`).join('')}</div>`).join('')}</div>${done?pickList('r3books','Trong cuốn sách có kẹp:'):''}`,
+      bind:m=>m.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{if(jam('r3books'))return;if(op('r3books'))return bubble('Toàn sách dạy làm bánh');if(b.dataset.b===P.bk.join(',')){ev('op',{s:'r3books'});erDing();refreshModal()}else{erTone(300,.1);bubble('Chỉ là sách dạy làm bánh');cd('r3books',4,10)}})}}),
+    '3:chair':()=>openModal(()=>({html:pickList('r3chair','Ghế bập bênh','<p class="ermp">Lật tấm chăn đan lên…</p>')})),
+    '3:mbox':()=>{if(!op('mboxu')){if(sel==='kn'){const i=sel;sel=null;ev('us',{i,s:'mboxu'});erDing();return openModal(musicView())}return openModal({html:`<div class="ermh">Hộp nhạc</div><img class="erbig" src="assets/er-d-hn.png" alt=""><p class="ermp">Hộp nhạc khoá, có một lỗ khoá rất nhỏ.</p>`})}openModal(musicView())},
+    '3:rug':()=>{if(op('rug'))return bubble('Cửa sập đã lộ ra rồi');const team=players().some(u=>erBag(S,u).includes('bd'));if(!team)return bubble('Tấm thảm nặng quá. Không biết bên dưới có gì không…');ev('op',{s:'rug'});erDing();bubble('Cuộn thảm lên… có một cửa sập!',3200)},
+    '4:oven':()=>{if(op('r4oven'))return openModal(()=>({html:pickList('r4oven','Lò nướng','<img class="erbig" src="assets/er-o-lo.png" alt="">')}));openModal(ovenView())},
+    '4:bowl':()=>openModal(bowlView()),
+    '4:book':()=>{if(!op('bowl'))return openModal({html:`<div class="ermh">Sổ công thức</div><img class="erbig" src="assets/er-d-sach.png" alt=""><p class="ermp">Sổ khoá chặt. Có lẽ phải làm xong việc gì đó trong hầm trước.</p>`});
+      openModal({html:`<div class="ermh">Sổ công thức bí mật</div><div class="erbook"><img src="assets/er-o-sach.png" alt=""><div class="erpg">Bánh bông lan của Bà<br>🌡️ = ⚖️ × 10 ${P.tm?'+ '+P.tm:''} độ<br><small>⚖️ là số ký bột trên cái cân</small></div></div>`})},
+    '4:exit':()=>{if(sel==='kvang'){const i=sel;sel=null;reach();ev('us',{i,s:'exit'});return}bubble('Cánh cửa tròn có ổ khoá hình trái tim')}};
+  function photo(r,back){let flip=false;openModal(()=>({html:`<div class="ermh">Ảnh treo tường</div>${flip?`<div class="erback">${back}</div>`:zoom(r,79.2,14.8,18.9,10.9)+'</div>'}<button class="btn sec w" id="erfl">${flip?'Lật lại mặt trước':'Lật xem mặt sau'}</button>`,bind:m=>m.querySelector('#erfl').onclick=()=>{flip=!flip;refreshModal()}}))}
+  function scaleView(){let on=[];return()=>{const open=op('r2scale'),sum=on.reduce((a,i)=>a+P.sk[i],0),ang=Math.min(sum,24)/24*300-150;
+    if(open)return{html:pickList('r2scale','Cái cân','<img class="erbig" src="assets/er-o-can.png" alt="">')};
+    return{html:`<div class="ermh">Cái cân có ổ khoá</div><div class="erz"><img src="assets/er-z1.jpg" alt=""><div class="erneedle" style="transform:rotate(${ang}deg)"></div></div><div class="ersk">${P.sk.map((w,i)=>`<button data-s="${i}" class="${on.includes(i)?'on':''}">${im('bot')}<b>${w} ký</b></button>`).join('')}</div><button class="btn w" id="erok">Đặt lên cân</button>`,
+      bind:m=>{m.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{const i=+b.dataset.s;on=on.includes(i)?on.filter(x=>x!==i):[...on,i];erTone(330,.06);refreshModal()});
+        m.querySelector('#erok').onclick=()=>{if(jam('r2scale'))return;if(sum===P.tg){ev('op',{s:'r2scale'});erDing();refreshModal()}else{erBuzz();bubble('Cân lệch, ổ khoá không mở');cd('r2scale',3,20)}}}}}}
+  function clockView(){let h=12,mm=0,nt=0;return()=>{if(op('r3clock'))return{html:pickList('r3clock','Đồng hồ quả lắc đã mở','<img class="erbig" src="assets/er-o-dh.png" alt="">')};
+    const hand=(ang,len,w,c)=>`<line x1="50" y1="50" x2="${50+len*Math.sin(ang*Math.PI/180)}" y2="${50-len*Math.cos(ang*Math.PI/180)}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`;
+    return{html:`<div class="ermh">Đồng hồ quả lắc</div><div class="erz"><img src="assets/er-z2.jpg" alt=""><button class="ersw ${nt?'nt':''}" id="ernt">${nt?'🌙':'☀️'}</button><svg class="erdial" viewBox="0 0 100 100"><circle cx="50" cy="50" r="49" fill="#fbf6ea" stroke="#5b3a24" stroke-width="1"/>${Array.from({length:60},(_,i)=>`<line x1="50" y1="4" x2="50" y2="${i%5?7:10}" stroke="#3f2a1d" stroke-width="${i%5?.6:1.6}" transform="rotate(${i*6} 50 50)"/>`).join('')}${hand((h%12)*30+mm*2.5,24,4,'#3f2a1d')}${hand(mm*30,38,2.4,'#3f2a1d')}<circle cx="50" cy="50" r="3.2" fill="#3f2a1d"/></svg></div>
+      <div class="erbtn3"><button id="erhh">⟳ Kim ngắn</button><button id="ermm">⟳ Kim dài</button></div><button class="btn w" id="erok">Đánh chuông</button>`,
+      bind:m=>{m.querySelector('#erhh').onclick=()=>{h=h%12+1;erTone(500,.04);refreshModal()};m.querySelector('#ermm').onclick=()=>{mm=(mm+1)%12;erTone(600,.04);refreshModal()};m.querySelector('#ernt').onclick=()=>{nt=nt?0:1;refreshModal()};
+        m.querySelector('#erok').onclick=()=>{if(jam('r3clock'))return;if(h===P.ck[0]&&mm===P.ck[1]&&nt===P.ck[2]){ev('op',{s:'r3clock'});[0,1,2].forEach(i=>setTimeout(()=>erTone(392,.5,'sine'),i*450));refreshModal()}else{erTone(220,.6,'sine');bubble('Boong… không có gì xảy ra');cd('r3clock',4,15)}}}}}}
+  function musicView(){let seq=[];const C=['#f472b6','#60a5fa','#facc15','#4ade80','#a78bfa'],pos=[[25.5,65.5],[38.5,65.5],[50.5,65.5],[63,65.5],[75.5,65.5]];return()=>{if(op('r3mbox'))return{html:pickList('r3mbox','Hộp nhạc','<img class="erbig" src="assets/er-o-hn.png" alt="">')};
+    return{html:`<div class="ermh">Hộp nhạc</div><div class="erz"><img src="assets/er-z3.jpg" alt="">${pos.map((p,i)=>`<button class="ermn" data-n="${i}" style="left:${p[0]}%;top:${p[1]}%"></button>`).join('')}</div><div class="erseq">${seq.map(i=>`<i style="background:${C[i]}"></i>`).join('')}${'<i></i>'.repeat(Math.max(0,6-seq.length))}</div>`,
+      bind:m=>m.querySelectorAll('[data-n]').forEach(b=>b.onclick=()=>{if(jam('r3mbox'))return;const n=+b.dataset.n;erTone(ER_NOTE[n],.35,'sine');seq.push(n);b.classList.add('hit');setTimeout(()=>b.classList.remove('hit'),200);
+        if(seq.length===6){if(seq.join()===P.mel.join()){ev('op',{s:'r3mbox'});setTimeout(()=>{P.mel.forEach((c,i)=>setTimeout(()=>erTone(ER_NOTE[c],.3,'sine'),i*220));},200);setTimeout(refreshModal,300)}else{setTimeout(()=>{erBuzz();bubble('Giai điệu nghe sai sai…')},300);seq=[];cd('r3mbox',4,15);setTimeout(refreshModal,350)}}else refreshModal()})}}}
+  function bowlView(){const sp=[[50,30],[78,43],[50,53],[22,43]];return()=>{const ps=players(),allIn=ps.every(u=>{const x=u===me?myU():uState(u);return x.r===4||(u!==me&&Date.now()-(x.at||0)>6e5)});
+    return{html:`<div class="ermh">Tô trộn bột</div><div class="erz"><img src="assets/er-z4.jpg" alt="">${sp.map((p,i)=>{const it=S.bowl[i];return`<button class="erslot" data-sl="${i}" style="left:${p[0]}%;top:${p[1]}%">${it?im(it):''}</button>`}).join('')}</div><p class="ermp">${S.op.bowl?'Tô bột đã trộn xong. Có tiếng cạch ở đâu đó!':!allIn?'Phải có mặt cả đội trong hầm mới bắt đầu trộn được.':sel?'Chạm vào ô để bỏ '+ERI[sel][0]+' vào.':'Chọn nguyên liệu trong túi rồi chạm vào ô.'}</p>`,
+      bind:m=>m.querySelectorAll('[data-sl]').forEach(b=>b.onclick=()=>{const i=+b.dataset.sl;if(S.op.bowl||S.bowl[i])return;if(!allIn)return bubble('Cả đội phải xuống hầm cùng nhau');if(!sel)return bubble('Chọn nguyên liệu trong túi trước');
+        if(i!==S.bowl.length)return bubble('Bỏ lần lượt từng ô theo thứ tự nhé');if(!ER_ING.includes(sel))return bubble('Thứ này không cho vào tô được');if(P.ing[i]!==sel){erBuzz();return bubble('Bà dặn không phải món này trước đâu')}
+        const it=sel;sel=null;ev('us',{i:it,s:'bowl'});erTone(500,.15);if(S.op.bowl)erDing();refreshModal()})}}}
+  function ovenView(){let t=100;return()=>op('r4oven')?{html:pickList('r4oven','Lò nướng','<img class="erbig" src="assets/er-o-lo.png" alt=""><p class="ermp">Ting! Trong khay bánh có thứ gì lấp lánh.</p>')}:({html:`<div class="ermh">Lò nướng lớn</div><img class="erbig" src="assets/er-d-lo.png" alt=""><div class="ertemp"><button id="erdn">−</button><b>${t}°</b><button id="erup">+</button></div><button class="btn w" id="erok">🔥 Nướng</button>`,
+    bind:m=>{m.querySelector('#erdn').onclick=()=>{t=Math.max(100,t-10);erTone(420,.04);refreshModal()};m.querySelector('#erup').onclick=()=>{t=Math.min(300,t+10);erTone(460,.04);refreshModal()};
+      m.querySelector('#erok').onclick=()=>{if(jam('r4oven'))return;if(!op('bowl'))return bubble('Chưa có bột trong lò thì nướng gì đây?');if(t===P.temp){ev('op',{s:'r4oven'});erDing();setTimeout(()=>erTone(1760,.4,'sine'),300);refreshModal()}else{erBuzz();bubble(t<P.temp?'Bánh chưa chín':'Khét mất rồi!');cd('r4oven',3,15)}}}})}
+  // đồng bộ online
+  async function poll(){if(loc||!v.isConnected||document.visibilityState!=='visible')return;try{const n=await API.getDoc(gPath(id));if(!n)return;n['e_'+me]=myE.length>=(n['e_'+me]||[]).length?myE:n['e_'+me];const lu=g['u_'+me],su=n['u_'+me];if(lu&&(!su||(lu.at||0)>(su.at||0)))n['u_'+me]=lu;const wasWait=g.st==='wait';g=Object.assign({id},n);S=erState(g);
+      if(wasWait&&g.st==='play'){build();return}if(g.st==='wait')return lobby();if(!modal)draw();else{syncChars();if(S.hints.length>seenHints)draw()}}catch(e){}}
+  timer=setInterval(poll,g.st==='wait'?2500:2000);
+  v._er={P,S:()=>S,g:()=>g,act,ev,goRoom,bagTap,sel:k=>{sel=k;draw()},walkTo,me:()=>myU(),CH,modal:()=>modal,closeModal,refreshModal};
+  if(g.st==='wait')lobby();else build()}
+window.openEr=openEr;
+
 
 
 if('serviceWorker'in navigator&&!DEMO)navigator.serviceWorker.register('sw.js').catch(()=>{});

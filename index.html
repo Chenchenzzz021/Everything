@@ -552,7 +552,7 @@ body:has(.erv .erlob) .gcmf{display:none}
 .erhs,.erfx,.erchs{position:absolute;inset:0}.erfx,.erchs{pointer-events:none}.erchs .erc{pointer-events:auto}
 .erh{position:absolute;border-radius:10px;cursor:pointer}.erh:active{background:rgba(255,255,255,.18)}
 .ertrap{position:absolute;left:12%;top:70%;width:76%;opacity:.98;filter:drop-shadow(0 4px 6px rgba(0,0,0,.4))}
-.erc{position:absolute;height:22%;transform:translate(-50%,0);display:flex;flex-direction:column;align-items:center;will-change:left,transform}
+.erc{position:absolute;height:22%;transform:translate(-50%,0);display:flex;flex-direction:column;align-items:center;will-change:left,bottom,transform;transform-origin:50% 100%}
 .erc>img{height:100%;width:auto;filter:drop-shadow(0 6px 4px rgba(0,0,0,.35));transition:transform .15s;pointer-events:none}
 .erc>span{position:absolute;top:-16px;font-size:11px;font-weight:700;background:rgba(0,0,0,.55);padding:1px 6px;border-radius:99px;white-space:nowrap}.erc.me>span{background:#16a34a}
 .ermsg{position:absolute;left:6%;right:6%;top:3%;background:#fffbeb;color:#422006;border:3px solid #3b2416;border-radius:14px;padding:8px 12px;font-size:15px;font-weight:600;text-align:center;box-shadow:0 4px 0 #3b2416;z-index:5;pointer-events:none}
@@ -1984,7 +1984,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 113${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 114${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};
@@ -2570,6 +2570,7 @@ window.openDv=openDv;
 // Đồng bộ: mỗi người chỉ ghi trường của mình (u_<uid> vị trí, e_<uid> nhật ký hành động) → không ghi đè nhau.
 // Trạng thái chung = phát lại toàn bộ nhật ký theo thời gian.
 const ER_T=36e5,ER_CH=[['meo','Mèo Bánh Quy'],['cun','Cún Kem Dâu'],['cao','Cáo Mật Ong']];
+const ER_Y0=74,ER_Y1=96,erYc=y=>Math.max(ER_Y0,Math.min(ER_Y1,y)),erSc=y=>.72+(erYc(y)-ER_Y0)/(ER_Y1-ER_Y0)*.36;
 const ER_R=[{n:'Quầy bánh',bg:'er-p1.jpg',fl:90},{n:'Bếp',bg:'er-p2.jpg',fl:91},{n:'Kho bột',bg:'er-p3.jpg',fl:90},{n:'Phòng làm việc của Bà',bg:'er-p4.jpg',fl:92},{n:'Hầm bí mật',bg:'er-p5.jpg',fl:91}];
 // điểm chạm: [id, x, y, w, h] theo % khung
 const ER_HS=[
@@ -2770,34 +2771,34 @@ async function openEr(id){if(erLocked())return;const old=$('.erv');if(old)old.re
     if(S.win&&!ended){ended=true;setTimeout(winScreen,900)}}
   function syncChars(){const box=st()&&st().querySelector('.erchs');if(!box)return;const r=peek?uState(peek.u).r:myRoom();
     players().forEach(u=>{const x=u===me?myU():uState(u);let c=CH[u];
-      if(!c){c=CH[u]={x:x.x==null?50:x.x,tx:x.x==null?50:x.x,r:x.r,f:1,el:null,pose:0,wt:0,busy:0};}
-      if(u!==me){if(c.r!==x.r){c.r=x.r;c.x=x.x}c.tx=x.x}else c.r=x.r;
+      const yy=x.y==null?ER_R[x.r||0].fl:x.y;if(!c){c=CH[u]={x:x.x==null?50:x.x,tx:x.x==null?50:x.x,y:yy,ty:yy,r:x.r,f:1,el:null,pose:0,wt:0,busy:0};}
+      if(u!==me){if(c.r!==x.r){c.r=x.r;c.x=x.x;c.y=yy}c.tx=x.x;c.ty=yy}else c.r=x.r;
       const ch=x.c>=0?ER_CH[x.c][0]:'meo';
       if(!c.el||!c.el.isConnected){c.el=document.createElement('div');c.el.className='erc'+(u===me?' me':'');c.el.dataset.u=u;c.el.innerHTML=`<img src="assets/er-${ch}-0.png" alt=""><span>${esc(u===me?'Bạn':nameOf(u))}</span>`;box.appendChild(c.el)}
       c.ch=ch;c.el.style.display=c.r===r?'':'none'})}
   // vòng lặp chuyển động mượt
   function loop(){let t0=performance.now();const step=now=>{if(!v.isConnected)return;const dt=Math.min(.05,(now-t0)/1000);t0=now;const fl=ER_R[peek?uState(peek.u).r:myRoom()].fl;
-      Object.keys(CH).forEach(u=>{const c=CH[u];if(!c.el)return;const d=c.tx-c.x,sp=26*dt;let pose=0;
-        if(Math.abs(d)>.3){c.x+=Math.sign(d)*Math.min(Math.abs(d),sp);c.f=d<0?-1:1;c.wt+=dt;const si=Math.floor(c.wt*6);pose=(si%2)?1:0;if(si!==c.si){c.si=si;if(c.el.style.display!=='none')ERS.fx.step(u!==me)}}else{c.wt=0;if(Math.abs(d)<=.3&&c.arrive){const f=c.arrive;c.arrive=null;f()}}
+      Object.keys(CH).forEach(u=>{const c=CH[u];if(!c.el)return;if(c.y==null){c.y=c.ty=fl}const dx=c.tx-c.x,dy=(c.ty-c.y)*1.25,d=Math.hypot(dx,dy),sp=26*dt;let pose=0;
+        if(d>.3){const k=Math.min(d,sp)/d;c.x+=dx*k;c.y+=dy*k/1.25;if(Math.abs(dx)>.2)c.f=dx<0?-1:1;c.wt+=dt;const si=Math.floor(c.wt*6);pose=(si%2)?1:0;if(si!==c.si){c.si=si;if(c.el.style.display!=='none')ERS.fx.step(u!==me)}}else{c.wt=0;if(Math.abs(d)<=.3&&c.arrive){const f=c.arrive;c.arrive=null;f()}}
         if(c.busy>now)pose=2;if(c.joy)pose=3;
         if(pose!==c.pose||!c.el.dataset.p){c.pose=pose;c.el.dataset.p=1;c.el.querySelector('img').src=`assets/er-${c.ch}-${pose}.png`}
         const bob=pose===1?Math.abs(Math.sin(c.wt*12))*.8:0;
-        c.el.style.transform=`translate(-50%,${-bob}%)`;c.el.style.left=c.x+'%';c.el.style.bottom=(100-fl)+'%';c.el.querySelector('img').style.transform=`scaleX(${c.f})`;c.el.style.zIndex=u===me?3:2});
+        c.el.style.transform=`translate(-50%,${-bob}%) scale(${erSc(c.y).toFixed(3)})`;c.el.style.left=c.x+'%';c.el.style.bottom=(100-c.y)+'%';c.el.querySelector('img').style.transform=`scaleX(${c.f})`;c.el.style.zIndex=Math.round(c.y*10)+(u===me?1:0)});
       const tm=v.querySelector('#ertm');if(tm&&g.t0){const left=ER_T-((S.win?S.winT:Date.now())-g.t0);const s=Math.max(0,Math.ceil(left/1000));tm.textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');tm.parentNode.classList.toggle('low',s<300);if(!S.win&&s!==loop.ls){if(loop.ls!=null&&s>0&&s<=60)ERS.fx.tick(s<=10);if(loop.ls!=null&&s===300)ERS.fx.notify();loop.ls=s}if(s<=0&&!S.win&&!ended){ended=true;loseScreen()}}
       raf=requestAnimationFrame(step)};raf=requestAnimationFrame(step)}
   const me_=()=>CH[me];
-  function walkTo(x,cb){const c=me_();x=Math.max(7,Math.min(93,x));c.tx=x;c.arrive=cb||null;if(Math.abs(c.x-x)<=.3&&cb){c.arrive=null;cb()}clearTimeout(walkTo.t);walkTo.t=setTimeout(()=>setU({x}),250)}
+  function walkTo(x,cb,y){const c=me_();x=Math.max(7,Math.min(93,x));const ty=y==null?c.ty:erYc(y);c.tx=x;c.ty=ty;c.arrive=cb||null;if(Math.hypot(c.x-x,(c.y-ty)*1.25)<=.3&&cb){c.arrive=null;cb()}clearTimeout(walkTo.t);walkTo.t=setTimeout(()=>setU({x,y:Math.round(ty*10)/10}),250)}
   const reach=()=>{const c=me_();c.busy=performance.now()+450};
   function onStage(e){if(modal||S.win)return;if(peek){const h=e.target.closest('.erh');if(!h)return bubble('Chỉ ngó được thôi, không sang được đâu');if(/^(dA|dB|dC|trap|up|rug|exit|hatch)$/.test(h.dataset.h))return bubble('Chỉ ngó được thôi, không chạm vào được');act(h.dataset.h);return}const sr=st().getBoundingClientRect(),px=(e.clientX-sr.left)/sr.width*100,py=(e.clientY-sr.top)/sr.height*100;
-    const ce=e.target.closest('.erc');if(ce&&ce.dataset.u!==me){const u=ce.dataset.u;walkTo(CH[u].x+(CH[u].x>me_().x?-9:9),()=>{if(sel){const i=sel;sel=null;reach();ev('gv',{i,to:u});ERS.fx.give();bubble('Đã đưa '+ERI[i][0]+' cho '+nameOf(u))}else bubble('Chọn một món trong túi rồi chạm vào bạn để đưa nhé')});return}
-    const h=e.target.closest('.erh');if(h){const hs=ER_HS[myRoom()].find(x=>x[0]===h.dataset.h);const fx=hs[1]+hs[3]/2;walkTo(fx,()=>{reach();act(h.dataset.h)});return}
-    walkTo(px)}
+    const ce=e.target.closest('.erc');if(ce&&ce.dataset.u!==me){const u=ce.dataset.u;walkTo(CH[u].x+(CH[u].x>me_().x?-9:9),()=>{if(sel){const i=sel;sel=null;reach();ev('gv',{i,to:u});ERS.fx.give();bubble('Đã đưa '+ERI[i][0]+' cho '+nameOf(u))}else bubble('Chọn một món trong túi rồi chạm vào bạn để đưa nhé')},CH[u].y);return}
+    const h=e.target.closest('.erh');if(h){const hs=ER_HS[myRoom()].find(x=>x[0]===h.dataset.h);const fx=hs[1]+hs[3]/2;walkTo(fx,()=>{reach();act(h.dataset.h)},hs[2]+hs[4]+4);return}
+    walkTo(px,null,py)}
   // ===== Túi đồ =====
   function bagTap(k){if(sel&&sel!==k){const pair=[sel,k],c=ER_CB.find(x=>pair.every(p=>x[0].includes(p)));if(c){const B=erBag(S,me);if(c[0].every(p=>B.includes(p))){sel=null;ev('cb',{i:c[1]});ERS.fx.combine();bubble('Ghép thành: '+ERI[c[1]][0]);return}bubble(c[1]==='bd'?'Còn thiếu mảnh bản đồ':'Còn thiếu một món');sel=k;draw();return}bubble('Hai món này không ghép được');sel=k;draw();return}
     sel=sel===k?null:k;draw()}
   // ===== Hành động ở từng chỗ =====
   const room=()=>peek?uState(peek.u).r:myRoom(),op=s=>!!S.op[s];
-  function goRoom(r,x){const c=me_();ERS.fx.door();setU({r,x});c.r=r;c.x=x;c.tx=x;const s=st();s.classList.add('erfade');setTimeout(()=>s.classList.remove('erfade'),350);draw()}
+  function goRoom(r,x){const c=me_();ERS.fx.door();const y=ER_R[r].fl;setU({r,x,y});c.r=r;c.x=x;c.tx=x;c.y=c.ty=y;const s=st();s.classList.add('erfade');setTimeout(()=>s.classList.remove('erfade'),350);draw()}
   function act(h){const r=room(),key=`r${r}${h}`;
     if(h==='dA'||h==='dB'||h==='dC'){const D=ER_DR[h];if(!op(h)){if(h==='dC')return openModal(letterLock());if(sel===(h==='dA'?'kdong':'kbac')){const i=sel;sel=null;ev('us',{i,s:h});erDing();bubble('Cạch! Cửa mở rồi');return}return bubble('Cửa khoá rồi. Có lỗ khoá '+(h==='dA'?'màu đồng':'màu bạc'))}
       return r===D[0]?goRoom(D[2],D[3]):goRoom(D[0],D[1])}

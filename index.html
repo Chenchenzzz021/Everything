@@ -596,6 +596,9 @@ body:has(.erv .erlob) .gcmf{display:none}
 .erbook{position:relative}.erbook img{width:100%;display:block}.erpg{position:absolute;left:15%;right:15%;top:20%;bottom:28%;background:#fdf6e3;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-weight:700;font-size:17px;line-height:1.5;color:#3f2a1d;box-shadow:0 0 12px 6px #fdf6e3}
 .erhd{display:flex;align-items:center;gap:10px;margin-right:36px}.erhd img{width:64px;height:64px;border-radius:50%}.erhd b{display:block;font-size:17px}.erhd small{color:#92400e}
 .ermp2{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.ermr{background:#fde68a;border:3px solid #3b2416;border-radius:10px;padding:6px;min-height:70px;font-size:12px}.ermr.cur{background:#86efac}.ermr span{display:flex;gap:2px;margin-top:4px}.ermr img{height:32px}
+.erpkb{position:absolute;left:3%;right:3%;bottom:3%;background:rgba(30,27,75,.88);color:#fff;border:2px solid #a5b4fc;border-radius:14px;padding:8px 10px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;justify-content:space-between;z-index:6}.erpkb button{border:0;border-radius:10px;background:#fde68a;font-weight:800;padding:6px 10px;color:#422006}.erst.erpeek{border-color:#818cf8}.erst.erpeek .erbg{filter:saturate(.85)}
+.erfr2{display:flex;align-items:center;gap:6px;background:#fde68a;border:3px solid #3b2416;border-radius:12px;padding:6px;margin:6px 0}.erfr2 img{height:44px}.erfr2 span{flex:1;font-size:13px}.erfr2 small{display:block;color:#92400e}.erfr2 button{border:2px solid #3b2416;background:#fff7ed;border-radius:10px;font-weight:700;font-size:12px;padding:6px}
+.erro{background:#e0e7ff;color:#3730a3;font-weight:700;font-size:13px;border-radius:10px;padding:4px 10px;margin:0 40px 8px 0;display:inline-block}.erm.ro #erok,.erm.ro #erput,.erm.ro #erhh,.erm.ro #ermm,.erm.ro #erup,.erm.ro #erdn,.erm.ro [data-u],.erm.ro [data-d]{display:none}.erm.ro [data-pk],.erm.ro [data-f],.erm.ro [data-b],.erm.ro .ermn,.erm.ro .erslot,.erm.ro [data-s],.erm.ro #ernt{pointer-events:none}
 .erwin{text-align:center;background:linear-gradient(#fff7ed,#fde68a)}.erwin h2{margin:6px 0}.erstar{font-size:34px}
 .erframe{position:relative;width:62%;margin:0 auto}.erframe .erfr{width:100%;display:block}.erfrin{position:absolute;left:18%;right:18%;top:20%;bottom:20%;display:flex;align-items:flex-end;justify-content:center;gap:0;border-radius:50%;overflow:hidden;background:#fef3c7}.erfrin img{height:62%;margin:0 -6%;animation:erjp .7s infinite alternate}.erfrin img:nth-child(2){animation-delay:.2s}.erfrin img:nth-child(3){animation-delay:.4s}
 @keyframes erjp{to{transform:translateY(-14%)}}
@@ -1978,7 +1981,7 @@ function drawSet(){const e=$('#set');const M=(S.couple&&S.couple.members)||[],ow
   <div class="card"><h2>Về vị trí khi tắt app</h2><p class="mut" style="margin-top:0">Đây là ứng dụng web nên điện thoại chỉ cho gửi vị trí <b>khi app đang mở</b>. Mỗi lần mở app là vị trí mới được gửi ngay, và mọi người luôn thấy “cập nhật lúc nào”. Nút 🔔 để nhờ ai đó mở app cập nhật.</p>
     <p class="mut">Nếu muốn vị trí tự cập nhật cả khi đã tắt app, có thể bật thêm <b>Chia sẻ vị trí của Google Maps</b> (Android và iPhone) hoặc <b>Tìm (Find My)</b> nếu mọi người dùng iPhone.</p></div>
   <div class="card"><h2>Rời nhóm</h2><p class="mut" style="margin-top:0">Xoá vị trí của bạn khỏi máy chủ và rời khỏi nhóm này.</p><button class="btn red w" id="lv">Rời nhóm</button></div>
-  <p class="mut" style="text-align:center">Everything · phiên bản 109${DEMO?' · xem thử':''}</p>`;
+  <p class="mut" style="text-align:center">Everything · phiên bản 110${DEMO?' · xem thử':''}</p>`;
   if($('#lo'))$('#lo').onclick=logout;
   if($('#mkacc'))$('#mkacc').onclick=async ev=>{const u=normU($('#us').value),p=$('#pw').value;if(!/^[a-z0-9._-]{3,30}$/.test(u))return toast('Tên đăng nhập 3–30 ký tự, chỉ chữ không dấu, số, dấu chấm, gạch',4000);if(p.length<6)return toast('Mật khẩu ít nhất 6 ký tự');
     ev.target.disabled=true;try{await API.register(u,p);S.user=u;LS.set('user',u);await API.saveProfile({name:S.name,user:u,code:S.code});toast('Đã tạo tài khoản ✅');drawSet()}catch(er){ev.target.disabled=false;toast(errMsg(er),4500)}};
@@ -2598,7 +2601,7 @@ function erParams(sd){const R=erRng(sd),ri=(a,b)=>a+Math.floor(R()*(b-a+1)),sh=a
   P.bk=[ri(1,3),ri(1,7)];P.ing=sh(ER_ING);P.tm=ri(0,3)*10;P.temp=P.tg*10+P.tm;return P}
 // phát lại nhật ký → trạng thái
 function erState(g){const pl=g.pl||[g.by],E=[];pl.forEach(u=>(g['e_'+u]||[]).forEach((e,i)=>E.push(Object.assign({u,i},e))));E.sort((a,b)=>a.t-b.t||(a.u<b.u?-1:a.u>b.u?1:a.i-b.i));
-  const S={op:{},loc:{},bowl:[],hints:[],win:0,winT:0,last:null};Object.keys(ERI).forEach(k=>S.loc[k]=ERI[k][2]?'c':'');
+  const S={op:{},loc:{},bowl:[],hints:[],win:0,winT:0,last:null,sw:{}};Object.keys(ERI).forEach(k=>S.loc[k]=ERI[k][2]?'c':'');
   // ít người hơn 3: cửa vào phòng trống mở sẵn
   if(pl.length<2)S.op.dA=1;if(pl.length<3)S.op.dB=1;
   const bag=u=>'b:'+u,cont=k=>ERI[k][2],avail=k=>S.loc[k]==='c'&&(S.op[cont(k)]||ER_FREE[cont(k)]);
@@ -2609,7 +2612,10 @@ function erState(g){const pl=g.pl||[g.by],E=[];pl.forEach(u=>(g['e_'+u]||[]).for
     case'gv':if(S.loc[e.i]===bag(u)&&pl.includes(e.to))S.loc[e.i]=bag(e.to);break;
     case'cb':{const c=ER_CB.find(x=>x[1]===e.i);if(c&&c[0].every(k=>S.loc[k]===bag(u))){c[0].forEach(k=>S.loc[k]='x');S.loc[e.i]=bag(u)}break}
     case'us':if(S.loc[e.i]===bag(u)){if(e.s==='bowl'){if(S.bowl.length<4&&!S.bowl.includes(e.i)){S.bowl.push(e.i);S.loc[e.i]='x';if(S.bowl.length===4)S.op.bowl=1}}else{S.loc[e.i]=e.i==='dent'?bag(u):'x';S.op[e.s]=1;if(e.s==='exit'){S.win=1;S.winT=e.t}}}break;
-    case'ht':S.hints.push({u,t:e.t,n:e.n});break}S.last=e});
+    case'ht':S.hints.push({u,t:e.t,n:e.n});break;
+    case'sw':S.sw[e.id]={id:e.id,from:u,to:e.to,r:e.r,x:e.x,t:e.t};break;
+    case'swok':if(S.sw[e.id]&&S.sw[e.id].to===u)S.sw[e.id].ok={r:e.r,x:e.x};break;
+    case'swno':if(S.sw[e.id]&&S.sw[e.id].to===u)S.sw[e.id].no=1;break}S.last=e});
   return S}
 const erBag=(S,u)=>Object.keys(S.loc).filter(k=>S.loc[k]==='b:'+u);
 // gợi ý của Bà Sáu theo tiến độ cả đội
@@ -2642,7 +2648,7 @@ async function erJoin(id){try{const g=await gGet(id);if(!g||g.st!=='wait')return
 async function openEr(id){const old=$('.erv');if(old)old.remove();const gm=$('.gm');if(gm)gm.remove();
   const v=document.createElement('div');v.className='erv';v.dataset.id=id;document.body.appendChild(v);const loc=isLocal(id),me=NET.uid;
   let g=await gGet(id);if(!g){v.remove();return toast('Không tìm thấy ván này')}
-  const P=erParams(g.sd||1);let S=erState(g),myE=(g['e_'+me]||[]).slice(),sel=null,mode='',timer=null,raf=0,modal=null,cool={},seenHints=S.hints.length,lastWin=0,ended=false;
+  const P=erParams(g.sd||1);let S=erState(g),myE=(g['e_'+me]||[]).slice(),sel=null,mode='',timer=null,raf=0,modal=null,cool={},seenHints=S.hints.length,lastWin=0,ended=false,peek=null;
   // nhân vật: vị trí hiển thị (mượt) và đích
   const CH={};
   const save=async o=>{o.upd=Date.now();if(loc){lgPut(id,o);g=Object.assign(g,JSON.parse(JSON.stringify(o)));return}Object.assign(g,o);try{await API.put(gPath(id),o,true)}catch(e){toast(errMsg(e))}};
@@ -2674,17 +2680,18 @@ async function openEr(id){const old=$('.erv');if(old)old.remove();const gm=$('.g
     const go=v.querySelector('#ergo');if(go)go.onclick=()=>{const pl=players();const o={st:'play',t0:Date.now(),pl};pl.forEach((u,i)=>{const x=Object.assign({},u===me?mine:uState(u),{r:Math.min(i,2),x:50,at:Date.now()+1});o['u_'+u]=x;g['u_'+u]=x});save(o);g=Object.assign(g,o);S=erState(g);build()}}
   // ===== Màn chơi =====
   const st=()=>v.querySelector('.erst');
-  function build(){v.innerHTML=`<div class="ertop"><button class="tdb" id="erx">✕</button><div class="ertm"><img src="assets/er-u-dh.png" alt=""><b id="ertm">60:00</b></div><b class="errn" id="errn"></b><button class="tdb erhb" id="erh"><img src="assets/er-u-ba.png" alt=""><small id="erhn">3</small></button><button class="tdb" id="ermp">🗺️</button></div>
-      <div class="erst"><div class="erbg"></div><div class="erhs"></div><div class="erfx"></div><div class="erchs"></div><div class="ermsg hide"></div></div>
+  function build(){v.innerHTML=`<div class="ertop"><button class="tdb" id="erx">✕</button><div class="ertm"><img src="assets/er-u-dh.png" alt=""><b id="ertm">60:00</b></div><b class="errn" id="errn"></b><button class="tdb erhb" id="erh"><img src="assets/er-u-ba.png" alt=""><small id="erhn">3</small></button><button class="tdb" id="ermp">🗺️</button><button class="tdb" id="erpk">👀</button></div>
+      <div class="erst"><div class="erbg"></div><div class="erhs"></div><div class="erfx"></div><div class="erchs"></div><div class="ermsg hide"></div><div class="erpkb hide" id="erpkb"></div></div>
       <div class="erbag"><span>🎒</span><div id="erbg"></div><small id="erbt"></small></div><div class="eract" id="eract"></div>`;
-    v.querySelector('#erx').onclick=()=>{if(confirmClose())close()};v.querySelector('#erh').onclick=askHint;v.querySelector('#ermp').onclick=showMap;
+    v.querySelector('#erx').onclick=()=>{if(confirmClose())close()};v.querySelector('#erh').onclick=askHint;v.querySelector('#ermp').onclick=showMap;v.querySelector('#erpk').onclick=peekPick;
     st().addEventListener('click',onStage);
     if(!loc&&!v.dataset.cm){v.dataset.cm=1;gcmInit(v,id);setTimeout(()=>{const f=[...document.querySelectorAll('.gcmf')].pop(),h=[...document.querySelectorAll('.gcms .gcmh b')].pop(),inp=[...document.querySelectorAll('#gci')].pop();if(f)f.firstChild.textContent='📻';if(h)h.textContent='📻 Bộ đàm của đội';if(inp)inp.placeholder='Nói gì đó với đội…'},50)}
     draw();loop()}
   const confirmClose=()=>{return true};
   const myRoom=()=>myU().r;
   function bubble(t,ms){const m=v.querySelector('.ermsg');if(!m)return;m.textContent=t;m.classList.remove('hide');clearTimeout(bubble.t);bubble.t=setTimeout(()=>m.classList.add('hide'),ms||2600)}
-  function draw(){if(g.st==='wait')return lobby();if(!st())return build();const r=myRoom(),R=ER_R[r];
+  function draw(){if(g.st==='wait')return lobby();if(!st())return build();if(peek&&uState(peek.u).r===myRoom())peek=null;const r=peek?uState(peek.u).r:myRoom(),R=ER_R[r];
+    {const pb=v.querySelector('#erpkb');pb.classList.toggle('hide',!peek);st().classList.toggle('erpeek',!!peek);if(peek)pb.innerHTML=`👀 Đang ngó ${esc(R.n)} của ${esc(nameOf(peek.u))} <button id="erback">Quay về</button>`;const bb=pb.querySelector('#erback');if(bb)bb.onclick=e=>{e.stopPropagation();peek=null;draw()}}
     st().querySelector('.erbg').style.backgroundImage=`url(assets/${R.bg})`;v.querySelector('#errn').textContent=R.n;
     v.querySelector('#erhn').textContent=3-S.hints.length;
     // điểm chạm
@@ -2697,9 +2704,10 @@ async function openEr(id){const old=$('.erv');if(old)old.remove();const gm=$('.g
     v.querySelectorAll('#erbg [data-i]').forEach(b=>b.onclick=()=>bagTap(b.dataset.i));
     const A=v.querySelector('#eract');A.innerHTML=sel?`<button data-a="see">🔍 Xem kỹ</button><button data-a="drop">✋ Bỏ chọn</button>`:'';A.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{if(b.dataset.a==='see')examine(sel);else{sel=null;draw()}});
     syncChars();
+    swCheck();
     if(S.hints.length>seenHints){const h=S.hints[S.hints.length-1];seenHints=S.hints.length;if(h.u!==me)showHint(h.n,h.u)}
     if(S.win&&!ended){ended=true;setTimeout(winScreen,900)}}
-  function syncChars(){const box=st()&&st().querySelector('.erchs');if(!box)return;const r=myRoom();
+  function syncChars(){const box=st()&&st().querySelector('.erchs');if(!box)return;const r=peek?uState(peek.u).r:myRoom();
     players().forEach(u=>{const x=u===me?myU():uState(u);let c=CH[u];
       if(!c){c=CH[u]={x:x.x==null?50:x.x,tx:x.x==null?50:x.x,r:x.r,f:1,el:null,pose:0,wt:0,busy:0};}
       if(u!==me){if(c.r!==x.r){c.r=x.r;c.x=x.x}c.tx=x.x}else c.r=x.r;
@@ -2707,7 +2715,7 @@ async function openEr(id){const old=$('.erv');if(old)old.remove();const gm=$('.g
       if(!c.el||!c.el.isConnected){c.el=document.createElement('div');c.el.className='erc'+(u===me?' me':'');c.el.dataset.u=u;c.el.innerHTML=`<img src="assets/er-${ch}-0.png" alt=""><span>${esc(u===me?'Bạn':nameOf(u))}</span>`;box.appendChild(c.el)}
       c.ch=ch;c.el.style.display=c.r===r?'':'none'})}
   // vòng lặp chuyển động mượt
-  function loop(){let t0=performance.now();const step=now=>{if(!v.isConnected)return;const dt=Math.min(.05,(now-t0)/1000);t0=now;const fl=ER_R[myRoom()].fl;
+  function loop(){let t0=performance.now();const step=now=>{if(!v.isConnected)return;const dt=Math.min(.05,(now-t0)/1000);t0=now;const fl=ER_R[peek?uState(peek.u).r:myRoom()].fl;
       Object.keys(CH).forEach(u=>{const c=CH[u];if(!c.el)return;const d=c.tx-c.x,sp=26*dt;let pose=0;
         if(Math.abs(d)>.3){c.x+=Math.sign(d)*Math.min(Math.abs(d),sp);c.f=d<0?-1:1;c.wt+=dt;pose=(Math.floor(c.wt*6)%2)?1:0}else{c.wt=0;if(Math.abs(d)<=.3&&c.arrive){const f=c.arrive;c.arrive=null;f()}}
         if(c.busy>now)pose=2;if(c.joy)pose=3;
@@ -2719,7 +2727,7 @@ async function openEr(id){const old=$('.erv');if(old)old.remove();const gm=$('.g
   const me_=()=>CH[me];
   function walkTo(x,cb){const c=me_();x=Math.max(7,Math.min(93,x));c.tx=x;c.arrive=cb||null;if(Math.abs(c.x-x)<=.3&&cb){c.arrive=null;cb()}clearTimeout(walkTo.t);walkTo.t=setTimeout(()=>setU({x}),250)}
   const reach=()=>{const c=me_();c.busy=performance.now()+450};
-  function onStage(e){if(modal||S.win)return;const sr=st().getBoundingClientRect(),px=(e.clientX-sr.left)/sr.width*100,py=(e.clientY-sr.top)/sr.height*100;
+  function onStage(e){if(modal||S.win)return;if(peek){const h=e.target.closest('.erh');if(!h)return bubble('Chỉ ngó được thôi, không sang được đâu');if(/^(dA|dB|dC|trap|up|rug|exit|hatch)$/.test(h.dataset.h))return bubble('Chỉ ngó được thôi, không chạm vào được');act(h.dataset.h);return}const sr=st().getBoundingClientRect(),px=(e.clientX-sr.left)/sr.width*100,py=(e.clientY-sr.top)/sr.height*100;
     const ce=e.target.closest('.erc');if(ce&&ce.dataset.u!==me){const u=ce.dataset.u;walkTo(CH[u].x+(CH[u].x>me_().x?-9:9),()=>{if(sel){const i=sel;sel=null;reach();ev('gv',{i,to:u});bubble('Đã đưa '+ERI[i][0]+' cho '+nameOf(u))}else bubble('Chọn một món trong túi rồi chạm vào bạn để đưa nhé')});return}
     const h=e.target.closest('.erh');if(h){const hs=ER_HS[myRoom()].find(x=>x[0]===h.dataset.h);const fx=hs[1]+hs[3]/2;walkTo(fx,()=>{reach();act(h.dataset.h)});return}
     walkTo(px)}
@@ -2727,7 +2735,7 @@ async function openEr(id){const old=$('.erv');if(old)old.remove();const gm=$('.g
   function bagTap(k){if(sel&&sel!==k){const pair=[sel,k],c=ER_CB.find(x=>pair.every(p=>x[0].includes(p)));if(c){const B=erBag(S,me);if(c[0].every(p=>B.includes(p))){sel=null;ev('cb',{i:c[1]});erDing();bubble('Ghép thành: '+ERI[c[1]][0]);return}bubble(c[1]==='bd'?'Còn thiếu mảnh bản đồ':'Còn thiếu một món');sel=k;draw();return}bubble('Hai món này không ghép được');sel=k;draw();return}
     sel=sel===k?null:k;draw()}
   // ===== Hành động ở từng chỗ =====
-  const room=()=>myRoom(),op=s=>!!S.op[s];
+  const room=()=>peek?uState(peek.u).r:myRoom(),op=s=>!!S.op[s];
   function goRoom(r,x){const c=me_();setU({r,x});c.r=r;c.x=x;c.tx=x;const s=st();s.classList.add('erfade');setTimeout(()=>s.classList.remove('erfade'),350);draw()}
   function act(h){const r=room(),key=`r${r}${h}`;
     if(h==='dA'||h==='dB'||h==='dC'){const D=ER_DR[h];if(!op(h)){if(h==='dC')return openModal(letterLock());if(sel===(h==='dA'?'kdong':'kbac')){const i=sel;sel=null;ev('us',{i,s:h});erDing();bubble('Cạch! Cửa mở rồi');return}return bubble('Cửa khoá rồi. Có lỗ khoá '+(h==='dA'?'màu đồng':'màu bạc'))}
@@ -2742,7 +2750,7 @@ async function openEr(id){const old=$('.erv');if(old)old.remove();const gm=$('.g
   // ===== Cửa sổ cận cảnh =====
   let mFn=null;
   function openModal(fn){if(modal)modal.remove();mFn=fn;modal=document.createElement('div');modal.className='erm';v.appendChild(modal);refreshModal()}
-  function refreshModal(){if(!modal)return;const o=typeof mFn==='function'?mFn():mFn;if(!o)return closeModal();modal.innerHTML=`<div class="ermb ${o.cls||''}"><button class="erx" id="ermx">✕</button>${o.html}</div>`;modal.querySelector('#ermx').onclick=closeModal;modal.onclick=e=>{if(e.target===modal)closeModal()};bindPick(modal);if(o.bind)o.bind(modal)}
+  function refreshModal(){if(!modal)return;const o=typeof mFn==='function'?mFn():mFn;if(!o)return closeModal();modal.classList.toggle('ro',!!peek);modal.innerHTML=`<div class="ermb ${o.cls||''}">${peek?'<div class="erro">👀 Chỉ xem, không chạm được</div>':''}<button class="erx" id="ermx">✕</button>${o.html}</div>`;modal.querySelector('#ermx').onclick=closeModal;modal.onclick=e=>{if(e.target===modal)closeModal()};bindPick(modal);if(o.bind)o.bind(modal)}
   function closeModal(){if(modal)modal.remove();modal=null;mFn=null;draw()}
   const cd=(k,n,sec)=>{cool[k]=(cool[k]||0)+1;if(cool[k]>=n){cool[k]=0;cool[k+'T']=Date.now()+sec*1000;bubble('Ổ khoá bị kẹt, chờ '+sec+' giây nhé',3000)}},jam=k=>{const t=(cool[k+'T']||0)-Date.now();if(t>0){bubble('Còn kẹt '+Math.ceil(t/1000)+' giây nữa');erBuzz();return true}return false};
   function hatchView(){return()=>{const H=Object.keys(S.loc).filter(k=>S.loc[k]==='h');const to=room()===0?'Bếp':'Quầy bánh';
@@ -2770,6 +2778,18 @@ async function openEr(id){const old=$('.erv');if(old)old.remove();const gm=$('.g
   function askHint(){if(S.win)return;const left=3-S.hints.length;if(left<=0)return bubble('Cả đội đã dùng hết 3 gợi ý rồi');
     openModal({cls:'erhint',html:`<div class="erhd"><img src="assets/er-u-ba.png" alt=""><div><b>Gọi cho Bà Sáu?</b><small>Cả đội còn ${left} gợi ý</small></div></div><p class="ermp">Bà sẽ gợi ý bước tiếp theo cả đội cần làm. Gợi ý hiện cho cả đội.</p><button class="btn w" id="erhok">📞 Gọi Bà (dùng 1 gợi ý)</button>`,
       bind:m=>m.querySelector('#erhok').onclick=()=>{const n=erHint(S);ev('ht',{n});seenHints=S.hints.length;showHint(n,me)}})}
+  const swDone=LS.get('ersw_'+id,{}),swAsk={};
+  function swCheck(){if(S.win)return;Object.values(S.sw).forEach(q=>{
+      if(q.from===me&&q.ok&&!swDone[q.id]){swDone[q.id]=1;LS.set('ersw_'+id,swDone);peek=null;goRoom(q.ok.r,q.ok.x);bubble('Đã đổi phòng với '+nameOf(q.to)+' 🔄',3000)}
+      if(q.from===me&&q.no&&!swDone[q.id]){swDone[q.id]=1;LS.set('ersw_'+id,swDone);bubble(nameOf(q.to)+' chưa muốn đổi phòng')}
+      if(q.to===me&&!q.ok&&!q.no&&!swAsk[q.id]&&!swDone[q.id]&&Date.now()-q.t<9e4){swAsk[q.id]=1;
+        openModal({html:`<div class="ermh">🔄 Đổi phòng?</div><p class="ermp"><b>${esc(nameOf(q.from))}</b> đang ở <b>${ER_R[q.r].n}</b> muốn đổi chỗ với bạn. Đồ trong túi ai người nấy giữ.</p><div class="erbtn3"><button id="erswn">Không</button><button id="erswy">🔄 Đồng ý</button></div>`,
+          bind:m=>{m.querySelector('#erswy').onclick=()=>{if(Date.now()-q.t>9e4||uState(q.from).r!==q.r){closeModal();return bubble('Lời mời đổi phòng đã hết hạn')}swDone[q.id]=1;LS.set('ersw_'+id,swDone);const u0=myU();ev('swok',{id:q.id,r:u0.r,x:u0.x});closeModal();peek=null;goRoom(q.r,q.x);bubble('Đã đổi phòng 🔄')};
+            m.querySelector('#erswn').onclick=()=>{swDone[q.id]=1;LS.set('ersw_'+id,swDone);ev('swno',{id:q.id});closeModal()}}})}})}
+  function peekPick(){if(S.win)return;if(peek){peek=null;return draw()}const O=players().filter(u=>u!==me&&uState(u).r!==myRoom());if(!O.length)return bubble(players().length<2?'Chơi một mình thì không có ai để ngó':'Cả đội đang ở cùng phòng với bạn');
+    openModal({html:`<div class="ermh">👀 Bạn bè đang ở đâu?</div>${O.map(u=>{const c=chOf(u),x=uState(u);return`<div class="erfr2">${c?`<img src="assets/er-${c[0]}-0.png" alt="">`:''}<span><b>${esc(nameOf(u))}</b><small>${ER_R[x.r].n}</small></span><button data-pu="${u}">👀 Ngó</button><button data-sw="${u}">🔄 Đổi phòng</button></div>`}).join('')}<p class="ermp">Ngó: chỉ xem phòng bạn, không chạm được. Đổi phòng: hai người đổi chỗ cho nhau, cần bạn kia đồng ý.</p>`,
+      bind:m=>{m.querySelectorAll('[data-pu]').forEach(b=>b.onclick=()=>{peek={u:b.dataset.pu};closeModal()});
+        m.querySelectorAll('[data-sw]').forEach(b=>b.onclick=()=>{const u=b.dataset.sw,u0=myU();ev('sw',{id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),to:u,r:u0.r,x:u0.x});closeModal();bubble('Đã gửi lời mời đổi phòng cho '+nameOf(u)+', chờ bạn ấy đồng ý…',3500)})}})}
   function showMap(){const ps=players();openModal({html:`<div class="ermh">🗺️ Sơ đồ tiệm</div><div class="ermp2">${[[0,'dA',1,'dB',2],[null,null,null,'dC',3]].map(()=>'').join('')}
     ${ER_R.map((R,i)=>{const known=i<3||(i===3&&op('dC'))||(i===4&&op('rug'));return`<div class="ermr ${i===myRoom()?'cur':''}"><b>${known?R.n:'???'}</b><span>${ps.filter(u=>(u===me?myU():uState(u)).r===i).map(u=>{const c=chOf(u);return c?`<img src="assets/er-${c[0]}-0.png" alt="">`:''}).join('')}</span></div>`}).join('')}</div>
     <p class="ermp">Cửa đã mở: ${['dA','dB','dC'].filter(op).length}/3${op('rug')?' · đã tìm thấy lối xuống hầm':''}</p>`})}
@@ -2794,7 +2814,7 @@ async function openEr(id){const old=$('.erv');if(old)old.remove();const gm=$('.g
     '1:fridge':()=>openModal(()=>{if(op('r1fridge'))return{html:pickList('r1fridge','Tủ lạnh',`<img class="erbig" src="assets/er-o-tl.png" alt="">`)};
       return{html:`<div class="ermh">Tủ lạnh có 12 ngăn, ngăn nào cũng có nắp</div><div class="erfg">${[1,2,3].map(rw=>[1,2,3,4].map(cl=>`<button data-f="${rw},${cl}">❄️</button>`).join('')).join('')}</div><p class="ermp">Hàng tính từ trên xuống, ngăn tính từ trái sang.</p>`,
         bind:m=>m.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{if(jam('r1fridge'))return;if(b.dataset.f===P.fr.join(',')){ev('op',{s:'r1fridge'});erDing();refreshModal()}else{erBuzz();b.textContent='∅';b.disabled=true;cd('r1fridge',3,15)}})}}),
-    '1:oven':()=>{const m=sel==='guong';openModal({html:`<div class="ermh">Lò nướng</div><div class="erov">${zoom(1,34.3,47.6,20.2,20.6)}<div class="eroc ${m?'':'flip'}">TỦ LẠNH<br>HÀNG ${P.fr[0]} · NGĂN ${P.fr[1]}</div></div></div><p class="ermp">${m?'Soi gương lên là đọc được rồi!':'Trên kính cửa lò có dòng chữ bị ngược…'}</p>`})},
+    '1:oven':()=>{const m=sel==='guong'&&!peek;openModal({html:`<div class="ermh">Lò nướng</div><div class="erov">${zoom(1,34.3,47.6,20.2,20.6)}<div class="eroc ${m?'':'flip'}">TỦ LẠNH<br>HÀNG ${P.fr[0]} · NGĂN ${P.fr[1]}</div></div></div><p class="ermp">${m?'Soi gương lên là đọc được rồi!':'Trên kính cửa lò có dòng chữ bị ngược…'}</p>`})},
     '1:cork':()=>openModal(()=>({html:pickList('r1cork','Bảng ghim',`<div class="erpaper">Ghi chú của Bà:<br><b>Bột cần cân = số đĩa bánh trong tủ kính ở Quầy + ${P.k} ký.</b></div>`)})),
     '1:table':()=>openModal(()=>({html:pickList('r1table','Bàn nhào bột')})),
     '1:photo':()=>photo(1,`<div class="erpaper">Bà nướng mẻ bánh đầu tiên</div>${erMiniClock(null,P.ck[1])}`),
@@ -2807,7 +2827,7 @@ async function openEr(id){const old=$('.erv');if(old)old.remove();const gm=$('.g
     '3:shelf':()=>openModal(()=>{const done=op('r3books');return{html:pickList('r3jars','Kệ sách của Bà','<p class="ermp">Trên nóc kệ có mấy hũ đồ khô.</p>')+`<div class="erbk">${[1,2,3].map(s=>`<div>${[1,2,3,4,5,6,7].map(b=>`<button data-b="${s},${b}" style="--c:${['#b45309','#be123c','#1d4ed8','#15803d','#7c3aed','#a16207','#0f766e'][(s*3+b)%7]};height:${70+((s*5+b*3)%4)*8}%"></button>`).join('')}</div>`).join('')}</div>${done?pickList('r3books','Trong cuốn sách có kẹp:'):''}`,
       bind:m=>m.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{if(jam('r3books'))return;if(op('r3books'))return bubble('Toàn sách dạy làm bánh');if(b.dataset.b===P.bk.join(',')){ev('op',{s:'r3books'});erDing();refreshModal()}else{erTone(300,.1);bubble('Chỉ là sách dạy làm bánh');cd('r3books',4,10)}})}}),
     '3:chair':()=>openModal(()=>({html:pickList('r3chair','Ghế bập bênh','<p class="ermp">Lật tấm chăn đan lên…</p>')})),
-    '3:mbox':()=>{if(!op('mboxu')){if(sel==='kn'){const i=sel;sel=null;ev('us',{i,s:'mboxu'});erDing();return openModal(musicView())}return openModal({html:`<div class="ermh">Hộp nhạc</div><img class="erbig" src="assets/er-d-hn.png" alt=""><p class="ermp">Hộp nhạc khoá, có một lỗ khoá rất nhỏ.</p>`})}openModal(musicView())},
+    '3:mbox':()=>{if(!op('mboxu')){if(sel==='kn'&&!peek){const i=sel;sel=null;ev('us',{i,s:'mboxu'});erDing();return openModal(musicView())}return openModal({html:`<div class="ermh">Hộp nhạc</div><img class="erbig" src="assets/er-d-hn.png" alt=""><p class="ermp">Hộp nhạc khoá, có một lỗ khoá rất nhỏ.</p>`})}openModal(musicView())},
     '3:rug':()=>{if(op('rug'))return bubble('Cửa sập đã lộ ra rồi');const team=players().some(u=>erBag(S,u).includes('bd'));if(!team)return bubble('Tấm thảm nặng quá. Không biết bên dưới có gì không…');ev('op',{s:'rug'});erDing();bubble('Cuộn thảm lên… có một cửa sập!',3200)},
     '4:oven':()=>{if(op('r4oven'))return openModal(()=>({html:pickList('r4oven','Lò nướng','<img class="erbig" src="assets/er-o-lo.png" alt="">')}));openModal(ovenView())},
     '4:bowl':()=>openModal(bowlView()),
